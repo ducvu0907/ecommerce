@@ -1,17 +1,29 @@
-version: "3.8"
-
 services:
   mongo:
     image: mongo:latest
     container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: product-service-db
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongo
-      MONGO_INITDB_DATABASE: product-service-db
     volumes:
-      - product-service-data:/ecommerce/product-service/data/db
-
+      - product-service-data:/data/db
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: order-service-db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - order-service-data:/var/lib/mysql
 volumes:
   product-service-data:
+  order-service-data:
