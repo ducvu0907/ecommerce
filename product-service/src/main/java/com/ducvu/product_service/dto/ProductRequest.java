@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRequest {
-    private String title;
-    private String sku;
+    private String name;
     private String imageUrl;
     private String description;
     private Double unitPrice;

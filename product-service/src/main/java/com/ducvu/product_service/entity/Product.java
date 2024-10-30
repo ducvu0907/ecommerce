@@ -16,7 +16,6 @@ public class Product {
     @Id
     private String id;
     private String name;
-    private String sku;
     private String imageUrl;
     private String description;
     private Double unitPrice;
