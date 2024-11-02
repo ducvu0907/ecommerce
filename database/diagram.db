@@ -1,0 +1,97 @@
+Table User {
+  user_id integer [pk]
+  full_name string
+  email string
+  phone string
+  created_at date
+  updated_at date
+}
+
+Table Credential {
+  credential_id integer [pk]
+  user_id integer [ref: - User.user_id] 
+  username string
+  password string
+  role string
+  is_enabled bool
+  created_at date
+  updated_at date
+}
+
+Table Rating {
+  rate_id integer [pk]
+  user_id integer [pk, ref: > User.user_id]
+  product_id integer [pk, ref: > Product.product_id]
+  rating integer
+  review string
+  created_at date
+  updated_at date
+}
+
+Table Category {
+  category_id integer [pk]
+  category_title string
+  created_at date
+  updated_at date
+}
+
+Table Product {
+  product_id integer [pk]
+  category_id integer [ref: < Category.category_id]
+  product_title string
+  image_url string
+  sku string
+  price_unit double
+  quantity integer
+  created_at date
+  updated_at date 
+}
+
+Table Order {
+  order_id integer [pk]
+  cart_id integer [ref: > Cart.cart_id]
+  order_date date
+  order_description string
+  order_fee double
+  created_at date
+  updated_at date
+}
+
+Table Item {
+  product_id integer [pk, ref: > Product.product_id]
+  order_id integer [pk, ref: > Order.order_id]
+  quantity integer
+  created_at date
+  updated_at date
+}
+
+Table Cart {
+  cart_id integer [pk]
+  user_id integer [ref: - User.user_id]
+  created_at date
+  updated_at date
+}
+
+Table Address {
+  address_id integer [pk]
+  user_id integer [ref: > User.user_id]
+  street string
+  city string
+  state string
+  postal_code string
+  country string
+  address_type string
+  created_at date
+  updated_at date
+}
+
+Table Payment {
+  payment_id integer [pk]
+  order_id integer [ref: - Order.order_id]
+  is_paid bool
+  payment_status string
+  created_at date
+  updated_at date
+}
+
+
