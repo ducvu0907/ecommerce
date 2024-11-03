@@ -51,7 +51,6 @@ Table Product {
 Table Order {
   order_id integer [pk]
   cart_id integer [ref: > Cart.cart_id]
-  order_date date
   order_description string
   order_fee double
   created_at date
