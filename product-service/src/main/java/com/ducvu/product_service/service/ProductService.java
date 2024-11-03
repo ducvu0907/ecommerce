@@ -1,92 +1,107 @@
 package com.ducvu.product_service.service;
 
-import com.ducvu.product_service.dto.ProductRequest;
-import com.ducvu.product_service.dto.ProductResponse;
+import com.ducvu.product_service.dto.ProductDto;
+import com.ducvu.product_service.entity.Category;
 import com.ducvu.product_service.entity.Product;
-import com.ducvu.product_service.exception.ProductException;
-import com.ducvu.product_service.helper.Util;
+import com.ducvu.product_service.exception.CategoryNotFoundException;
+import com.ducvu.product_service.exception.ProductNotFoundException;
+import com.ducvu.product_service.helper.Mapper;
+import com.ducvu.product_service.repository.CategoryRepository;
 import com.ducvu.product_service.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class ProductService {
     private final ProductRepository productRepository;
-    private final Util util;
+    private final CategoryRepository categoryRepository;
 
-    public List<ProductResponse> getProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(util::map).toList();
+    public List<ProductDto> getAllProducts() {
+        return this.productRepository.findAll()
+                .stream()
+                .map(Mapper::map)
+                .distinct()
+                .toList();
     }
 
-    public ProductResponse getProduct(String productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException("Product not found"));
+    public List<ProductDto> getAllProductsByCategory(Integer categoryId) {
+        Category category =  this.categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(String.format("Category with id: %d not found", categoryId)));
 
-        return util.map(product);
+        return this.productRepository.findProductsByCategoryId(categoryId)
+                .stream()
+                .map(Mapper::map)
+                .distinct()
+                .toList();
     }
 
-    public ProductResponse createProduct(ProductRequest productRequest) {
-        if (!util.validCreateProductRequest(productRequest)) {
-            throw new ProductException("Product needs name, image, price and quantity");
-        }
+    public ProductDto getProductById(Integer productId) {
+        Product product = this.productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("Product with id: %d not found", productId)));
 
-        Product product = Product.builder()
-                .name(productRequest.getName())
-                .imageUrl(productRequest.getImageUrl())
-                .description(productRequest.getDescription())
-                .unitPrice(productRequest.getUnitPrice())
-                .stockQuantity(productRequest.getStockQuantity())
-                .build();
-
-        productRepository.save(product);
-        log.info("Product {} is saved", product.getId());
-
-        return util.map(product);
+        return Mapper.map(product);
     }
 
-
-    public ProductResponse updateProduct(String productId, ProductRequest productRequest) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException("Product not found"));
-
-        if (productRequest.getName() != null) {
-            product.setName(productRequest.getName());
+    public ProductDto createProduct(ProductDto productDto) {
+        if (productDto.getCategoryDto() == null) {
+            throw new CategoryNotFoundException("No category provided");
         }
+        Integer categoryId = productDto.getCategoryDto().getCategoryId();
+        Category category =  this.categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(String.format("Category with id: %d not found", categoryId)));
 
-        if (productRequest.getImageUrl() != null) {
-            product.setImageUrl(productRequest.getImageUrl());
-        }
-
-        if (productRequest.getDescription() != null) {
-            product.setDescription(productRequest.getDescription());
-        }
-
-        if (productRequest.getUnitPrice() != null) {
-            product.setUnitPrice(productRequest.getUnitPrice());
-        }
-
-        if (productRequest.getStockQuantity() != null) {
-            product.setStockQuantity(productRequest.getStockQuantity());
-        }
-
-        productRepository.save(product);
-        log.info("Product {} is updated", product.getId());
-
-        return util.map(product);
+        Product product = Mapper.map(productDto);
+        this.productRepository.save(product);
+        return Mapper.map(product);
     }
 
-    public void deleteProduct(String productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new ProductException("Product not found");
+    public ProductDto updateProduct(Integer productId, ProductDto productDto) {
+        if (productDto.getCategoryDto() != null) {
+            Integer categoryId = productDto.getCategoryDto().getCategoryId();
+            Category category =  this.categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new CategoryNotFoundException(String.format("Category with id: %d not found", categoryId)));
         }
 
-        productRepository.deleteById(productId);
-        log.info("Product {} is deleted", productId);
+        Product product = this.productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("Product with id: %d not found", productId)));
+
+        if (productDto.getProductTitle() != null) {
+            product.setProductTitle(productDto.getProductTitle());
+        }
+
+        if (productDto.getImageUrl() != null) {
+            product.setImageUrl(productDto.getImageUrl());
+        }
+
+        if (productDto.getSku() != null) {
+            product.setSku(productDto.getSku());
+        }
+
+        if (productDto.getPriceUnit() != null) {
+            product.setPriceUnit(productDto.getPriceUnit());
+        }
+
+        if (productDto.getQuantity() != null) {
+            product.setQuantity(productDto.getQuantity());
+        }
+
+        if (productDto.getCategoryDto() != null) {
+            product.setCategory(Mapper.map(productDto.getCategoryDto()));
+        }
+
+        this.productRepository.save(product);
+        return Mapper.map(product);
+    }
+
+    public void deleteProduct(Integer productId) {
+        Product product = this.productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("Product with id: %d not found", productId)));
+
+        this.productRepository.delete(product);
     }
 }

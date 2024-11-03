@@ -1,23 +1,40 @@
 package com.ducvu.product_service.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Document(value = "product")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Entity
+@Table(name = "product")
 @Data
-public class Product {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class Product extends BaseEntity {
     @Id
-    private String id;
-    private String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer productId;
+
+    @Column(name = "seller_id", nullable = false)
+    private Integer sellerId;
+
+    @Column(name = "product_title", nullable = false)
+    private String productTitle;
+
+    @Column(name = "image_url")
     private String imageUrl;
-    private String description;
-    private Double unitPrice;
-    private Integer stockQuantity;
+
+    @Column(name = "sku", nullable = false)
+    private String sku;
+
+    @Column(name = "price_unit", nullable = false)
+    private Double priceUnit;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
 }
