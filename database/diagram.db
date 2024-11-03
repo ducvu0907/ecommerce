@@ -9,7 +9,7 @@ Table User {
 
 Table Credential {
   credential_id integer [pk]
-  user_id integer [ref: - User.user_id] 
+  user_id integer [ref: - User.user_id]
   username string
   password string
   role string
@@ -38,13 +38,14 @@ Table Category {
 Table Product {
   product_id integer [pk]
   category_id integer [ref: < Category.category_id]
+  seller_id integer [ref: > User.user_id]
   product_title string
   image_url string
   sku string
   price_unit double
   quantity integer
   created_at date
-  updated_at date 
+  updated_at date
 }
 
 Table Order {
@@ -80,7 +81,6 @@ Table Address {
   state string
   postal_code string
   country string
-  address_type string
   created_at date
   updated_at date
 }
@@ -93,5 +93,3 @@ Table Payment {
   created_at date
   updated_at date
 }
-
-
