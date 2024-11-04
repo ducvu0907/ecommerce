@@ -1,6 +1,7 @@
 package com.ducvu.product_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,6 @@ public class ProductDto {
     private Integer quantity;
 
     @JsonProperty("category")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(value = Include.NON_NULL)
     private CategoryDto categoryDto;
 }

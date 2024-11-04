@@ -1,6 +1,7 @@
 package com.ducvu.product_service.controller;
 
 import com.ducvu.product_service.dto.CategoryDto;
+import com.ducvu.product_service.dto.ProductDto;
 import com.ducvu.product_service.repository.DtoCollectionResponse;
 import com.ducvu.product_service.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class CategoryController {
     @GetMapping()
     public ResponseEntity<DtoCollectionResponse<CategoryDto>> getAllCategories() {
         log.info("Category controller, fetch all categories");
-        return ResponseEntity.ok(new DtoCollectionResponse<>(this.categoryService.getAllCategories()));
+        return ResponseEntity.ok(new DtoCollectionResponse<>(this.categoryService.getCategories()));
     }
 
     @GetMapping("/{category_id}")

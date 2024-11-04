@@ -21,19 +21,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDto> getProducts() {
         return this.productRepository.findAll()
-                .stream()
-                .map(Mapper::map)
-                .distinct()
-                .toList();
-    }
-
-    public List<ProductDto> getAllProductsByCategory(Integer categoryId) {
-        Category category =  this.categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(String.format("Category with id: %d not found", categoryId)));
-
-        return this.productRepository.findProductsByCategoryId(categoryId)
                 .stream()
                 .map(Mapper::map)
                 .distinct()

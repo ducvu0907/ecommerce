@@ -1,6 +1,7 @@
 package com.ducvu.product_service.service;
 
 import com.ducvu.product_service.dto.CategoryDto;
+import com.ducvu.product_service.dto.ProductDto;
 import com.ducvu.product_service.entity.Category;
 import com.ducvu.product_service.exception.CategoryNotFoundException;
 import com.ducvu.product_service.helper.Mapper;
@@ -19,7 +20,7 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public List<CategoryDto> getAllCategories() {
+    public List<CategoryDto> getCategories() {
         return this.categoryRepository.findAll()
                 .stream()
                 .map(Mapper::map)

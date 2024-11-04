@@ -16,15 +16,9 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<DtoCollectionResponse<ProductDto>> getAllProducts() {
+    public ResponseEntity<DtoCollectionResponse<ProductDto>> getProducts() {
         log.info("Product controller, fetch all products");
-        return ResponseEntity.ok(new DtoCollectionResponse<>(this.productService.getAllProducts()));
-    }
-
-    @GetMapping("/category/{category_id}")
-    public ResponseEntity<DtoCollectionResponse<ProductDto>> getAllProductsByCategoryId(@PathVariable String categoryId) {
-        log.info("Product controller, fetch all products by category id");
-        return ResponseEntity.ok(new DtoCollectionResponse<>(this.productService.getAllProductsByCategory(Integer.valueOf(categoryId))));
+        return ResponseEntity.ok(new DtoCollectionResponse<>(this.productService.getProducts()));
     }
 
     @GetMapping("/{productId}")
