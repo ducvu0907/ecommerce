@@ -6,7 +6,6 @@ import com.ducvu.user_service.dto.UserDto;
 import com.ducvu.user_service.entity.Address;
 import com.ducvu.user_service.entity.Credential;
 import com.ducvu.user_service.entity.User;
-import com.ducvu.user_service.exception.CredentialNotFoundException;
 
 import java.util.stream.Collectors;
 
