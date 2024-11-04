@@ -77,7 +77,6 @@ Table Address {
   user_id integer [ref: > User.user_id]
   street string
   city string
-  state string
   postal_code string
   country string
   created_at date
