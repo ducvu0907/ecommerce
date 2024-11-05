@@ -48,6 +48,20 @@ Table Product {
   updated_at date
 }
 
+Table Discount {
+  discount_id integer [pk]
+  discount_type enum("percent", "fixed")
+  discount_description string
+  value double
+  start_date date
+  end_date date
+  usage_limit integer
+  min_order_value double
+  product_id integer [ref: > Product.product_id]
+  promo_code string [unique]
+  is_active boolean
+}
+
 Table Order {
   order_id integer [pk]
   cart_id integer [ref: > Cart.cart_id]
