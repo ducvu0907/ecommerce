@@ -1,12 +1,13 @@
 package com.ducvu.product_service.controller;
 
 import com.ducvu.product_service.dto.ProductDto;
-import com.ducvu.product_service.repository.DtoCollectionResponse;
 import com.ducvu.product_service.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -15,34 +16,40 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping
-    public ResponseEntity<DtoCollectionResponse<ProductDto>> getProducts() {
-        log.info("Product controller, fetch all products");
-        return ResponseEntity.ok(new DtoCollectionResponse<>(this.productService.getProducts()));
+    // public
+    @GetMapping("")
+    public ResponseEntity<List<ProductDto>> getProducts() {
+
     }
 
+    // public
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<List<ProductDto>> getProductsOfSeller(@PathVariable("sellerId") String sellerId) {
+
+    }
+
+    // public
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable("productId") String productId) {
-        log.info("Product controller, fetch product by id");
-        return ResponseEntity.ok(this.productService.getProductById(Integer.valueOf(productId)));
+    public ResponseEntity<ProductDto> getProduct(@PathVariable("productId") String productId) {
+
     }
 
+    // seller
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
-        log.info("Product controller, create product");
-        return ResponseEntity.ok(this.productService.createProduct(productDto));
+
     }
 
+    // seller
     @PutMapping("/{productId}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable("productId") String productId, @RequestBody ProductDto productDto) {
-        log.info("Product controller, update product");
-        return ResponseEntity.ok(this.productService.updateProduct(Integer.valueOf(productId), productDto));
+
     }
 
+    // seller
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Boolean> deleteProduct(@PathVariable("productId") final String productId) {
-        log.info("Product controller, delete product");
-        this.productService.deleteProduct(Integer.valueOf(productId));
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable("productId") String productId) {
+
     }
+
 }

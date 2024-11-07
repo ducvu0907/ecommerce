@@ -13,23 +13,23 @@ import lombok.*;
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Integer productId;
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "seller_id", nullable = false)
+    @Column(name = "seller_id")
     private Integer sellerId;
 
-    @Column(name = "product_title", nullable = false)
-    private String productTitle;
+    @Column(name = "title")
+    private String title;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "sku", nullable = false)
+    @Column(name = "sku")
     private String sku;
 
-    @Column(name = "price_unit", nullable = false)
-    private Double priceUnit;
+    @Column(name = "price")
+    private Double price;
 
     @Column(name = "quantity")
     private Integer quantity;

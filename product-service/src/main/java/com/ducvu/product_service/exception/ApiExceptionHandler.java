@@ -11,12 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 @RequiredArgsConstructor
 public class ApiExceptionHandler {
-    @ExceptionHandler(value = {CategoryNotFoundException.class, ProductNotFoundException.class})
-    public ResponseEntity<ErrorMessage> handleNotFoundException(RuntimeException exception) {
-        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage(), HttpStatus.NOT_FOUND.value());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
-    }
-
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorMessage> handleGenericException(Exception exception) {
         ErrorMessage errorResponse = new ErrorMessage(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());

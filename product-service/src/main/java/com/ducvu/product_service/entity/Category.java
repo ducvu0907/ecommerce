@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -16,13 +16,12 @@ import java.util.Set;
 public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
-    private Integer categoryId;
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "category_title", nullable = false)
-    private String categoryTitle;
+    @Column(name = "title")
+    private String title;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Product> products;
+    private List<Product> products;
 }

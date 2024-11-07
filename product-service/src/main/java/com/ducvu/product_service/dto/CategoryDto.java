@@ -1,7 +1,6 @@
 package com.ducvu.product_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class CategoryDto {
-    private Integer categoryId;
-    private String categoryTitle;
+    private Integer id;
+    private String title;
 
     @JsonProperty("products")
-    @JsonInclude(value = Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<ProductDto> productDtos;
 }

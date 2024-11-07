@@ -11,8 +11,8 @@ public class Mapper {
 
     public static CategoryDto map(Category category) {
         return CategoryDto.builder()
-                .categoryId(category.getCategoryId())
-                .categoryTitle(category.getCategoryTitle())
+                .id(category.getId())
+                .title(category.getTitle())
                 .productDtos(
                         category.getProducts()
                                 .stream()
@@ -24,32 +24,30 @@ public class Mapper {
 
     public static Category map(CategoryDto categoryDto) {
         return Category.builder()
-                .categoryTitle(categoryDto.getCategoryTitle())
+                .title(categoryDto.getTitle())
                 .build();
     }
 
     public static Product map(ProductDto productDto) {
         return Product.builder()
                 .sellerId(productDto.getSellerId())
-                .productTitle(productDto.getProductTitle())
+                .title(productDto.getTitle())
                 .imageUrl(productDto.getImageUrl())
                 .sku(productDto.getSku())
-                .priceUnit(productDto.getPriceUnit())
+                .price(productDto.getPrice())
                 .quantity(productDto.getQuantity())
-                .category(map(productDto.getCategoryDto()))
                 .build();
     }
 
     public static ProductDto map(Product product) {
         return ProductDto.builder()
-                .productId(product.getProductId())
+                .id(product.getId())
                 .sellerId(product.getSellerId())
-                .productTitle(product.getProductTitle())
+                .title(product.getTitle())
                 .imageUrl(product.getImageUrl())
                 .sku(product.getSku())
-                .priceUnit(product.getPriceUnit())
+                .price(product.getPrice())
                 .quantity(product.getQuantity())
-                .categoryDto(map(product.getCategory()))
                 .build();
     }
 
