@@ -23,6 +23,18 @@ services:
     volumes:
       - order-data:/var/lib/mysql
 
+  mysql-cart:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cart_db
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - cart-data:/var/lib/mysql
+
   postgres-user:
     image: postgres:latest
     environment:
@@ -37,4 +49,5 @@ services:
 volumes:
   product-data:
   order-data:
+  cart-data:
   user-data:
