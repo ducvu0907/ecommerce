@@ -1,5 +1,5 @@
 Table User {
-  user_id integer [pk]
+  id integer [pk]
   full_name string
   email string
   phone string
@@ -8,87 +8,100 @@ Table User {
 }
 
 Table Credential {
-  credential_id integer [pk]
-  user_id integer [ref: - User.user_id]
+  id integer [pk]
+  user_id integer [ref: - User.id]
   username string
-  password string
+  hashes_password string
   role string
   is_enabled bool
   created_at date
   updated_at date
 }
 
-Table Rating {
-  rate_id integer [pk]
-  user_id integer [pk, ref: > User.user_id]
-  product_id integer [pk, ref: > Product.product_id]
+Table Review {
+  id integer [pk]
+  user_id integer [pk, ref: > User.id]
+  product_id integer [pk, ref: > Product.id]
   rating integer
-  review string
+  content string
   created_at date
   updated_at date
 }
 
 Table Category {
-  category_id integer [pk]
-  category_title string
+  id integer [pk]
+  title string
+  description string
   created_at date
   updated_at date
 }
 
 Table Product {
-  product_id integer [pk]
-  category_id integer [ref: < Category.category_id]
-  seller_id integer [ref: > User.user_id]
-  product_title string
+  id integer [pk]
+  category_id integer [ref: < Category.id]
+  seller_id integer [ref: > User.id]
+  title string
   image_url string
   sku string
-  price_unit double
+  price double
   quantity integer
   created_at date
   updated_at date
 }
 
 Table Discount {
-  discount_id integer [pk]
-  discount_type enum("percent", "fixed")
-  discount_description string
+  id integer [pk]
+  type enum("percent", "fixed")
+  description string
   value double
   start_date date
   end_date date
-  usage_limit integer
-  min_order_value double
-  product_id integer [ref: > Product.product_id]
+  usage_limits integer
+  min_order double
+  product_id integer [ref: > Product.id]
   promo_code string [unique]
   is_active boolean
 }
 
 Table Order {
-  order_id integer [pk]
-  cart_id integer [ref: > Cart.cart_id]
-  order_description string
-  order_fee double
+  id integer [pk]
+  cart_id integer [ref: > Cart.id]
+  description string
+  total_amount double
   created_at date
   updated_at date
 }
 
-Table Item {
-  product_id integer [pk, ref: > Product.product_id]
-  order_id integer [pk, ref: > Order.order_id]
+Table OrderItem {
+  id integer [pk]
+  product_id integer [pk, ref: > Product.id]
+  order_id integer [pk, ref: > Order.id]
   quantity integer
+  price double
   created_at date
   updated_at date
 }
 
 Table Cart {
-  cart_id integer [pk]
-  user_id integer [ref: - User.user_id]
+  id integer [pk]
+  user_id integer [ref: - User.id]
+  created_at date
+  updated_at date
+}
+
+Table CartItem {
+  id integer [pk]
+  product_id integer [pk, ref: > Product.id]
+  cart_id integer [pk, ref: > Cart.id]
+  quantity integer
+  price double
   created_at date
   updated_at date
 }
 
 Table Address {
   address_id integer [pk]
-  user_id integer [ref: > User.user_id]
+  user_id integer [ref: > User.id]
   street string
   city string
   postal_code string
@@ -98,10 +111,10 @@ Table Address {
 }
 
 Table Payment {
-  payment_id integer [pk]
-  order_id integer [ref: - Order.order_id]
-  is_paid bool
-  payment_status string
+  id integer [pk]
+  order_id integer [ref: - Order.id]
+  transaction_id integer // references the identifier for the transaction of the integrated payment gateway
+  status enum("pending", "completed", "failed")
   created_at date
   updated_at date
 }
