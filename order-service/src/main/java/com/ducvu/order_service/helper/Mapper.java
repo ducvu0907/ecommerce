@@ -1,45 +1,53 @@
 package com.ducvu.order_service.helper;
 
-import com.ducvu.order_service.dto.CartDto;
 import com.ducvu.order_service.dto.OrderDto;
-import com.ducvu.order_service.entity.Cart;
+import com.ducvu.order_service.dto.OrderItemDto;
 import com.ducvu.order_service.entity.Order;
-
-import java.util.stream.Collectors;
+import com.ducvu.order_service.entity.OrderItem;
 
 public class Mapper {
     public static OrderDto map(Order order) {
         return OrderDto.builder()
-                .orderId(order.getOrderId())
-                .orderDescription(order.getOrderDescription())
-                .orderFee(order.getOrderFee())
-                .cartDto(Mapper.map(order.getCart()))
+                .id(order.getId())
+                .userId(order.getUserId())
+                .description(order.getDescription())
+                .totalAmount(order.getTotalAmount())
+                .items(order.getItems()
+                        .stream().map(Mapper::map)
+                        .toList()
+                )
                 .build();
     }
 
     public static Order map(OrderDto orderDto) {
         return Order.builder()
-                .orderDescription(orderDto.getOrderDescription())
-                .orderFee(orderDto.getOrderFee())
-                .build();
-    }
-
-    public static CartDto map(Cart cart) {
-        return CartDto.builder()
-                .cartId(cart.getCartId())
-                .userId(cart.getUserId())
-                .orderDtos(
-                        cart.getOrders()
-                                .stream()
-                                .map(Mapper::map)
-                                .collect(Collectors.toSet())
+                .id(orderDto.getId())
+                .userId(orderDto.getUserId())
+                .description(orderDto.getDescription())
+                .totalAmount(orderDto.getTotalAmount())
+                .items(orderDto.getItems()
+                        .stream().map(Mapper::map)
+                        .toList()
                 )
                 .build();
     }
 
-    public static Cart map(CartDto cartDto) {
-        return Cart.builder()
-                .userId(cartDto.getUserId())
+    public static OrderItemDto map(OrderItem item) {
+        return OrderItemDto.builder()
+                .id(item.getId())
+                .productId(item.getProductId())
+                .quantity(item.getQuantity())
+                .price(item.getPrice())
                 .build();
     }
+
+    public static OrderItem map(OrderItemDto itemDto) {
+        return OrderItem.builder()
+                .id(itemDto.getId())
+                .productId(itemDto.getProductId())
+                .quantity(itemDto.getQuantity())
+                .price(itemDto.getPrice())
+                .build();
+    }
+
 }

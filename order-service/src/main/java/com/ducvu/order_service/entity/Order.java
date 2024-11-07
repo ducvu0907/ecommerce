@@ -3,26 +3,30 @@ package com.ducvu.order_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
-@Table(name = "order")
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"cart"})
+@Table(name = "orders")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true, exclude = {"items"})
 public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private Integer orderId;
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "order_description")
-    private String orderDescription;
+    @Column(name = "user_id")
+    private Integer userId;
 
-    @Column(name = "order_fee", nullable = false)
-    private Double orderFee;
+    @Column(name = "description")
+    private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @Column(name = "total_amount")
+    private Double totalAmount;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> items;
 }

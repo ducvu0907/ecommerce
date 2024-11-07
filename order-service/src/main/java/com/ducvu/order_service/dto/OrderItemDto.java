@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
-
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
-public class DtoCollectionResponse<T> {
-    private Collection<T> collection;
-
+public class OrderItemDto {
+    private Integer id;
+    private Integer productId;
+    private Integer quantity;
+    private Double price;
 }
