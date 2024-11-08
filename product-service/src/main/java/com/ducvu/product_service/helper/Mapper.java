@@ -22,23 +22,6 @@ public class Mapper {
                 .build();
     }
 
-    public static Category map(CategoryDto categoryDto) {
-        return Category.builder()
-                .title(categoryDto.getTitle())
-                .build();
-    }
-
-    public static Product map(ProductDto productDto) {
-        return Product.builder()
-                .sellerId(productDto.getSellerId())
-                .title(productDto.getTitle())
-                .imageUrl(productDto.getImageUrl())
-                .sku(productDto.getSku())
-                .price(productDto.getPrice())
-                .quantity(productDto.getQuantity())
-                .build();
-    }
-
     public static ProductDto map(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
