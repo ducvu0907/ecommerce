@@ -12,6 +12,8 @@ public class Mapper {
                 .userId(order.getUserId())
                 .description(order.getDescription())
                 .totalAmount(order.getTotalAmount())
+                .isPaid(order.getIsPaid())
+                .status(order.getStatus())
                 .itemDtos(
                         order.getItems()
                                 .stream().map(Mapper::map)

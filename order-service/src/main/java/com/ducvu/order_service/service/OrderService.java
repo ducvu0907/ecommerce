@@ -30,6 +30,10 @@ public class OrderService {
 
     }
 
+    public OrderDto updateOrder(Integer orderId, OrderDto orderDto) {
+
+    }
+
     public void deleteOrder(Integer orderId) {
 
     }

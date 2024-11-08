@@ -27,6 +27,12 @@ public class Order extends BaseEntity {
     @Column(name = "total_amount")
     private Double totalAmount;
 
+    @Column(name = "is_paid")
+    private Boolean isPaid;
+
+    @Column(name = "status")
+    private String status; // prepare, deliver, arrive
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> items;
 }
