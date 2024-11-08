@@ -1,18 +1,11 @@
 Table User {
   id integer [pk]
   full_name string
+  username string
+  hashed_password string
+  role enum("admin", "user", "seller")
   email string
   phone string
-  created_at date
-  updated_at date
-}
-
-Table Credential {
-  id integer [pk]
-  user_id integer [ref: - User.id]
-  username string
-  hashes_password string
-  role string
   is_enabled bool
   created_at date
   updated_at date
@@ -31,7 +24,6 @@ Table Review {
 Table Category {
   id integer [pk]
   title string
-  description string
   created_at date
   updated_at date
 }
@@ -65,7 +57,7 @@ Table Discount {
 
 Table Order {
   id integer [pk]
-  cart_id integer [ref: > Cart.id]
+  user_id integer [ref: > User.id]
   description string
   total_amount double
   created_at date
@@ -100,7 +92,7 @@ Table CartItem {
 }
 
 Table Address {
-  address_id integer [pk]
+  id integer [pk]
   user_id integer [ref: > User.id]
   street string
   city string
