@@ -4,7 +4,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: product_db
-      MYSQL_USER: mysql
+      MYSQL_USER: admin
       MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
@@ -16,7 +16,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: order_db
-      MYSQL_USER: mysql
+      MYSQL_USER: admin
       MYSQL_PASSWORD: root
     ports:
       - "3307:3306"
@@ -28,7 +28,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: cart_db
-      MYSQL_USER: mysql
+      MYSQL_USER: admin
       MYSQL_PASSWORD: root
     ports:
       - "3308:3306"
@@ -39,15 +39,50 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_DB: user_db
-      POSTGRES_USER: postgres
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: root
     ports:
       - "5432:5432"
     volumes:
       - user-data:/var/lib/postgresql/data
 
+  mongo-review:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: review_db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - review-data:/data/db
+
+  mongo-discount:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: discount_db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27018:27017"
+    volumes:
+      - discount-data:/data/db
+
+  mongo-payment:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: payment_db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27019:27017"
+    volumes:
+      - payment-data:/data/db
 volumes:
   product-data:
   order-data:
   cart-data:
   user-data:
+  review-data:
+  discount-data:
+  payment-data:
