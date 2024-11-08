@@ -5,12 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "item")
+@Table(name = "orderItems")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItem {
+@EqualsAndHashCode(callSuper = true, exclude = {"order"})
+public class OrderItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -18,9 +19,6 @@ public class OrderItem {
 
     @Column(name = "product_id")
     private Integer productId;
-
-    @Column(name = "order_id")
-    private Integer orderId;
 
     @Column(name = "quantity")
     private Integer quantity;

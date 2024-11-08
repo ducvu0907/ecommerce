@@ -30,7 +30,7 @@ public class OrderService {
 
     }
 
-    public boolean deleteOrder(Integer orderId) {
+    public void deleteOrder(Integer orderId) {
 
     }
 }

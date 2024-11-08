@@ -16,29 +16,33 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    @GetMapping("")
-    public ResponseEntity<List<OrderDto>> getOrdersOfUser(Integer userId) {
+    // user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderDto>> getOrdersOfUser(@PathVariable("userId") Integer userId) {
 
     }
 
+    // user
     @PostMapping("")
-    public ResponseEntity<OrderDto> createOrder(OrderDto orderDto) {
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
 
     }
 
+    // user
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto> getOrderOfUser(@PathVariable String orderId) {
+    public ResponseEntity<OrderDto> getOrderOfUser(@PathVariable("orderId") String orderId) {
 
     }
 
+    // user
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<OrderDto> deleteOrder(@PathVariable String orderId) {
+    public ResponseEntity<OrderDto> deleteOrder(@PathVariable("orderId") String orderId) {
 
     }
 
     // admin
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDto> updateOrder(@PathVariable String orderId, OrderDto orderDto) {
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable("orderId") String orderId, @RequestBody OrderDto orderDto) {
 
     }
 }
