@@ -1,28 +1,27 @@
 package com.ducvu.user_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.*;
-
-import java.util.Set;
+import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserDto {
-    private Integer userId;
+    private Integer id;
     private String fullName;
     private String email;
+    private String username;
+    private String role;
     private String phone;
 
     @JsonProperty("addresses")
-    @JsonInclude(value = Include.NON_NULL)
-    private Set<AddressDto> addressDtos;
-
-    @JsonProperty("credential")
-    @JsonInclude(value = Include.NON_NULL)
-    private CredentialDto credentialDto;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<AddressDto> addressDtos;
 }

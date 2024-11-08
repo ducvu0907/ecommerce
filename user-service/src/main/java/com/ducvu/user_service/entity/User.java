@@ -1,6 +1,5 @@
 package com.ducvu.user_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,14 +9,14 @@ import java.util.Set;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"addresses", "credential"})
+@EqualsAndHashCode(callSuper = true, exclude = {"addresses"})
 @Data
 @Builder
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "full_name")
     private String fullName;
@@ -25,13 +24,21 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "hashedPassword")
+    private String hashedPassword;
+
+    @Column(name = "role")
+    private String role; // admin, seller, user
+
     @Column(name = "phone")
     private String phone;
 
-    @JsonIgnore
+    @Column(name = "is_enabled")
+    private String isEnabled;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Address> addresses;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Credential credential;
 }

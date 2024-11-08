@@ -1,54 +1,66 @@
 package com.ducvu.user_service.controller;
 
-import com.ducvu.user_service.dto.DtoCollectionResponse;
+import com.ducvu.user_service.dto.AddressDto;
 import com.ducvu.user_service.dto.UserDto;
 import com.ducvu.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
-@Slf4j
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<DtoCollectionResponse<UserDto>> getUsers() {
-        log.info("User controller, fetch all users");
-        return ResponseEntity.ok(new DtoCollectionResponse<>(userService.getUsers()));
+    // public
+    @GetMapping("")
+    public ResponseEntity<List<UserDto>> getUsers() {
+
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable String userId) {
-        log.info("User controller, fetch user by id");
-        return ResponseEntity.ok(userService.getUserById(Integer.valueOf(userId)));
-    }
-
-    @PostMapping
+    // admin
+    @PostMapping("")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        log.info("User controller, create user");
-        return ResponseEntity.ok(userService.createUser(userDto));
+
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable String userId, @RequestBody UserDto userDto) {
-        log.info("User controller, update user");
-        return ResponseEntity.ok(userService.updateUser(Integer.valueOf(userId), userDto));
+    // public
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Integer userId) {
+
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        log.info("User controller, fetch user by username");
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+    // user
+    @GetMapping("/{userId}/addresses")
+    public ResponseEntity<UserDto> addAddress(@PathVariable Integer userId, @RequestBody AddressDto addressDto) {
+
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable String userId) {
-        log.info("User controller, delete user");
-        userService.deleteUserById(Integer.valueOf(userId));
-        return ResponseEntity.ok(true);
+    // user
+    @GetMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<UserDto> updateAddress(@PathVariable Integer userId, @PathVariable Integer addressId, @RequestBody AddressDto addressDto) {
+
     }
+
+    // user
+    @GetMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<UserDto> removeAddress(@PathVariable Integer userId, @PathVariable Integer addressId) {
+
+    }
+
+    // user
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Integer userId, @RequestBody UserDto userDto) {
+
+    }
+
+    // admin
+    @GetMapping("/{userId}")
+    public ResponseEntity<Boolean> deleteUser(@PathVariable Integer userId) {
+
+    }
+
 }

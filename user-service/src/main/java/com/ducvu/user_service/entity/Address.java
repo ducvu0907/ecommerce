@@ -1,6 +1,5 @@
 package com.ducvu.user_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,8 +13,8 @@ import lombok.*;
 public class Address extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
-    private Integer addressId;
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "country")
     private String country;
@@ -29,8 +28,7 @@ public class Address extends BaseEntity {
     @Column(name = "postal_code")
     private String postalCode;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }
