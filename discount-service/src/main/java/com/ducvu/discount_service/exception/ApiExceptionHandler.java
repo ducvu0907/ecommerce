@@ -1,6 +1,5 @@
 package com.ducvu.discount_service.exception;
 
-import com.ducvu.discount_service.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
