@@ -108,7 +108,7 @@ Table Payment {
   id integer [pk]
   order_id integer [ref: - Order.id]
   user_id integer [ref: > User.id]
-  transaction_id integer // references the identifier for the transaction of the integrated payment gateway
+  transaction_id integer
   created_at date
   updated_at date
 }
