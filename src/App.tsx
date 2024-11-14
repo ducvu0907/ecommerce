@@ -1,8 +1,8 @@
-import { Box } from '@chakra-ui/react';
-
 const App = () => {
   return (
-    <Box>App</Box>
+    <>
+      <div className="">App</div>
+    </>
   );
 }
 
