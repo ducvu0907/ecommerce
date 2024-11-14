@@ -13,12 +13,11 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+/*    private final UserService userService;
 
     // public
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getUsers() {
-
     }
 
     // admin
@@ -61,6 +60,9 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable Integer userId) {
 
+    }*/
+    @GetMapping("")
+    public String test() {
+        return "hello world";
     }
-
 }

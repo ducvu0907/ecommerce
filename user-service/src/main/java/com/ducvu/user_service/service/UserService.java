@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-    private final UserRepository userRepository;
+/*    private final UserRepository userRepository;
     private final AddressRepository addressRepository;
 
     public UserDto createUser(UserDto userDto) {
@@ -49,5 +49,5 @@ public class UserService {
 
     public void deleteUser(Integer userId) {
 
-    }
+    }*/
 }
