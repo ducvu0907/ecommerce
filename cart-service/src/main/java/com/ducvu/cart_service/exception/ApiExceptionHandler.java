@@ -1,6 +1,6 @@
 package com.ducvu.cart_service.exception;
 
-import com.ducvu.order_service.exception.ErrorMessage;
+import com.ducvu.cart_service.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -15,12 +15,12 @@
         <module name="product-service" />
         <module name="user-service" />
         <module name="order-service" />
-        <module name="service-registry" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cloud-config" target="21" />
       <module name="proxy-client" target="21" />
+      <module name="service-registry" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
