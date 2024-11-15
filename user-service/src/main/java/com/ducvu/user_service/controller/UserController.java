@@ -1,68 +1,50 @@
 package com.ducvu.user_service.controller;
 
-import com.ducvu.user_service.dto.AddressDto;
-import com.ducvu.user_service.dto.UserDto;
+import com.ducvu.user_service.dto.request.AuthRequest;
+import com.ducvu.user_service.dto.request.UserCreateRequest;
+import com.ducvu.user_service.dto.request.UserUpdateRequest;
+import com.ducvu.user_service.dto.response.ApiResponse;
+import com.ducvu.user_service.dto.response.AuthResponse;
+import com.ducvu.user_service.dto.response.UserResponse;
 import com.ducvu.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-/*    private final UserService userService;
+    private UserService userService;
 
-    // public
-    @GetMapping("")
-    public ResponseEntity<List<UserDto>> getUsers() {
+    @PostMapping
+    ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request) {
+        var res = userService.createUser(request);
+        return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
-    // admin
-    @PostMapping("")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-
+    @GetMapping
+    ApiResponse<List<UserResponse>> getUsers(@RequestBody AuthRequest request) {
+        var res = userService.getUsers(request);
+        return ApiResponse.<List<UserResponse>>builder().result(res).build();
     }
 
-    // public
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Integer userId) {
-
+    ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
+        var res = userService.getUser(userId);
+        return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
-    // user
-    @GetMapping("/{userId}/addresses")
-    public ResponseEntity<UserDto> addAddress(@PathVariable Integer userId, @RequestBody AddressDto addressDto) {
-
+    @DeleteMapping("/{userId}")
+    ApiResponse<String> deleteUser(@PathVariable String userId, @RequestBody AuthRequest request) {
+        userService.deleteUser(userId, request);
+        return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
-    // user
-    @GetMapping("/{userId}/addresses/{addressId}")
-    public ResponseEntity<UserDto> updateAddress(@PathVariable Integer userId, @PathVariable Integer addressId, @RequestBody AddressDto addressDto) {
-
-    }
-
-    // user
-    @GetMapping("/{userId}/addresses/{addressId}")
-    public ResponseEntity<UserDto> removeAddress(@PathVariable Integer userId, @PathVariable Integer addressId) {
-
-    }
-
-    // user
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Integer userId, @RequestBody UserDto userDto) {
-
-    }
-
-    // admin
-    @GetMapping("/{userId}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable Integer userId) {
-
-    }*/
-    @GetMapping("")
-    public String test() {
-        return "hello world";
+    @PutMapping("/{userId}")
+    ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
+        var res = userService.updateUser(userId, request);
+        return ApiResponse.<UserResponse>builder().result(res).build();
     }
 }

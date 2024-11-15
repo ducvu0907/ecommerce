@@ -6,39 +6,28 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"addresses"})
 @Data
 @Builder
-public class User extends BaseEntity {
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @Column(name = "full_name")
-    private String fullName;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "hashedPassword")
-    private String hashedPassword;
+    private String firstName;
+    private String lastName;
 
-    @Column(name = "role")
+    private String password;
     private String role; // admin, seller, user
-
-    @Column(name = "phone")
     private String phone;
 
-    @Column(name = "is_enabled")
-    private String isEnabled;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Address> addresses;
+
+    @Column(name = "token", unique = true)
+    private String token;
 }
