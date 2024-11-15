@@ -1,8 +1,6 @@
 const App = () => {
   return (
-    <>
-      <div className="">App</div>
-    </>
+    <div className="italic font-bold">App</div>
   );
 }
 
