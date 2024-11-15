@@ -6,6 +6,7 @@ import com.ducvu.user_service.dto.response.AddressResponse;
 import com.ducvu.user_service.dto.response.ApiResponse;
 import com.ducvu.user_service.entity.Address;
 import com.ducvu.user_service.service.AddressService;
+import com.ducvu.user_service.service.AuthService;
 import com.ducvu.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/addresses")
 @RequiredArgsConstructor
 public class AddressController {
-    private AddressService addressService;
+    private final AddressService addressService;
 
     @PostMapping("/")
-    public ApiResponse<AddressResponse> createAddress(AddressCreateRequest request) {
+    public ApiResponse<AddressResponse> createAddress(@RequestBody AddressCreateRequest request) {
         var res = addressService.createAddress(request);
         return ApiResponse.<AddressResponse>builder().result(res).build();
     }
 
-    @PostMapping("/{addressId}")
+    @DeleteMapping("/{addressId}")
     public ApiResponse<String> deleteAddress(@PathVariable("addressId") String addressId, @RequestBody AuthRequest request) {
-        addressService.deleteAddress(addressId, request);
+        addressService.deleteAddress(Integer.parseInt(addressId), request);
         return ApiResponse.<String>builder().result("Address has been deleted").build();
     }
 }

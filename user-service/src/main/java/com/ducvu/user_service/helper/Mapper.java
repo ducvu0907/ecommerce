@@ -4,6 +4,7 @@ import com.ducvu.user_service.dto.request.AddressCreateRequest;
 import com.ducvu.user_service.dto.request.UserCreateRequest;
 import com.ducvu.user_service.dto.response.AddressResponse;
 import com.ducvu.user_service.dto.response.AuthResponse;
+import com.ducvu.user_service.dto.response.TokenResponse;
 import com.ducvu.user_service.dto.response.UserResponse;
 import com.ducvu.user_service.entity.Address;
 import com.ducvu.user_service.entity.User;
@@ -37,7 +38,6 @@ public class Mapper {
                                 .map(this::toAddressResponse)
                                 .collect(Collectors.toSet())
                 )
-                .token(user.getToken())
                 .build();
     }
 
@@ -63,6 +63,12 @@ public class Mapper {
         return AuthResponse.builder()
                 .role(user.getRole())
                 .userId(user.getId())
+                .build();
+    }
+
+    public TokenResponse toTokenResponse(User user) {
+        return TokenResponse.builder()
+                .token(user.getToken())
                 .build();
     }
 }

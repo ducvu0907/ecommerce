@@ -5,17 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResponse {
-    Integer id;
-    String username;
-    String firstName;
-    String lastName;
-    String phone;
-    Set<AddressResponse> addresses;
+public class TokenResponse {
+    String token;
 }

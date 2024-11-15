@@ -6,49 +6,49 @@ import com.ducvu.user_service.dto.request.UserUpdateRequest;
 import com.ducvu.user_service.dto.response.UserResponse;
 import com.ducvu.user_service.entity.User;
 import com.ducvu.user_service.helper.Mapper;
-import com.ducvu.user_service.repository.AddressRepository;
+import com.ducvu.user_service.helper.TokenUtil;
 import com.ducvu.user_service.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-    private UserRepository userRepository;
-    private AddressRepository addressRepository;
-    private Mapper mapper;
+    private final UserRepository userRepository;
+    private final Mapper mapper;
+    private final TokenUtil tokenUtil;
 
     public UserResponse createUser(UserCreateRequest request) {
+        userRepository.findByUsername(request.getUsername())
+                .ifPresent(user -> {throw new RuntimeException("User already exists");});
         User user = mapper.toUser(request);
-        try {
-            userRepository.save(user);
-        } catch(Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        var token = tokenUtil.generateToken();
+        user.setToken(token);
+        user.setAddresses(new HashSet<>());
+        userRepository.save(user);
         return mapper.toUserResponse(user);
     }
 
-    public UserResponse getUser(String userId) {
+    public UserResponse getUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return mapper.toUserResponse(user);
     }
 
-    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+    public UserResponse updateUser(Integer userId, UserUpdateRequest request) {
         if (request.getToken() == null) {
             throw new RuntimeException("No token found");
         }
         User user = userRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new RuntimeException("Token invalid"));
 
-        if (user.getId() != userId | user.getRole() != "ADMIN") {
+        if (!user.getId().equals(userId) | !user.getRole().equals("admin")) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -74,10 +74,10 @@ public class UserService {
     }
 
     // admin
-    public void deleteUser(String userId, AuthRequest request) {
+    public void deleteUser(Integer userId, AuthRequest request) {
         User user = userRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new RuntimeException("Token invalid"));
-        if (user.getRole() != "ADMIN") {
+        if (!user.getRole().equals("admin")) {
             throw new RuntimeException("Unauthorized");
         }
         try {
@@ -91,7 +91,7 @@ public class UserService {
     public List<UserResponse> getUsers(AuthRequest request) {
         User user = userRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new RuntimeException("Token invalid"));
-        if (user.getRole() != "ADMIN") {
+        if (!user.getRole().equals("admin")) {
             throw new RuntimeException("Unauthorized");
         }
         return userRepository.findAll()

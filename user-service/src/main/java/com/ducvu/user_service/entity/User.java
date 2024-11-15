@@ -4,16 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Set;
+import java.util.UUID;
 
+@Table(name = "users")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
+@EqualsAndHashCode(exclude = "addresses")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(name = "username", unique = true)
     private String username;
