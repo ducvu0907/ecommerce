@@ -1,37 +1,60 @@
 package com.ducvu.product_service.helper;
 
-import com.ducvu.product_service.dto.CategoryDto;
-import com.ducvu.product_service.dto.ProductDto;
+import com.ducvu.product_service.dto.request.CategoryCreateRequest;
+import com.ducvu.product_service.dto.request.ProductCreateRequest;
+import com.ducvu.product_service.dto.response.CategoryResponse;
+import com.ducvu.product_service.dto.response.ProductResponse;
 import com.ducvu.product_service.entity.Category;
 import com.ducvu.product_service.entity.Product;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
-public class Mapper {
 
-    public static CategoryDto map(Category category) {
-        return CategoryDto.builder()
-                .id(category.getId())
-                .title(category.getTitle())
-                .productDtos(
-                        category.getProducts()
-                                .stream()
-                                .map(Mapper::map)
-                                .collect(Collectors.toSet())
-                )
+@Component
+public class Mapper {
+    public Product toProduct(ProductCreateRequest request) {
+        return Product.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .imageUrl(request.getImageUrl())
+                .sku(request.getSku())
+                .price(request.getPrice())
+                .quantity(request.getQuantity())
                 .build();
     }
 
-    public static ProductDto map(Product product) {
-        return ProductDto.builder()
+    public ProductResponse toProductResponse(Product product) {
+        return ProductResponse.builder()
                 .id(product.getId())
                 .sellerId(product.getSellerId())
+                .sku(product.getSku())
                 .title(product.getTitle())
                 .imageUrl(product.getImageUrl())
-                .sku(product.getSku())
+                .description(product.getDescription())
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
                 .build();
     }
+
+    public Category toCategory(CategoryCreateRequest request) {
+        return Category.builder()
+                .title(request.getTitle())
+                .build();
+    }
+
+    public CategoryResponse toCategoryResponse(Category category) {
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .title(category.getTitle())
+                .products(
+                category.getProducts()
+                        .stream()
+                        .map(this::toProductResponse)
+                        .collect(Collectors.toSet())
+                )
+                .build();
+    }
+
 
 }

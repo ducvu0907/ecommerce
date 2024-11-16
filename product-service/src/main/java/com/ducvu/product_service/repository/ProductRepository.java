@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-    @Query(value = "select * from product where category_id = :categoryId", nativeQuery = true)
-    List<Product> findProductsByCategoryId(Integer categoryId);
+    List<Product> findBySellerId(Integer sellerId);
+    Optional<Product> findBySku(String sku);
 }

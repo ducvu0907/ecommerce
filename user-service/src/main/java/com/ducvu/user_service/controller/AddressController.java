@@ -24,8 +24,8 @@ public class AddressController {
     }
 
     @DeleteMapping("/{addressId}")
-    public ApiResponse<String> deleteAddress(@PathVariable("addressId") String addressId, @RequestBody AuthRequest request) {
-        addressService.deleteAddress(Integer.parseInt(addressId), request);
+    public ApiResponse<String> deleteAddress(@PathVariable("addressId") Integer addressId, @RequestBody AuthRequest request) {
+        addressService.deleteAddress(addressId, request);
         return ApiResponse.<String>builder().result("Address has been deleted").build();
     }
 }

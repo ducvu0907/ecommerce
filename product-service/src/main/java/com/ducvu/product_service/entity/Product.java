@@ -9,32 +9,21 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"category"})
-public class Product extends BaseEntity {
+@EqualsAndHashCode(exclude = {"category"})
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "seller_id")
     private Integer sellerId;
-
-    @Column(name = "title")
     private String title;
-
-    @Column(name = "image_url")
+    private String description;
     private String imageUrl;
-
-    @Column(name = "sku")
     private String sku;
-
-    @Column(name = "price")
     private Double price;
-
-    @Column(name = "quantity")
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 

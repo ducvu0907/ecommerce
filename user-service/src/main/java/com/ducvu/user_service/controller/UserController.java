@@ -31,20 +31,20 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
-        var res = userService.getUser(Integer.parseInt(userId));
+    ApiResponse<UserResponse> getUser(@PathVariable("userId") Integer userId) {
+        var res = userService.getUser(userId);
         return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
     @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable String userId, @RequestBody AuthRequest request) {
-        userService.deleteUser(Integer.parseInt(userId), request);
+    ApiResponse<String> deleteUser(@PathVariable Integer userId, @RequestBody AuthRequest request) {
+        userService.deleteUser(userId, request);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
     @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
-        var res = userService.updateUser(Integer.parseInt(userId), request);
+    ApiResponse<UserResponse> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest request) {
+        var res = userService.updateUser(userId, request);
         return ApiResponse.<UserResponse>builder().result(res).build();
     }
 }

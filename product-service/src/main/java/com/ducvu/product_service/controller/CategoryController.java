@@ -1,16 +1,17 @@
 package com.ducvu.product_service.controller;
 
-import com.ducvu.product_service.dto.CategoryDto;
+import com.ducvu.product_service.dto.request.CategoryCreateRequest;
+import com.ducvu.product_service.dto.response.ApiResponse;
+import com.ducvu.product_service.dto.response.CategoryResponse;
 import com.ducvu.product_service.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryController {
@@ -18,32 +19,22 @@ public class CategoryController {
 
     // public
     @GetMapping("")
-    public ResponseEntity<List<CategoryDto>> getCategories() {
-
+    public ApiResponse<List<CategoryResponse>> getCategories() {
+        var res = categoryService.getCategories();
+        return ApiResponse.<List<CategoryResponse>>builder().result(res).build();
     }
 
     // public
-    @GetMapping("/{category_id}")
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable("categoryId") String categoryId) {
-
+    @GetMapping("/{categoryId}")
+    public ApiResponse<CategoryResponse> getCategory(@PathVariable("categoryId") Integer categoryId) {
+        var res = categoryService.getCategory(categoryId);
+        return ApiResponse.<CategoryResponse>builder().result(res).build();
     }
 
     // admin
     @PostMapping("")
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
-
+    public ApiResponse<CategoryResponse> createCategory(@RequestBody CategoryCreateRequest request) {
+        var res = categoryService.createCategory(request);
+        return ApiResponse.<CategoryResponse>builder().result(res).build();
     }
-
-    // admin
-    @PutMapping("{categoryId}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable("categoryId") String categoryId, @RequestBody CategoryDto categoryDto) {
-
-    }
-
-    // admin
-    @DeleteMapping("{categoryId}")
-    public ResponseEntity<Boolean> deleteCategory(@PathVariable("categoryId") String categoryId) {
-
-    }
-
 }
