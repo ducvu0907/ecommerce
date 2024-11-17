@@ -1,29 +1,36 @@
 package com.ducvu.cart_service.helper;
 
-import com.ducvu.cart_service.dto.CartDto;
-import com.ducvu.cart_service.dto.CartItemDto;
+import com.ducvu.cart_service.dto.response.CartItemResponse;
+import com.ducvu.cart_service.dto.response.CartResponse;
 import com.ducvu.cart_service.entity.Cart;
 import com.ducvu.cart_service.entity.CartItem;
+import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
+@Component
 public class Mapper {
-    public static CartDto map(Cart cart) {
-        return CartDto.builder()
+    public CartResponse toCartResponse(Cart cart) {
+        return CartResponse.builder()
                 .id(cart.getId())
                 .userId(cart.getUserId())
-                .itemDtos(
+                .items(
                         cart.getItems()
-                                .stream().map(Mapper::map)
-                                .toList()
+                                .stream()
+                                .map(this::toCartItemResponse)
+                                .collect(Collectors.toSet())
                 )
                 .build();
     }
 
-    public static CartItemDto map(CartItem item) {
-        return CartItemDto.builder()
+
+    public CartItemResponse toCartItemResponse(CartItem item) {
+        return CartItemResponse.builder()
                 .id(item.getId())
                 .productId(item.getProductId())
                 .quantity(item.getQuantity())
                 .price(item.getPrice())
+                .cartId(item.getCart().getId())
                 .build();
     }
 

@@ -4,22 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "carts")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"items"})
-public class Cart extends BaseEntity {
+@EqualsAndHashCode(exclude = {"items"})
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     private Integer userId;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CartItem> items;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private Set<CartItem> items;
 }
