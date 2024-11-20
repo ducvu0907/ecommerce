@@ -41,4 +41,10 @@ public class CartController {
         cartService.deleteItem(itemId, request);
         return ApiResponse.<String>builder().result("Item has been deleted").build();
     }
+
+    @DeleteMapping("/items")
+    public ApiResponse<String> deleteItems(@RequestBody AuthRequest request) {
+        cartService.deleteItems(request);
+        return ApiResponse.<String>builder().result("Cart has been emptied").build();
+    }
 }

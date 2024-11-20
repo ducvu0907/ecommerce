@@ -138,4 +138,24 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    @Transactional
+    public void deleteItems(AuthRequest request) {
+        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
+        var authResponse = userClient.authenticate(authRequest);
+        if (authResponse == null) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
+                .orElseThrow(() ->  new RuntimeException("Cart not found"));
+
+        cart.getItems().forEach(item -> {
+            cartItemRepository.delete(item);
+        });
+
+        cart.getItems().clear();
+        cartRepository.save(cart);
+    }
+
+
 }

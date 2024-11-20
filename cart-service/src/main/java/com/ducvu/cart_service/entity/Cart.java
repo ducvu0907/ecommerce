@@ -3,7 +3,6 @@ package com.ducvu.cart_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
