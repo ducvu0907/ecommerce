@@ -1,4 +1,4 @@
-package com.ducvu.user_service.dto.response;
+package com.ducvu.order_service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

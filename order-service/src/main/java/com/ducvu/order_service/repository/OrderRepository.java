@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    @Query(value = "select * from order where user_id = :userId", nativeQuery = true)
-    List<Order> findOrdersByUserId(Integer userId);
+    List<Order> findByUserId(Integer userId);
 }

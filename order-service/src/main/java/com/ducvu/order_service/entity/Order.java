@@ -3,7 +3,7 @@ package com.ducvu.order_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -11,28 +11,17 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"items"})
-public class Order extends BaseEntity {
+@EqualsAndHashCode(exclude = {"items"})
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "user_id")
     private Integer userId;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "total_amount")
     private Double totalAmount;
-
-    @Column(name = "is_paid")
-    private Boolean isPaid;
-
-    @Column(name = "status")
-    private String status; // prepare, deliver, arrive
+    private String status; // pending, delivering, arrived
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OrderItem> items;
+    private Set<OrderItem> items;
 }

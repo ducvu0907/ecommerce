@@ -1,48 +1,43 @@
 package com.ducvu.order_service.controller;
 
-import com.ducvu.order_service.dto.OrderDto;
+import com.ducvu.order_service.dto.request.AuthRequest;
+import com.ducvu.order_service.dto.request.CreateOrderRequest;
+import com.ducvu.order_service.dto.response.ApiResponse;
+import com.ducvu.order_service.dto.response.OrderResponse;
 import com.ducvu.order_service.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
-@Slf4j
 public class OrderController {
     private final OrderService orderService;
 
-    // user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<OrderDto>> getOrdersOfUser(@PathVariable("userId") Integer userId) {
-
-    }
-
-    // user
     @PostMapping("")
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
-
+    public ApiResponse<List<OrderResponse>> getMyOrders(@RequestBody AuthRequest request) {
+        var res = orderService.getMyOrders(request);
+        return ApiResponse.<List<OrderResponse>>builder().result(res).build();
     }
 
-    // user
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto> getOrderOfUser(@PathVariable("orderId") String orderId) {
-
+    @PostMapping("/{orderId}")
+    public ApiResponse<OrderResponse> getOrder(@PathVariable Integer orderId, @RequestBody AuthRequest request) {
+        var res = orderService.getOrder(orderId, request);
+        return ApiResponse.<OrderResponse>builder().result(res).build();
     }
 
-    // user
+    @PostMapping("/create")
+    public ApiResponse<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
+        var res = orderService.createOrder(request);
+        return ApiResponse.<OrderResponse>builder().result(res).build();
+    }
+
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<OrderDto> deleteOrder(@PathVariable("orderId") String orderId) {
-
+    public ApiResponse<String> cancelOrder(@PathVariable Integer orderId, @RequestBody AuthRequest request) {
+        orderService.cancelOrder(orderId, request);
+        return ApiResponse.<String>builder().result("Order has been canceled").build();
     }
 
-    // admin
-    @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDto> updateOrder(@PathVariable("orderId") String orderId, @RequestBody OrderDto orderDto) {
-
-    }
 }
