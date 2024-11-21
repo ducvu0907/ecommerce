@@ -18,6 +18,7 @@ public class Order {
     private Integer id;
 
     private Integer userId;
+    private String discountId; // nullable, only one discount is applicable
     private String description;
     private Double totalAmount;
     private String status; // pending, delivering, arrived

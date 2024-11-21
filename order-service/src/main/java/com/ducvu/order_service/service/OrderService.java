@@ -1,6 +1,7 @@
 package com.ducvu.order_service.service;
 
 import com.ducvu.order_service.config.CartClient;
+import com.ducvu.order_service.config.DiscountClient;
 import com.ducvu.order_service.config.UserClient;
 import com.ducvu.order_service.dto.request.AuthRequest;
 import com.ducvu.order_service.dto.request.CreateOrderRequest;
@@ -30,6 +31,7 @@ public class OrderService {
     private final Mapper mapper;
     private final UserClient userClient;
     private final CartClient cartClient;
+    private final DiscountClient discountClient;
 
     public List<OrderResponse> getMyOrders(AuthRequest request) {
         var authResponse = userClient.authenticate(request);
@@ -87,6 +89,20 @@ public class OrderService {
         }
 
         order.setTotalAmount(totalAmount);
+
+        if (request.getDiscountId() != null) {
+            var discountResponse = discountClient.getDiscount(request.getDiscountId());
+            if (discountResponse == null) {
+                throw new RuntimeException("Discount invalid");
+            }
+            order.setDiscountId(request.getDiscountId());
+            if (discountResponse.getResult().getAmount() != null) {
+                order.setTotalAmount(order.getTotalAmount() - discountResponse.getResult().getAmount());
+            } else if (discountResponse.getResult().getPercent() != null) {
+                order.setTotalAmount(order.getTotalAmount() * (1 - discountResponse.getResult().getPercent() / 100));
+            }
+        }
+
         order.setStatus("pending"); // default status
         orderRepository.save(order);
 

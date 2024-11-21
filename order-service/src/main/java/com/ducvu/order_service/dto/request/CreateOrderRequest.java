@@ -15,4 +15,5 @@ import java.util.List;
 public class CreateOrderRequest {
     String token; // use token to get user cart and then
     String description;
+    String discountId;
 }
