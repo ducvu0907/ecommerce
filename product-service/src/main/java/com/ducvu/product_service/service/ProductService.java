@@ -59,7 +59,11 @@ public class ProductService {
         // check user role
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null || !authResponse.getResult().getRole().equals("seller")) {
+        if (authResponse == null) {
+            throw new RuntimeException("Token invalid");
+        }
+
+        if (!authResponse.getResult().getRole().equals("seller")) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -79,7 +83,11 @@ public class ProductService {
         // check user role
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null || !authResponse.getResult().getRole().equals("seller")) {
+        if (authResponse == null) {
+            throw new RuntimeException("Token invalid");
+        }
+
+        if (!authResponse.getResult().getRole().equals("seller")) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -116,7 +124,11 @@ public class ProductService {
         // check user role
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null || !authResponse.getResult().getUserId().equals(product.getSellerId()) || !authResponse.getResult().getRole().equals("seller")) {
+        if (authResponse == null) {
+            throw new RuntimeException("Token invalid");
+        }
+
+        if (!authResponse.getResult().getUserId().equals(product.getSellerId()) || !authResponse.getResult().getRole().equals("seller")) {
             throw new RuntimeException("Unauthorized");
         }
 

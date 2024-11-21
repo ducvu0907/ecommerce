@@ -31,7 +31,7 @@ public class CartService {
     public CartResponse getMyCart(AuthRequest request) {
         var authResponse = userClient.authenticate(request);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
         Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
                 .orElseGet(() -> {
@@ -49,7 +49,7 @@ public class CartService {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
         Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
                 .orElseGet(() -> {
@@ -88,7 +88,7 @@ public class CartService {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
 
         Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
@@ -123,7 +123,7 @@ public class CartService {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
 
         Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
@@ -143,7 +143,7 @@ public class CartService {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
 
         Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())

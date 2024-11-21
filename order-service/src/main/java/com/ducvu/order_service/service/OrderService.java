@@ -34,7 +34,7 @@ public class OrderService {
     public List<OrderResponse> getMyOrders(AuthRequest request) {
         var authResponse = userClient.authenticate(request);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
         List<Order> orders = orderRepository.findByUserId(authResponse.getResult().getUserId());
         return orders.stream()
@@ -45,7 +45,7 @@ public class OrderService {
     public OrderResponse getOrder(Integer orderId, AuthRequest request) {
         var authResponse = userClient.authenticate(request);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -61,7 +61,7 @@ public class OrderService {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
 
         var cartResponse = cartClient.getMyCart(authRequest);
@@ -99,7 +99,7 @@ public class OrderService {
     public void cancelOrder(Integer orderId, AuthRequest request) {
         var authResponse = userClient.authenticate(request);
         if (authResponse == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Token invalid");
         }
 
         Order order = orderRepository.findById(orderId)
