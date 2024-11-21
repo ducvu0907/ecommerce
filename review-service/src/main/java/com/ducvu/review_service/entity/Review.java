@@ -1,21 +1,29 @@
 package com.ducvu.review_service.entity;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-// TODO: change other ids to string
+import java.time.LocalDate;
+
 @Document(value = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Review extends BaseEntity {
+public class Review {
     @Id
     private String id;
     private Integer userId;
+
+    @Indexed
     private Integer productId;
-    private Integer rating; // {1-5}
+
+    private Integer rating; // 1-5
     private String content;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
 }
