@@ -1,21 +1,21 @@
 package com.ducvu.discount_service.helper;
 
-import com.ducvu.discount_service.dto.DiscountDto;
+import com.ducvu.discount_service.dto.response.DiscountResponse;
 import com.ducvu.discount_service.entity.Discount;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Mapper {
-    public static DiscountDto map(Discount discount) {
-        return DiscountDto.builder()
+    public DiscountResponse toDiscountResponse(Discount discount) {
+        return DiscountResponse.builder()
                 .id(discount.getId())
-                .type(discount.getType())
                 .description(discount.getDescription())
+                .amount(discount.getAmount())
+                .percent(discount.getPercent())
                 .startDate(discount.getStartDate())
                 .endDate(discount.getEndDate())
-                .usageLimit(discount.getUsageLimit())
-                .minOrder(discount.getMinOrder())
-                .promoCode(discount.getPromoCode())
-                .productId(discount.getProductId())
                 .isActive(discount.getIsActive())
                 .build();
     }
+
 }

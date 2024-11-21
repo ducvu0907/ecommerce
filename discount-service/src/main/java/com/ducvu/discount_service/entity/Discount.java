@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(value = "discounts")
@@ -11,18 +12,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Discount extends BaseEntity {
+public class Discount {
     @Id
     private String id;
-    private String type;
+
     private String description;
-    private Double value;
+    private Double amount;
+    private Double percent;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Integer usageLimit;
-    private Double minOrder;
-    private Integer productId;
-    private String promoCode;
     private Boolean isActive;
 }
