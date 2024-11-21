@@ -3,6 +3,7 @@ package com.ducvu.order_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -25,4 +26,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OrderItem> items;
+
+    private LocalDateTime createdAt;
 }

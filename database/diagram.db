@@ -1,14 +1,12 @@
 Table User {
   id integer [pk]
-  full_name string
+  first_name string
+  last_name string
   username string
-  hashed_password string
+  password string
   role enum("admin", "user", "seller")
-  email string
   phone string
   is_enabled bool
-  created_at date
-  updated_at date
 }
 
 Table Review {
@@ -24,46 +22,39 @@ Table Review {
 Table Category {
   id integer [pk]
   title string
-  created_at date
-  updated_at date
 }
 
 Table Product {
   id integer [pk]
   category_id integer [ref: < Category.id]
+  description string
   seller_id integer [ref: > User.id]
   title string
   image_url string
   sku string
   price double
   quantity integer
-  created_at date
-  updated_at date
 }
 
 Table Discount {
   id integer [pk]
-  type enum("percent", "fixed")
+  amount double
+  percent double
   description string
-  value double
   start_date date
   end_date date
-  usage_limit integer
-  min_order double
   product_id integer [ref: > Product.id]
-  promo_code string [unique]
   is_active boolean
 }
 
 Table Order {
   id integer [pk]
+  discount_id integer [ref: < Discount.id]
   user_id integer [ref: > User.id]
   description string
   total_amount double
-  is_paid boolean
-  status enum(""prepare", "deliver", "arrive")
+  status enum("pending", "delivering", "arrived")
   created_at date
-  updated_at date
 }
 
 Table OrderItem {
@@ -72,15 +63,11 @@ Table OrderItem {
   order_id integer [pk, ref: > Order.id]
   quantity integer
   price double
-  created_at date
-  updated_at date
 }
 
 Table Cart {
   id integer [pk]
   user_id integer [ref: - User.id]
-  created_at date
-  updated_at date
 }
 
 Table CartItem {
@@ -89,8 +76,6 @@ Table CartItem {
   cart_id integer [pk, ref: > Cart.id]
   quantity integer
   price double
-  created_at date
-  updated_at date
 }
 
 Table Address {
@@ -98,10 +83,7 @@ Table Address {
   user_id integer [ref: > User.id]
   street string
   city string
-  postal_code string
   country string
-  created_at date
-  updated_at date
 }
 
 Table Payment {
