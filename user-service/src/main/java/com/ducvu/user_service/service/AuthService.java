@@ -8,6 +8,7 @@ import com.ducvu.user_service.dto.response.TokenResponse;
 import com.ducvu.user_service.dto.response.UserResponse;
 import com.ducvu.user_service.entity.User;
 import com.ducvu.user_service.helper.Mapper;
+import com.ducvu.user_service.helper.TokenUtil;
 import com.ducvu.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final UserRepository userRepository;
     private final Mapper mapper;
+    private final TokenUtil tokenUtil;
 
     public AuthResponse authenticate(AuthRequest request) {
         User user = userRepository.findByToken(request.getToken())
@@ -35,6 +37,12 @@ public class AuthService {
             throw new RuntimeException("Password incorrect");
         }
 
+        // reset token every login
+        String newToken = tokenUtil.generateToken();
+        user.setToken(newToken);
+        userRepository.save(user);
+
         return mapper.toTokenResponse(user);
     }
+
 }
