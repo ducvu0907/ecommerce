@@ -1,6 +1,10 @@
 package com.ducvu.payment_service.controller;
 
-import com.ducvu.payment_service.dto.PaymentDto;
+import com.ducvu.payment_service.dto.request.AuthRequest;
+import com.ducvu.payment_service.dto.request.CreatePaymentRequest;
+import com.ducvu.payment_service.dto.request.PayOrderRequest;
+import com.ducvu.payment_service.dto.response.ApiResponse;
+import com.ducvu.payment_service.dto.response.PaymentResponse;
 import com.ducvu.payment_service.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,27 +13,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
 
-    // user
     @PostMapping("")
-    public ResponseEntity<PaymentDto> createPayment(@RequestBody PaymentDto paymentDto) {
-
+    public ApiResponse<List<PaymentResponse>> getMyPayments(@RequestBody AuthRequest request) {
+        var res = paymentService.getMyPayments(request);
+        return ApiResponse.<List<PaymentResponse>>builder().result(res).build();
     }
 
-    // user
-    @GetMapping("/{paymentId}")
-    public ResponseEntity<PaymentDto> getPaymentById(@PathVariable String paymentId) {
-
+    @PostMapping("/order/{orderId}")
+    public ApiResponse<PaymentResponse> getPayment(@PathVariable Integer orderId, @RequestBody AuthRequest request) {
+        var res = paymentService.getPaymentByOrderId(orderId, request);
+        return ApiResponse.<PaymentResponse>builder().result(res).build();
     }
 
-    // user
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<List<PaymentDto>> getPaymentsByUserId(@PathVariable String userId) {
-
+    @PostMapping("/create")
+    public ApiResponse<PaymentResponse> createPayment(@RequestBody CreatePaymentRequest request) {
+        var res = paymentService.createPayment(request);
+        return ApiResponse.<PaymentResponse>builder().result(res).build();
     }
 
+    @PostMapping("/pay")
+    public ApiResponse<PaymentResponse> payOrder(@RequestBody PayOrderRequest request) {
+        var res = paymentService.payOrder(request);
+        return ApiResponse.<PaymentResponse>builder().result(res).build();
+    }
 }

@@ -4,16 +4,20 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document(value = "payments")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Payment extends BaseEntity {
+public class Payment {
     @Id
     private String id;
+
     private Integer orderId;
     private Integer userId;
-    private String transactionId;
+    private String transactionId; // id from the payment gateway
+    private String status; // pending, completed
+    private LocalDateTime payDate;
 }

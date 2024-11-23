@@ -1,16 +1,19 @@
 package com.ducvu.payment_service.helper;
 
-import com.ducvu.payment_service.dto.PaymentDto;
+import com.ducvu.payment_service.dto.response.PaymentResponse;
 import com.ducvu.payment_service.entity.Payment;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Mapper {
-    public static PaymentDto map(Payment payment) {
-        return PaymentDto.builder()
+    public PaymentResponse toPaymentResponse(Payment payment) {
+        return PaymentResponse.builder()
                 .id(payment.getId())
                 .orderId(payment.getOrderId())
                 .userId(payment.getUserId())
                 .transactionId(payment.getTransactionId())
-                .createdAt(payment.getCreatedAt())
+                .status(payment.getStatus())
+                .payDate(payment.getPayDate())
                 .build();
     }
 }

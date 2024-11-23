@@ -2,9 +2,11 @@ package com.ducvu.order_service.service;
 
 import com.ducvu.order_service.config.CartClient;
 import com.ducvu.order_service.config.DiscountClient;
+import com.ducvu.order_service.config.PaymentClient;
 import com.ducvu.order_service.config.UserClient;
 import com.ducvu.order_service.dto.request.AuthRequest;
 import com.ducvu.order_service.dto.request.CreateOrderRequest;
+import com.ducvu.order_service.dto.request.CreatePaymentRequest;
 import com.ducvu.order_service.dto.response.OrderItemResponse;
 import com.ducvu.order_service.dto.response.OrderResponse;
 import com.ducvu.order_service.entity.Order;
@@ -32,6 +34,7 @@ public class OrderService {
     private final UserClient userClient;
     private final CartClient cartClient;
     private final DiscountClient discountClient;
+    private final PaymentClient paymentClient;
 
     public List<OrderResponse> getMyOrders(AuthRequest request) {
         var authResponse = userClient.authenticate(request);
@@ -108,6 +111,9 @@ public class OrderService {
 
         var deleteItemsResponse = cartClient.deleteItems(authRequest); // empty the cart
         log.info(deleteItemsResponse.getResult());
+
+        CreatePaymentRequest paymentRequest = CreatePaymentRequest.builder().token(request.getToken()).orderId(order.getId()).build();
+        paymentClient.createPayment(paymentRequest);
 
         return mapper.toOrderResponse(order);
     }
