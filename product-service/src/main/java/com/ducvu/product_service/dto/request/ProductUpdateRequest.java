@@ -13,6 +13,7 @@ public class ProductUpdateRequest {
     String token;
     String title;
     String description;
+    String sku;
     String imageUrl;
     Double price;
     Integer quantity;

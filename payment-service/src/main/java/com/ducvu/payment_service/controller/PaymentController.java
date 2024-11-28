@@ -36,9 +36,9 @@ public class PaymentController {
         return ApiResponse.<PaymentResponse>builder().result(res).build();
     }
 
-    @PostMapping("/pay")
-    public ApiResponse<PaymentResponse> payOrder(@RequestBody PayOrderRequest request) {
-        var res = paymentService.payOrder(request);
-        return ApiResponse.<PaymentResponse>builder().result(res).build();
-    }
+    //@PostMapping("/pay")
+    //public ApiResponse<PaymentResponse> payOrder(@RequestBody PayOrderRequest request) {
+    //    var res = paymentService.payOrder(request);
+    //    return ApiResponse.<PaymentResponse>builder().result(res).build();
+    //}
 }

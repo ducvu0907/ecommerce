@@ -52,7 +52,7 @@ public class PaymentService {
     }
 
     public PaymentResponse createPayment(CreatePaymentRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build()
+        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
         if (authResponse == null) {
             throw new RuntimeException("Token not found");
@@ -68,14 +68,13 @@ public class PaymentService {
         return mapper.toPaymentResponse(payment);
     }
 
-
     // TODO: implement pay order using vnpay
-    public PaymentResponse payOrder(PayOrderRequest request) {
+    //public PaymentResponse payOrder(PayOrderRequest request) {
 
-    }
+    //}
 
-    private void payOrder() {
+    //private void payOrder() {
 
-    }
+    //}
 
 }

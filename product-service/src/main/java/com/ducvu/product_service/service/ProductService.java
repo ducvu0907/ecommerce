@@ -111,6 +111,10 @@ public class ProductService {
             product.setQuantity(request.getQuantity());
         }
 
+        if (request.getSku() != null) {
+            product.setSku(request.getSku());
+        }
+
         productRepository.save(product);
         return mapper.toProductResponse(product);
     }
