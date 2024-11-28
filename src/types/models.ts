@@ -35,5 +35,16 @@ export type User = {
   firstName: string;
   lastName: string;
   phone: string;
-  addresses: Array<Address>;
+  addresses: Address[];
+};
+
+export type Product = {
+  id: number;
+  sellerId: number;
+  sku: string;
+  title: string;
+  imageUrl: string;
+  description: string;
+  price: number;
+  quantity: number;
 };

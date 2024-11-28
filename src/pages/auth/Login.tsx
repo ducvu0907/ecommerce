@@ -15,7 +15,7 @@ export interface LoginFormData {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const {mutate: login, isPending: isLoading} = useLogin();
+  const {mutate: login, isPending: isLoading } = useLogin();
 
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',

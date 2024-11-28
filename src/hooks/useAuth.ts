@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 const isLoggedIn = () => {
-  return localStorage.getItem("token") !== null;
+  const { token } = useAuth();
+  return token !== null;
 };
 
 const loginRequest = async (credentials: LoginRequest): Promise<ApiResponse<Token>> => {
@@ -16,7 +17,7 @@ const loginRequest = async (credentials: LoginRequest): Promise<ApiResponse<Toke
   });
 
   if (!response.ok) {
-    throw new Error("Login failed");
+    throw new Error("Unexpected error while logging in");
   }
 
   return response.json();
@@ -30,14 +31,14 @@ const signupRequest = async (credentials: SignupRequest): Promise<ApiResponse<Us
   });
 
   if (!response.ok) {
-    throw new Error("Signup failed");
+    throw new Error("Unexpected error while signing up");
   }
 
   return response.json();
 };
 
 const useLogin = () => {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const { setToken } = useAuth();
 
   return useMutation({
@@ -61,7 +62,7 @@ const useLogin = () => {
 };
 
 const useSignup = () => {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const navigate = useNavigate();
 
   return useMutation({
