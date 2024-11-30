@@ -4,60 +4,54 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSignup } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { validateSignupForm } from '@/helpers';
-
-export interface SignupFormData {
-  username: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  role: string; // seller, user
-}
+import { SignupRequest } from '@/types/models';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
-  const { mutate: signup, isPending: isLoading } = useSignup();
-  
-  const [formData, setFormData] = useState<SignupFormData>({
+  const { signupMutation } = useAuth();
+  const { mutate: signup, isPending: isLoading } = signupMutation;
+
+  const [formData, setFormData] = useState<SignupRequest>({
     username: '',
     password: '',
     firstName: '',
     lastName: '',
     phone: '',
-    role: 'user'
+    role: 'user',
   });
 
-  const [errors, setErrors] = useState<Partial<SignupFormData>>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    // Clear error when user starts typing
-    if (errors[name as keyof SignupFormData]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: undefined
-      }));
-    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
   };
 
   const handleRoleChange = (value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      role: value
+      role: value,
     }));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateSignupForm(formData)) {
+    const { isValid, errors } = validateSignupForm(formData);
+    if (isValid) {
       signup(formData);
+    } else {
+      setErrors(errors);
     }
   };
 
@@ -81,7 +75,7 @@ const Signup: React.FC = () => {
                   placeholder="John"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={errors.firstName ? "border-red-500" : ""}
+                  className={errors.firstName ? 'border-red-500' : ''}
                 />
                 {errors.firstName && (
                   <p className="text-sm text-red-500">{errors.firstName}</p>
@@ -96,7 +90,7 @@ const Signup: React.FC = () => {
                   placeholder="Doe"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={errors.lastName ? "border-red-500" : ""}
+                  className={errors.lastName ? 'border-red-500' : ''}
                 />
                 {errors.lastName && (
                   <p className="text-sm text-red-500">{errors.lastName}</p>
@@ -112,7 +106,7 @@ const Signup: React.FC = () => {
                 placeholder="johndoe"
                 value={formData.username}
                 onChange={handleInputChange}
-                className={errors.username ? "border-red-500" : ""}
+                className={errors.username ? 'border-red-500' : ''}
               />
               {errors.username && (
                 <p className="text-sm text-red-500">{errors.username}</p>
@@ -128,7 +122,7 @@ const Signup: React.FC = () => {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={errors.password ? "border-red-500" : ""}
+                className={errors.password ? 'border-red-500' : ''}
               />
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password}</p>
@@ -143,7 +137,7 @@ const Signup: React.FC = () => {
                 placeholder="0912345678"
                 value={formData.phone}
                 onChange={handleInputChange}
-                className={errors.phone ? "border-red-500" : ""}
+                className={errors.phone ? 'border-red-500' : ''}
               />
               {errors.phone && (
                 <p className="text-sm text-red-500">{errors.phone}</p>
@@ -152,7 +146,7 @@ const Signup: React.FC = () => {
 
             <div className="space-y-2">
               <Label>Account Type</Label>
-              <Select onValueChange={handleRoleChange} defaultValue={formData.role}>
+              <Select onValueChange={handleRoleChange} value={formData.role}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your account type" />
                 </SelectTrigger>
@@ -163,8 +157,8 @@ const Signup: React.FC = () => {
               </Select>
             </div>
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full"
               disabled={isLoading}
             >

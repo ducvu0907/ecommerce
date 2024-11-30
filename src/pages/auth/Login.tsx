@@ -4,23 +4,20 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Lock, Mail } from 'lucide-react';
-import { useLogin } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { validateLoginForm } from '@/helpers';
-
-export interface LoginFormData {
-  username: string;
-  password: string;
-}
+import { LoginRequest } from '@/types/models';
+import useAuth from '@/hooks/useAuth';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const {mutate: login, isPending: isLoading } = useLogin();
-
-  const [formData, setFormData] = useState<LoginFormData>({
+  const { loginMutation } = useAuth();
+  const { mutate: login, isPending: isLoading } = loginMutation;
+  const [formData, setFormData] = useState<LoginRequest>({
     username: '',
     password: ''
   });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -28,12 +25,21 @@ const Login: React.FC = () => {
       ...prev,
       [name]: value
     }));
+
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: ''
+    }));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateLoginForm(formData)) {
+    const { isValid, errors } = validateLoginForm(formData);
+
+    if (isValid) {
       login(formData);
+    } else {
+      setErrors(errors);
     }
   };
 
@@ -55,14 +61,16 @@ const Login: React.FC = () => {
                 <Input 
                   id="username"
                   name="username"
-                  type="username" 
+                  type="text" 
                   placeholder="Enter your username"
                   className="pl-10"
                   value={formData.username}
                   onChange={handleInputChange}
-                  required
                 />
               </div>
+              {errors.username && (
+                <p className="text-sm text-red-500">{errors.username}</p>
+              )}
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -85,10 +93,13 @@ const Login: React.FC = () => {
                   className="pl-10"
                   value={formData.password}
                   onChange={handleInputChange}
-                  required
                 />
               </div>
+              {errors.password && (
+                <p className="text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
+
             <Button 
               type="submit" 
               className="w-full"

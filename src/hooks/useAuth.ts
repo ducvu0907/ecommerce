@@ -2,55 +2,60 @@ import { useMutation } from "@tanstack/react-query";
 import { ApiResponse, LoginRequest, SignupRequest, Token, User } from "@/types/models";
 import { useToast } from "./use-toast";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const isLoggedIn = () => {
-  const { token } = useAuth();
-  return token !== null;
-};
-
-const loginRequest = async (credentials: LoginRequest): Promise<ApiResponse<Token>> => {
-  const response = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(credentials)
-  });
-
-  if (!response.ok) {
-    throw new Error("Unexpected error while logging in");
+  const { token } = useContext(AuthContext);
+  if (!token) {
+    return false;
   }
-
-  return response.json();
+  return true;
 };
 
-const signupRequest = async (credentials: SignupRequest): Promise<ApiResponse<User>> => {
-  const response = await fetch("/api/auth/signup", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(credentials)
-  });
-
-  if (!response.ok) {
-    throw new Error("Unexpected error while signing up");
-  }
-
-  return response.json();
-};
-
-const useLogin = () => {
+const useAuth = () => {
+  const { setToken } = useContext(AuthContext);
   const { toast } = useToast();
-  const { setToken } = useAuth();
+  const navigate = useNavigate();
 
-  return useMutation({
+  const loginRequest = async (formData: LoginRequest): Promise<ApiResponse<Token>> => {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    if (!response.ok) {
+      throw new Error("Unexpected error while logging in");
+    }
+
+    return response.json();
+  };
+
+  const signupRequest = async (formData: SignupRequest): Promise<ApiResponse<User>> => {
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    if (!response.ok) {
+      throw new Error("Unexpected error while signing up");
+    }
+
+    return response.json();
+  };
+
+  const loginMutation = useMutation({
     mutationFn: loginRequest,
     onError: (error: Error) => {
       toast({
-        title: error.message
+        title: error.message,
       });
     },
     onSuccess: (data: ApiResponse<Token>) => {
       if (data && data.result) {
-        console.log(data);
+        console.log("Login successfully", data);
         const token = data.result.token;
         localStorage.setItem("token", token);
         setToken(token);
@@ -59,39 +64,33 @@ const useLogin = () => {
       }
     },
   });
-};
 
-const useSignup = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-
-  return useMutation({
+  const signupMutation = useMutation({
     mutationFn: signupRequest,
     onError: (error: Error) => {
       toast({
-        title: error.message
+        title: error.message,
       });
     },
     onSuccess: (data: ApiResponse<User>) => {
       if (data && data.result) {
-        console.log(data);
+        console.log("Signup successfully", data);
         navigate("/login");
       } else {
         throw new Error(data.message);
       }
     },
   });
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    navigate("/login");
+  };
+
+  return { loginMutation, signupMutation, logout };
 };
 
-const useLogout = () => {
-  const { setToken } = useAuth();
-  localStorage.removeItem("token");
-  setToken(null);
-};
 
-export {
-  isLoggedIn,
-  useLogin,
-  useSignup,
-  useLogout,
-};
+export { isLoggedIn };
+export default useAuth;

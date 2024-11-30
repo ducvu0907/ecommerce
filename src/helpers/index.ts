@@ -1,41 +1,51 @@
-import { LoginFormData } from "@/pages/auth/Login";
-import { SignupFormData } from "@/pages/auth/Signup";
+import { LoginRequest, SignupRequest } from "@/types/models";
 
-export const validateLoginForm = (formData: LoginFormData): boolean => {
+export const validateLoginForm = (formData: LoginRequest): { isValid: boolean; errors: { [key: string]: string } } => {
+  const errors: { [key: string]: string } = {};
+
   if (!formData.username) {
-    return false;
+    errors.username = "Username is required.";
   }
 
   if (!formData.password) {
-    return false;
+    errors.password = "Password is required.";
   }
-  return true;
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
 };
 
-export const validateSignupForm = (formData: SignupFormData): boolean => {
+export const validateSignupForm = (formData: SignupRequest): { isValid: boolean; errors: { [key: string]: string } } => {
+  const errors: { [key: string]: string } = {};
+
   if (!formData.username) {
-    return false;
+    errors.username = "Username is required.";
   }
 
   if (!formData.password) {
-    return false;
+    errors.password = "Password is required.";
   }
 
   if (!formData.firstName) {
-    return false;
+    errors.firstName = "First name is required.";
   }
 
   if (!formData.lastName) {
-    return false;
+    errors.lastName = "Last name is required.";
   }
 
   if (!formData.phone) {
-    return false;
+    errors.phone = "Phone number is required.";
   }
 
   if (!formData.role) {
-    return false;
+    errors.role = "Role is required.";
   }
 
-  return true;
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
 };
