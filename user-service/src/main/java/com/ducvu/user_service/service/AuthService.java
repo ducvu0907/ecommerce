@@ -45,4 +45,12 @@ public class AuthService {
         return mapper.toTokenResponse(user);
     }
 
+    public void logout(AuthRequest request) {
+        User user = userRepository.findByToken(request.getToken())
+                .orElseThrow(() -> new RuntimeException("Token invalid"));
+
+        // invalidate the current token
+        user.setToken(null);
+        userRepository.save(user);
+    }
 }
