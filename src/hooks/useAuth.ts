@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { ApiResponse, LoginRequest, SignupRequest, Token, User } from "@/types/models";
 import { useToast } from "./use-toast";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 
 const isLoggedIn = () => {
