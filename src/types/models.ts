@@ -53,6 +53,12 @@ export type Product = {
   quantity: number;
 };
 
+export type Category = {
+  id: number;
+  title: string;
+  products: Product[];
+};
+
 export type Auth = {
   userId: string;
   role: string;

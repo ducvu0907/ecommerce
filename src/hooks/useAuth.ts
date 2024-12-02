@@ -14,6 +14,11 @@ const isLoggedIn = () => {
   return true;
 };
 
+const isSeller = () => {
+  const { role } = useContext(AuthContext);
+  return role === "seller";
+};
+
 const useAuth = () => {
   const { setToken, setRole, setUserId } = useContext(AuthContext);
   const { toast } = useToast();
@@ -28,7 +33,7 @@ const useAuth = () => {
     });
 
     if (!response.ok) {
-      throw new Error("Unexpected error while logging in");
+      throw new Error("Network request failed: unable to log in");
     }
 
     return response.json();
@@ -42,7 +47,7 @@ const useAuth = () => {
     });
 
     if (!response.ok) {
-      throw new Error("Unexpected error while signing up");
+      throw new Error("Network request failed: unable to sign up");
     }
 
     return response.json();
@@ -61,7 +66,6 @@ const useAuth = () => {
         const token = data.result.token;
         localStorage.setItem("token", token);
         setToken(token);
-
         authenticateMutate.mutate({ token });
       } else {
         throw new Error(data.message);
@@ -98,5 +102,5 @@ const useAuth = () => {
 };
 
 
-export { isLoggedIn };
+export { isLoggedIn, isSeller };
 export default useAuth;

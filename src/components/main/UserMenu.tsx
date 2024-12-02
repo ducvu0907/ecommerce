@@ -27,12 +27,12 @@ const UserMenu = () => {
     <div className="flex items-center space-x-6">
       {!loggedIn ? (
         <div>
-          <Button className="text-white hover:underline bg-transparent hover:bg-transparent">
-            <Link to={"/signup"}>Sign up</Link>
+          <Button variant="link" type="button" className="text-white font-normal">
+            <Link to={"/login"}>Log in</Link>
           </Button>
           <span className="border border-white"></span>
-          <Button className="text-white hover:underline bg-transparent hover:bg-transparent">
-            <Link to={"/login"}>Log in</Link>
+          <Button variant="link" type="button" className="text-white font-normal">
+            <Link to={"/signup"}>Sign up</Link>
           </Button>
         </div>
       ) : (

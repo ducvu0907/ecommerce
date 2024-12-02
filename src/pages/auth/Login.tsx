@@ -57,13 +57,13 @@ const Login: React.FC = () => {
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input 
                   id="username"
                   name="username"
                   type="text" 
                   placeholder="Enter your username"
-                  className="pl-10"
+                  className={`pl-10 ${errors.username ? 'border-red-500' : ''}`}
                   value={formData.username}
                   onChange={handleInputChange}
                 />
@@ -84,13 +84,13 @@ const Login: React.FC = () => {
                 </Button>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input 
                   id="password"
                   name="password"
                   type="password" 
                   placeholder="Enter your password"
-                  className="pl-10"
+                  className={`pl-10 ${errors.password ? 'border-red-500' : ''}`}
                   value={formData.password}
                   onChange={handleInputChange}
                 />

@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { User, Lock, Phone } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { validateSignupForm } from '@/helpers';
@@ -69,14 +70,16 @@ const Signup: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  name="firstName"
-                  placeholder="John"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  className={errors.firstName ? 'border-red-500' : ''}
-                />
+                <div className="relative">
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    placeholder="John"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className={`${errors.firstName ? 'border-red-500' : ''}`}
+                  />
+                </div>
                 {errors.firstName && (
                   <p className="text-sm text-red-500">{errors.firstName}</p>
                 )}
@@ -84,14 +87,16 @@ const Signup: React.FC = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Doe"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className={errors.lastName ? 'border-red-500' : ''}
-                />
+                <div className="relative">
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Doe"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className={`${errors.lastName ? 'border-red-500' : ''}`}
+                  />
+                </div>
                 {errors.lastName && (
                   <p className="text-sm text-red-500">{errors.lastName}</p>
                 )}
@@ -100,14 +105,17 @@ const Signup: React.FC = () => {
 
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                name="username"
-                placeholder="johndoe"
-                value={formData.username}
-                onChange={handleInputChange}
-                className={errors.username ? 'border-red-500' : ''}
-              />
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  id="username"
+                  name="username"
+                  placeholder="johndoe"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  className={`pl-10 ${errors.username ? 'border-red-500' : ''}`}
+                />
+              </div>
               {errors.username && (
                 <p className="text-sm text-red-500">{errors.username}</p>
               )}
@@ -115,15 +123,18 @@ const Signup: React.FC = () => {
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={errors.password ? 'border-red-500' : ''}
-              />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className={`pl-10 ${errors.password ? 'border-red-500' : ''}`}
+                />
+              </div>
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password}</p>
               )}
@@ -131,14 +142,17 @@ const Signup: React.FC = () => {
 
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                name="phone"
-                placeholder="0912345678"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className={errors.phone ? 'border-red-500' : ''}
-              />
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  id="phone"
+                  name="phone"
+                  placeholder="0912345678"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className={`pl-10 ${errors.phone ? 'border-red-500' : ''}`}
+                />
+              </div>
               {errors.phone && (
                 <p className="text-sm text-red-500">{errors.phone}</p>
               )}
