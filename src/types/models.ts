@@ -4,6 +4,10 @@ export type ApiResponse<T> = {
   result?: T;
 };
 
+export type AuthRequest = {
+  token: string;
+};
+
 export type LoginRequest = {
   username: string;
   password: string;
@@ -47,4 +51,9 @@ export type Product = {
   description: string;
   price: number;
   quantity: number;
+};
+
+export type Auth = {
+  userId: string;
+  role: string;
 };

@@ -4,6 +4,7 @@ import { useToast } from "./use-toast";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
+import { authenticate } from "@/services/auth";
 
 const isLoggedIn = () => {
   const { token } = useContext(AuthContext);
@@ -14,8 +15,9 @@ const isLoggedIn = () => {
 };
 
 const useAuth = () => {
-  const { setToken } = useContext(AuthContext);
+  const { setToken, setRole, setUserId } = useContext(AuthContext);
   const { toast } = useToast();
+  const authenticateMutate = authenticate();
   const navigate = useNavigate();
 
   const loginRequest = async (formData: LoginRequest): Promise<ApiResponse<Token>> => {
@@ -54,11 +56,13 @@ const useAuth = () => {
       });
     },
     onSuccess: (data: ApiResponse<Token>) => {
-      if (data && data.result) {
+      if (data.result) {
         console.log("Login successfully", data);
         const token = data.result.token;
         localStorage.setItem("token", token);
         setToken(token);
+
+        authenticateMutate.mutate({ token });
       } else {
         throw new Error(data.message);
       }
@@ -73,7 +77,7 @@ const useAuth = () => {
       });
     },
     onSuccess: (data: ApiResponse<User>) => {
-      if (data && data.result) {
+      if (data.result) {
         console.log("Signup successfully", data);
         navigate("/login");
       } else {
@@ -85,6 +89,8 @@ const useAuth = () => {
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
+    setRole(null);
+    setUserId(null);
     navigate("/login");
   };
 

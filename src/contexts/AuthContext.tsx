@@ -5,6 +5,8 @@ interface AuthContextType {
   setToken: (token: string | null) => void;
   role: string | null;
   setRole: (role: string | null) => void;
+  userId: string | null;
+  setUserId: (userId: string | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -12,6 +14,8 @@ export const AuthContext = createContext<AuthContextType>({
   setToken: () => {},
   role: null,
   setRole: () => {},
+  userId: null,
+  setUserId: () => {},
 });
 
 interface AuthProviderProps {
@@ -21,6 +25,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -30,7 +35,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, setToken, role, setRole }}>
+    <AuthContext.Provider value={{ token, setToken, role, setRole, userId, setUserId }}>
       {children}
     </AuthContext.Provider>
   );
