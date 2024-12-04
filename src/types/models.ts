@@ -19,7 +19,7 @@ export type SignupRequest = {
   firstName: string;
   lastName: string;
   phone: string;
-  role: string; // seller, user
+  role: string; // seller, buyer
 };
 
 export type Token = {

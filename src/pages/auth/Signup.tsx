@@ -21,7 +21,7 @@ const Signup: React.FC = () => {
     firstName: '',
     lastName: '',
     phone: '',
-    role: 'user',
+    role: 'buyer',
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -165,7 +165,7 @@ const Signup: React.FC = () => {
                   <SelectValue placeholder="Select your account type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="buyer">Buyer</SelectItem>
                   <SelectItem value="seller">Seller</SelectItem>
                 </SelectContent>
               </Select>
