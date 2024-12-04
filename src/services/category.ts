@@ -1,42 +1,33 @@
 import { Category } from "@/types/models";
 import { useQuery } from "@tanstack/react-query";
+import { _request } from "./request";
+import { ApiResponse } from "@/types/models";
 
-const getCategoriesRequest = async (): Promise<Category[]> => {
-  const response = await fetch("api/categories", {
+const getCategoriesRequest = async (): Promise<ApiResponse<Category[]>> => {
+  return _request<ApiResponse<Category[]>>({
+    url: "api/categories",
     method: "GET",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json"}
   });
-
-  if (!response.ok) {
-    throw new Error("Network request failed: unable to fetch all categories");
-  }
-
-  return response.json();
 };
 
-const getCategoryRequest = async (categoryId: string): Promise<Category> => {
-  const response = await fetch(`api/categories/${categoryId}`, {
+const getCategoryRequest = async (categoryId: string): Promise<ApiResponse<Category>> => {
+  return _request<ApiResponse<Category>>({
+    url: `api/categories/${categoryId}`,
     method: "GET",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json"}
   });
-
-  if (!response.ok) {
-    throw new Error("Network request failed: unable to fetch category");
-  }
-
-  return response.json();
 };
-
 
 export const getCategories = () => {
-  return useQuery<Category[], Error>({
+  return useQuery<ApiResponse<Category[]>, Error>({
     queryKey: ["categories"],
     queryFn: getCategoriesRequest
   });
 };
 
 export const getCategory = (categoryId: string) => {
-  return useQuery<Category, Error>({
+  return useQuery<ApiResponse<Category>, Error>({
     queryKey: ["categories", categoryId],
     queryFn: () => getCategoryRequest(categoryId)
   });

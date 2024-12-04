@@ -1,61 +1,48 @@
 import { Product } from "@/types/models";
 import { useQuery } from "@tanstack/react-query";
+import { _request } from "./request";
+import { ApiResponse } from "@/types/models";
 
-const getProductsRequest = async (): Promise<Product[]> => {
-  const response = await fetch("api/products", {
+const getProductsRequest = async (): Promise<ApiResponse<Product[]>> => {
+  return _request<ApiResponse<Product[]>>({
+    url: "api/products",
     method: "GET",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type":"application/json"}
   });
-
-  if (!response.ok) {
-    throw new Error("Network request failed: unable to fetch products");
-  }
-
-  return response.json();
 };
 
-const getProductsBySellerRequest = async (sellerId: string): Promise<Product[]> => {
-  const response = await fetch(`api/products/seller/${sellerId}`, {
+const getProductsBySellerRequest = async (sellerId: string): Promise<ApiResponse<Product[]>> => {
+  return _request<ApiResponse<Product[]>>({
+    url: `api/products/seller/${sellerId}`,
     method: "GET",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type":"application/json"}
   });
-
-  if (!response.ok) {
-    throw new Error("Network request failed: unable to fetch products by seller");
-  }
-
-  return response.json();
 };
 
-const getProductRequest = async (productId: string): Promise<Product> => {
-  const response = await fetch(`api/products/${productId}`, {
+const getProductRequest = async (productId: string): Promise<ApiResponse<Product>> => {
+  return _request<ApiResponse<Product>>({
+    url: `api/products/${productId}`,
     method: "GET",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type":"application/json"}
   });
-
-  if (!response.ok) {
-    throw new Error("Network request failed: unable to fetch product");
-  }
-
-  return response.json();
 };
 
 export const getProducts = () => {
-  return useQuery<Product[], Error>({
+  return useQuery<ApiResponse<Product[]>, Error>({
     queryKey: ["products"],
     queryFn: getProductsRequest,
   });
 };
 
 export const getProductsBySeller = (sellerId: string) => {
-  return useQuery<Product[], Error>({
+  return useQuery<ApiResponse<Product[]>, Error>({
     queryKey: ["products", "seller", sellerId],
     queryFn: () => getProductsBySellerRequest(sellerId)
   });
 };
 
 export const getProduct = (productId: string) => {
-  return useQuery<Product, Error>({
+  return useQuery<ApiResponse<Product>, Error>({
     queryKey: ["products", productId],
     queryFn: () => getProductRequest(productId)
   });
