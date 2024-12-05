@@ -16,8 +16,8 @@ public class Payment {
     private String id;
 
     private Integer orderId;
-    private Integer userId;
-    private String transactionId; // id from the payment gateway
-    private String status; // pending, completed
+    private Integer userId; // for querying user payments history
+    private String transactionId; // references the transaction from the payment gateway
+    private String status; // pending (default), completed
     private LocalDateTime payDate;
 }

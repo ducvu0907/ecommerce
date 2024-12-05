@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -18,4 +19,5 @@ public class OrderResponse {
     Double totalAmount;
     String status;
     Set<OrderItemResponse> items;
+    LocalDateTime createAt;
 }

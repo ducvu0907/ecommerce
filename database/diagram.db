@@ -4,9 +4,9 @@ Table User {
   last_name string
   username string
   password string
-  role enum("admin", "user", "seller")
+  role enum("admin", "buyer", "seller")
   phone string
-  is_enabled bool
+  token string
 }
 
 Table Review {
@@ -43,7 +43,6 @@ Table Discount {
   description string
   start_date date
   end_date date
-  product_id integer [ref: > Product.id]
   is_active boolean
 }
 
@@ -91,6 +90,5 @@ Table Payment {
   order_id integer [ref: - Order.id]
   user_id integer [ref: > User.id]
   transaction_id integer
-  created_at date
-  updated_at date
+  pay_date date
 }

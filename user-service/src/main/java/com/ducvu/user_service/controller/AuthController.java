@@ -40,4 +40,10 @@ public class AuthController {
         var res = authService.authenticate(request);
         return ApiResponse.<AuthResponse>builder().result(res).build();
     }
+
+    @PostMapping("/logout")
+    public ApiResponse<String> logout(@RequestBody AuthRequest request) {
+        authService.logout(request);
+        return ApiResponse.<String>builder().result("Logout successfully").build();
+    }
 }

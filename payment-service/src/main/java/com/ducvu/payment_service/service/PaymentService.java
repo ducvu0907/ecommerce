@@ -68,13 +68,5 @@ public class PaymentService {
         return mapper.toPaymentResponse(payment);
     }
 
-    // TODO: implement pay order using vnpay
-    //public PaymentResponse payOrder(PayOrderRequest request) {
-
-    //}
-
-    //private void payOrder() {
-
-    //}
-
+    // TODO: implement pay order using vnpay/zalopay
 }

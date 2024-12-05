@@ -24,7 +24,7 @@ public class User {
     private String lastName;
 
     private String password;
-    private String role; // admin, seller, user
+    private String role; // admin, seller, buyer
     private String phone;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

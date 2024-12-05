@@ -7,6 +7,7 @@ import com.ducvu.order_service.entity.Order;
 import com.ducvu.order_service.entity.OrderItem;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,6 +25,7 @@ public class Mapper {
                                 .map(this::toOrderItemResponse)
                                 .collect(Collectors.toSet())
                 )
+                .createAt(LocalDateTime.now())
                 .build();
     }
 
