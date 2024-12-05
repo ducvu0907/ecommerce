@@ -78,6 +78,7 @@ services:
       - "27019:27017"
     volumes:
       - payment-data:/data/db
+
 volumes:
   product-data:
   order-data:
