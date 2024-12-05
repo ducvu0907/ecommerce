@@ -27,14 +27,14 @@ export type Token = {
 };
 
 export type Address = {
-  id: number;
+  id: string;
   country: string;
   street: string;
   city: string;
 };
 
 export type User = {
-  id: number;
+  id: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -43,7 +43,7 @@ export type User = {
 };
 
 export type Product = {
-  id: number;
+  id: string;
   sellerId: number;
   sku: string;
   title: string;
@@ -54,12 +54,69 @@ export type Product = {
 };
 
 export type Category = {
-  id: number;
+  id: string;
   title: string;
   products: Product[];
+};
+
+export type Review = {
+  id: string;
+  userId: string;
+  productId: string;
+  rating: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Auth = {
   userId: string;
   role: string;
+};
+
+export type OrderItem = {
+  id: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  cartId: string;
+
+};
+
+export type Order = {
+  id: string;
+  userId: string;
+  description: string;
+  totalAmount: number;
+  status: string;
+  items: OrderItem[];
+};
+
+export type Cart = {
+  id: string;
+  userId: string;
+  items: CartItem[];
+};
+
+export type CartItem = {
+  id: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  cartId: string;
+};
+
+export type Discount = {
+  id: string;
+  description: string;
+  amount: number;
+  percent: number;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+};
+
+// TODO: type for payment response
+export type Payment = {
+  id: string;
 };
