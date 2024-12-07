@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { FaSearch } from 'react-icons/fa';
+import { Search } from "lucide-react";
 
 const Searchbar = () => {
   const [query, setQuery] = useState<string>("");
 
-  // FIXME: placeholder
   const handleSearch = () => {
-    console.log("you pressed search");
+    console.log("Searching:", query);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,19 +15,19 @@ const Searchbar = () => {
   };
 
   return (
-    <div className="w-full flex items-center space-x-4 bg-white rounded-md shadow-lg px-4 py-2">
+    <div className="w-full flex items-center bg-gradient-to-r from-[#FF6B6B] to-[#FCA311] rounded-md p-2 shadow-lg">
       <Input
         type="text"
         value={query}
         onChange={handleChange}
-        placeholder="Search..."
-        className="w-full p-2 rounded-md border-none border-gray-300 focus:ring-0 focus:ring-blue-500"
+        placeholder="Discover..."
+        className="w-full bg-white/80 border-0 rounded-md py-4 text-lg placeholder-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
       />
       <Button
         onClick={handleSearch}
-        className="flex items-center justify-center bg-blue-500 text-white hover:bg-blue-700 py-5 px-7 rounded-sm focus:outline-none focus:ring-2"
+        className="ml-2 w-1/12 bg-[#4ECDC4] text-white rounded-md p-3 hover:bg-[#45B7AA] transition-colors duration-300 ease-in-out"
       >
-        <FaSearch size={26} />
+        <Search className="w-6 h-6" />
       </Button>
     </div>
   );
