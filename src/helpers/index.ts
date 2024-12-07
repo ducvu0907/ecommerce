@@ -1,4 +1,4 @@
-import { LoginRequest, SignupRequest } from "@/types/models";
+import { LoginRequest, ReviewData, SignupRequest } from "@/types/models";
 
 export const validateLoginForm = (formData: LoginRequest): { isValid: boolean; errors: { [key: string]: string } } => {
   const errors: { [key: string]: string } = {};
@@ -48,4 +48,35 @@ export const validateSignupForm = (formData: SignupRequest): { isValid: boolean;
     isValid: Object.keys(errors).length === 0,
     errors
   };
+};
+
+// format iso date to more readable one
+export const formatDate = (date: Date) => {
+  return date.toLocaleString();
+};
+
+export const isOutOfStock = (quantity: number) => {
+  return quantity === 0;
+};
+
+export const computeAverageRating = (reviews: ReviewData[]) => {
+  if (reviews.length === 0) {
+    return 0;
+  }
+
+  return reviews.reduce((acc, el) => acc + el.rating, 0) / reviews.length;
+};
+
+export const validateReviewForm = (rating: number, content: string) => {
+  if (rating === 0) {
+    alert('Please select a rating');
+    return false;
+  }
+
+  if (content.trim().length < 3) {
+    alert('Review must be at least 3 characters long');
+    return false;
+  }
+
+  return true;
 };
