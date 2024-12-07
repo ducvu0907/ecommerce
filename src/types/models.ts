@@ -1,3 +1,9 @@
+export type routerType = {
+  title: string;
+  path: string;
+  element: JSX.Element;
+};
+
 export type ApiResponse<T> = {
   code: number;
   message: string;
@@ -19,30 +25,48 @@ export type SignupRequest = {
   firstName: string;
   lastName: string;
   phone: string;
-  role: string; // seller, buyer
+  role: string; // seller, buyer, admin
 };
 
-export type Token = {
+export type AddItemRequest = {
+  token: string;
+  productId: string;
+  quantity: string;
+};
+
+export type UpdateItemRequest = {
+  token: string;
+  quantity: number;
+};
+
+export type CreateReviewRequest = {
+  token: string;
+  productId: string;
+  rating: number;
+  content: string;
+};
+
+export type TokenData = {
   token: string;
 };
 
-export type Address = {
+export type AddressData = {
   id: string;
   country: string;
   street: string;
   city: string;
 };
 
-export type User = {
+export type UserData = {
   id: string;
   username: string;
   firstName: string;
   lastName: string;
   phone: string;
-  addresses: Address[];
+  addresses: AddressData[];
 };
 
-export type Product = {
+export type ProductData = {
   id: string;
   sellerId: number;
   sku: string;
@@ -53,13 +77,13 @@ export type Product = {
   quantity: number;
 };
 
-export type Category = {
+export type CategoryData = {
   id: string;
   title: string;
-  products: Product[];
+  products: ProductData[];
 };
 
-export type Review = {
+export type ReviewData = {
   id: string;
   userId: string;
   productId: string;
@@ -69,12 +93,12 @@ export type Review = {
   updatedAt: Date;
 };
 
-export type Auth = {
+export type AuthData = {
   userId: string;
   role: string;
 };
 
-export type OrderItem = {
+export type OrderItemData = {
   id: string;
   productId: string;
   quantity: number;
@@ -83,22 +107,23 @@ export type OrderItem = {
 
 };
 
-export type Order = {
+export type OrderData = {
   id: string;
   userId: string;
   description: string;
   totalAmount: number;
   status: string;
-  items: OrderItem[];
+  items: OrderItemData[];
+  createdAt: Date;
 };
 
-export type Cart = {
+export type CartData = {
   id: string;
   userId: string;
-  items: CartItem[];
+  items: CartItemData[];
 };
 
-export type CartItem = {
+export type CartItemData = {
   id: string;
   productId: string;
   quantity: number;
@@ -106,7 +131,7 @@ export type CartItem = {
   cartId: string;
 };
 
-export type Discount = {
+export type DiscountData = {
   id: string;
   description: string;
   amount: number;
@@ -116,7 +141,7 @@ export type Discount = {
   isActive: boolean;
 };
 
-// TODO: type for payment response
-export type Payment = {
+// TODO: payment interface model
+export type PaymentData = {
   id: string;
 };
