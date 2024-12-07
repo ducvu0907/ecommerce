@@ -6,18 +6,21 @@ import { BrowserRouter } from 'react-router-dom'
 import "./index.css";
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from './contexts/AuthContext.tsx'
+import { CartProvider } from './contexts/CartContext.tsx'
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <App />
-          <Toaster />
-        </QueryClientProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <CartProvider>
+            <App />
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>,
 )
