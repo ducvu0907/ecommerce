@@ -31,7 +31,7 @@ export type SignupRequest = {
 export type AddItemRequest = {
   token: string;
   productId: string;
-  quantity: string;
+  quantity: number;
 };
 
 export type UpdateItemRequest = {

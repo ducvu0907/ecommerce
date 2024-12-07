@@ -22,7 +22,8 @@ export const authenticate = () => {
     mutationFn: authenticateRequest,
     onError: (error: Error) => {
       toast({
-        title: error.message
+        title: error.message,
+        variant: "destructive"
       });
     },
     onSuccess: (data: ApiResponse<AuthData>) => {

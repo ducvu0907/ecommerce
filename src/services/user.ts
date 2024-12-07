@@ -5,7 +5,7 @@ import { ApiResponse } from "@/types/models";
 
 const getUserRequest = async (userId: string): Promise<ApiResponse<UserData>> => {
   return _request<ApiResponse<UserData>>({
-    url: `/api/user/${userId}`,
+    url: `/api/users/${userId}`,
     method: "GET",
     headers: {"Content-Type":"application/json"},
   });
