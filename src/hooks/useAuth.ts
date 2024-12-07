@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { ApiResponse, LoginRequest, SignupRequest, Token, User } from "@/types/models";
+import { ApiResponse, AuthRequest, LoginRequest, SignupRequest, TokenData, UserData } from "@/types/models";
 import { useToast } from "./use-toast";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { authenticate } from "@/services/auth";
+import { _request } from "@/services/request";
 
 const isLoggedIn = () => {
   const { token } = useContext(AuthContext);
@@ -25,32 +26,22 @@ const useAuth = () => {
   const authenticateMutate = authenticate();
   const navigate = useNavigate();
 
-  const loginRequest = async (formData: LoginRequest): Promise<ApiResponse<Token>> => {
-    const response = await fetch("/api/auth/login", {
+  const loginRequest = async (formData: LoginRequest): Promise<ApiResponse<TokenData>> => {
+    return _request<ApiResponse<TokenData>>({
+      url: "api/auth/login",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
     });
-
-    if (!response.ok) {
-      throw new Error("Network request failed: unable to log in");
-    }
-
-    return response.json();
   };
 
-  const signupRequest = async (formData: SignupRequest): Promise<ApiResponse<User>> => {
-    const response = await fetch("/api/auth/signup", {
+  const signupRequest = async (formData: SignupRequest): Promise<ApiResponse<UserData>> => {
+    return _request<ApiResponse<UserData>>({
+      url: "api/auth/signup",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
     });
-
-    if (!response.ok) {
-      throw new Error("Network request failed: unable to sign up");
-    }
-
-    return response.json();
   };
 
   const loginMutation = useMutation({
@@ -60,7 +51,7 @@ const useAuth = () => {
         title: error.message,
       });
     },
-    onSuccess: (data: ApiResponse<Token>) => {
+    onSuccess: (data: ApiResponse<TokenData>) => {
       if (data.result) {
         console.log("Login successfully", data);
         const token = data.result.token;
@@ -80,9 +71,12 @@ const useAuth = () => {
         title: error.message,
       });
     },
-    onSuccess: (data: ApiResponse<User>) => {
+    onSuccess: (data: ApiResponse<UserData>) => {
       if (data.result) {
         console.log("Signup successfully", data);
+        toast({
+          title: "Signup successfully"
+        });
         navigate("/login");
       } else {
         throw new Error(data.message);
@@ -91,6 +85,13 @@ const useAuth = () => {
   });
 
   const logout = () => {
+    const request: AuthRequest = {token: localStorage.getItem("token") || ""};
+    // fetch without awaiting
+    fetch("api/auth/logout", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(request)
+    });
     localStorage.removeItem("token");
     setToken(null);
     setRole(null);
@@ -100,7 +101,6 @@ const useAuth = () => {
 
   return { loginMutation, signupMutation, logout };
 };
-
 
 export { isLoggedIn, isSeller };
 export default useAuth;
