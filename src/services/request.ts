@@ -9,12 +9,12 @@ export const _request = async <T>({url, method, headers, body}: RequestOptions):
   const response = await fetch(url, {
     method: method,
     headers: headers,
-    body: JSON.stringify(body)
+    body: body
   });
 
-  if (!response.ok) {
-    throw new Error("Network request failed");
+  if (response.status === 500) {
+    throw new Error("An error ocurred");
   }
 
-  return response.json();
+  return response.json() as T;
 };
