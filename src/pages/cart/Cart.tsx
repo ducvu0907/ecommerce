@@ -36,7 +36,7 @@ const Cart = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <input type="text" placeholder="Enter promocode" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="text" placeholder="Enter promocode" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2" />
               <Button variant="default">Apply</Button>
             </div>
           </CardContent>
