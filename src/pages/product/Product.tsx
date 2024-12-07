@@ -9,6 +9,7 @@ import NotFound from "../main/NotFound";
 
 import { getProduct } from "@/services/product";
 import { getReviewsByProduct } from "@/services/review";
+import CreateReviewForm from "@/components/review/CreateReviewForm";
 
 const ProductLoadingState = () => (
   <div className="flex justify-center items-center w-full py-8">
@@ -99,6 +100,9 @@ const Product = () => {
       </div>
 
       <div>
+        <div>
+          <CreateReviewForm productId={productId} />
+        </div>
         <ReviewsSection productId={productId} />
       </div>
     </div>
