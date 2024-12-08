@@ -46,6 +46,12 @@ export type CreateReviewRequest = {
   content: string;
 };
 
+export type CreateOrderRequest = {
+  token: string;
+  description: string;
+  discountId: string | null;
+};
+
 export type TokenData = {
   token: string;
 };
@@ -68,7 +74,7 @@ export type UserData = {
 
 export type ProductData = {
   id: string;
-  sellerId: number;
+  sellerId: string;
   sku: string;
   title: string;
   imageUrl: string;
@@ -112,7 +118,7 @@ export type OrderData = {
   userId: string;
   description: string;
   totalAmount: number;
-  status: string;
+  status: string; // pending, delivering, arrived
   items: OrderItemData[];
   createdAt: Date;
 };

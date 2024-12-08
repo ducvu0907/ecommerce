@@ -18,20 +18,6 @@ const Cart = () => {
       <div className="w-2/5 space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Delivery</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Free</span>
-                <span>Express: $9.99</span>
-              </div>
-              <p>Delivery date: June 24, 2022</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
             <CardTitle>Promocode</CardTitle>
           </CardHeader>
           <CardContent>
@@ -68,8 +54,8 @@ const Cart = () => {
                 <span>$199</span>
               </div>
             </div>
-            <div className="mt-4 flex justify-end">
-              <Button variant="default">Proceed to checkout</Button>
+            <div className="mt-4 flex justify-center">
+              <Button variant="default">Proceed</Button>
             </div>
           </CardContent>
         </Card>

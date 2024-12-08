@@ -10,6 +10,7 @@ import NotFound from "../main/NotFound";
 import { getProduct } from "@/services/product";
 import { getReviewsByProduct } from "@/services/review";
 import CreateReviewForm from "@/components/review/CreateReviewForm";
+import SellerInfo from "@/components/product/SellerInfo";
 
 const ProductLoadingState = () => (
   <div className="flex justify-center items-center w-full py-8">
@@ -100,9 +101,12 @@ const Product = () => {
       </div>
 
       <div>
-        <div>
-          <CreateReviewForm productId={productId} />
-        </div>
+        <SellerInfo sellerId={product.result.sellerId} />
+      </div>
+      <div>
+        <CreateReviewForm productId={productId} />
+      </div>
+      <div>
         <ReviewsSection productId={productId} />
       </div>
     </div>

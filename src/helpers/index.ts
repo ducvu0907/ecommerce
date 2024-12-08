@@ -51,9 +51,26 @@ export const validateSignupForm = (formData: SignupRequest): { isValid: boolean;
 };
 
 // format iso date to more readable one
-export const formatDate = (date: Date) => {
-  return date.toLocaleString();
-};
+export const formatDate = (isoDate: Date, options = {}) => {
+  if (!isoDate) {
+    throw new Error("Invalid ISO date string");
+  }
+
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  };
+
+  const formatOptions = { ...defaultOptions, ...options };
+
+  const date = new Date(isoDate);
+
+  return new Intl.DateTimeFormat('en-US', formatOptions).format(date);
+}
 
 export const isOutOfStock = (quantity: number) => {
   return quantity === 0;

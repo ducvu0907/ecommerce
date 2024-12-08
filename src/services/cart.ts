@@ -87,6 +87,9 @@ export const updateItem = () => {
     onSuccess: (data: ApiResponse<CartData>) => {
       if (data?.result) {
         console.log("Update item in cart: ", data);
+        toast({
+          title: "Item updated successfully"
+        });
         queryClient.invalidateQueries({queryKey: ["cart"]});
 
       } else {
