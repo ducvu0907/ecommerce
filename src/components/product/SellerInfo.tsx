@@ -1,5 +1,5 @@
 import { getUser } from "@/services/user";
-import { CheckCircle2, ShieldCheck, MapPin, Badge, Phone, MessageCircle, Store } from "lucide-react";
+import { CheckCircle2, ShieldCheck, MapPin, Badge, Phone, MessageCircle, Store, ShoppingBag, Users, MessageSquareText } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -105,10 +105,8 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
         </div>
       </CardContent>
 
-      <CardContent className="border-l-2">
-        <div>
-          <p className="font-bold italic">statistics go here</p>
-        </div>
+      <CardContent className="border-l-2 w-full">
+        <div className="flex h-full items-center justify-center italic font-semibold">statistics go here</div>
       </CardContent>
 
     </Card>

@@ -1,65 +1,50 @@
 import CartItemList from "@/components/cart/CartItemList";
-import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "@/contexts/CartContext";
+import { computeSubtotal } from "@/helpers";
+import { ArrowRight, ShoppingCart } from "lucide-react";
 
 const Cart = () => {
+  const { cart } = useContext(CartContext);
+  const [subtotal, setSubtotal] = useState<number>(0);
+
+  useEffect(() => {
+    const calculatedSubtotal = cart ? computeSubtotal(cart.items) : 0;
+    setSubtotal(calculatedSubtotal);
+  }, [cart]);
+
   return (
-    <div className="flex justify-between max-w-7xl mx-auto py-8">
-      <div className="w-3/5 space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Cart</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CartItemList />
-          </CardContent>
-        </Card>
-      </div>
-      <div className="w-2/5 space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Promocode</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <input type="text" placeholder="Enter promocode" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2" />
-              <Button variant="default">Apply</Button>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
+    <div className="container mx-auto max-w-4xl px-4 py-8 space-y-6">
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <ShoppingCart className="mr-3 h-6 w-6" />
+            Your Cart
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CartItemList />
+        </CardContent>
+        <CardFooter className="border-t pt-4 sticky bottom-2">
+          <div className="w-full space-y-4">
+            <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>$99</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Discount</span>
-                <span>-15%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Delivery</span>
-                <span>$9.99</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span>$199</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                <span>Total</span>
-                <span>$199</span>
+                <span className="text-gray-600">Subtotal</span>
+                <span className="font-semibold">${subtotal.toFixed(2)}</span>
               </div>
             </div>
-            <div className="mt-4 flex justify-center">
-              <Button variant="default">Proceed</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            <Button 
+              className="w-full mt-4" 
+              disabled={cart?.items.length === 0}
+            >
+              Proceed to Checkout
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

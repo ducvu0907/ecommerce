@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { CartItemData } from "@/types/models";
 import { Loader, AlertTriangle, Minus, Plus, Trash, Check } from "lucide-react";
 import { deleteItem, updateItem } from "@/services/cart";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { Input } from "../ui/input";
 
@@ -23,6 +23,14 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const [isQuantityChanged, setIsQuantityChanged] = useState<boolean>(false);
   const { mutate: updateItemMutate, isPending: isUpdateLoading } = updateItem();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (quantity !== item.quantity) {
+      setIsQuantityChanged(true);
+    } else {
+      setIsQuantityChanged(false);
+    }
+  }, [quantity]);
 
   const handleDeleteItem = async () => {
     if (!token) {
@@ -41,7 +49,6 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity);
-    setIsQuantityChanged(newQuantity !== item.quantity);
   };
 
   const handleQuantityInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +69,6 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
   const handleCancelUpdate = () => {
     setQuantity(item.quantity);
-    setIsQuantityChanged(false);
   };
 
   if (isLoading) {
@@ -223,9 +229,8 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
               {isDeletePending ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <Trash className="mr-2 h-4 w-4" />
+                  <span>Delete</span>
               )}
-              Delete
             </Button>
           </DialogFooter>
         </DialogContent>

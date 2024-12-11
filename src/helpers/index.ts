@@ -1,4 +1,4 @@
-import { LoginRequest, ReviewData, SignupRequest } from "@/types/models";
+import { CartData, CartItemData, LoginRequest, ReviewData, SignupRequest } from "@/types/models";
 
 export const validateLoginForm = (formData: LoginRequest): { isValid: boolean; errors: { [key: string]: string } } => {
   const errors: { [key: string]: string } = {};
@@ -96,4 +96,8 @@ export const validateReviewForm = (rating: number, content: string) => {
   }
 
   return true;
+};
+
+export const computeSubtotal = (items: CartItemData[]) => {
+  return items.reduce((acc, el) => el.price + acc, 0);
 };
