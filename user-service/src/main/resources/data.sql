@@ -19,7 +19,10 @@ VALUES
 ('Isabella', 'Lopez', 'isabellalopez', '123456', 'seller', '0979012345'),
 ('Aiden', 'Gonzalez', 'aidengonzalez', '123456', 'admin', '0980123456'),
 ('Amelia', 'Wilson', 'ameliawilson', '123456', 'buyer', '0991234567'),
-('Liam', 'Moore', 'liammoore', '123456', 'seller', '0902345678');
+('Liam', 'Moore', 'liammoore', '123456', 'seller', '0902345678'),
+('eren', 'jaeger', 'buyer', '123', 'buyer', '0123456789'),
+('gojo', 'satoru', 'seller', '123', 'buyer', '0123456789'),
+('admin', 'admin', 'admin', '123', 'admin', '0123456789');
 
 INSERT INTO addresses (user_id, street, city, country)
 VALUES

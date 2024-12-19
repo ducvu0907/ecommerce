@@ -1,6 +1,7 @@
 package com.ducvu.product_service.controller;
 
 import com.ducvu.product_service.dto.request.AuthRequest;
+import com.ducvu.product_service.dto.request.OrderRequest;
 import com.ducvu.product_service.dto.request.ProductCreateRequest;
 import com.ducvu.product_service.dto.request.ProductUpdateRequest;
 import com.ducvu.product_service.dto.response.ApiResponse;
@@ -63,4 +64,11 @@ public class ProductController {
         return ApiResponse.<String>builder().result("Product has been deleted").build();
     }
 
+    // order service uses this to update the product quantity
+    // after placing order or canceling order
+    @PostMapping("/order")
+    public ApiResponse<String> order(@RequestBody OrderRequest request) {
+        productService.order(request);
+        return ApiResponse.<String>builder().result("Products have been updated").build();
+    }
 }

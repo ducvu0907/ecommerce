@@ -68,5 +68,21 @@ public class PaymentService {
         return mapper.toPaymentResponse(payment);
     }
 
+    public void deletePayment(Integer orderId, AuthRequest request) {
+        var authResponse = userClient.authenticate(request);
+        if (authResponse == null) {
+            throw new RuntimeException("Token not found");
+        }
+
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        if (!payment.getUserId().equals(authResponse.getResult().getUserId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        paymentRepository.delete(payment);
+    }
+
     // TODO: implement pay order using vnpay/zalopay
 }

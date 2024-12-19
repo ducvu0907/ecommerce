@@ -2,13 +2,13 @@ package com.ducvu.cart_service.controller;
 
 import com.ducvu.cart_service.dto.request.AddItemRequest;
 import com.ducvu.cart_service.dto.request.AuthRequest;
+import com.ducvu.cart_service.dto.request.UpdateCartRequest;
 import com.ducvu.cart_service.dto.request.UpdateItemRequest;
 import com.ducvu.cart_service.dto.response.ApiResponse;
 import com.ducvu.cart_service.dto.response.CartResponse;
 import com.ducvu.cart_service.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,4 +47,12 @@ public class CartController {
         cartService.deleteItems(request);
         return ApiResponse.<String>builder().result("Cart has been emptied").build();
     }
+
+    // update cart after ordering
+    @PostMapping("/order")
+    public ApiResponse<String> updateCart(@RequestBody UpdateCartRequest request) {
+        cartService.updateCart(request);
+        return ApiResponse.<String>builder().result("Cart updated successfully").build();
+    }
+
 }

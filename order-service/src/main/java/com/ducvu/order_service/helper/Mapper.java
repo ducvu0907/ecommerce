@@ -1,5 +1,6 @@
 package com.ducvu.order_service.helper;
 
+import com.ducvu.order_service.dto.request.OrderItemRequest;
 import com.ducvu.order_service.dto.response.CartItemResponse;
 import com.ducvu.order_service.dto.response.OrderItemResponse;
 import com.ducvu.order_service.dto.response.OrderResponse;
@@ -39,11 +40,11 @@ public class Mapper {
                 .build();
     }
 
-    public OrderItem toOrderItem(CartItemResponse itemResponse) {
+    public OrderItem toOrderItem(OrderItemRequest itemRequest) {
         return OrderItem.builder()
-                .productId(itemResponse.getProductId())
-                .quantity(itemResponse.getQuantity())
-                .price(itemResponse.getPrice())
+                .productId(itemRequest.getProductId())
+                .quantity(itemRequest.getQuantity())
+                .price(itemRequest.getPrice())
                 .build();
     }
 }

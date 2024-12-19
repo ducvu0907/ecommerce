@@ -19,5 +19,5 @@ public class OrderResponse {
     Double totalAmount;
     String status;
     Set<OrderItemResponse> items;
-    LocalDateTime createAt;
+    LocalDateTime createdAt;
 }

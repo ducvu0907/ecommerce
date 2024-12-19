@@ -1,9 +1,7 @@
 package com.ducvu.product_service.service;
 
 import com.ducvu.product_service.config.UserClient;
-import com.ducvu.product_service.dto.request.AuthRequest;
-import com.ducvu.product_service.dto.request.ProductCreateRequest;
-import com.ducvu.product_service.dto.request.ProductUpdateRequest;
+import com.ducvu.product_service.dto.request.*;
 import com.ducvu.product_service.dto.response.AuthResponse;
 import com.ducvu.product_service.dto.response.ProductResponse;
 import com.ducvu.product_service.entity.Category;
@@ -15,8 +13,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.math.ec.ScaleXPointMap;
+import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,6 +139,21 @@ public class ProductService {
         productRepository.deleteById(productId);
         category.getProducts().remove(product);
         categoryRepository.save(category);
+    }
+
+    public void order(OrderRequest request) {
+        for (OrderProductRequest productRequest : request.getProducts()) {
+            var product = productRepository.findById(productRequest.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            if (request.isOrderCanceled()) {
+                product.setQuantity(product.getQuantity() + productRequest.getQuantity());
+            } else {
+                product.setQuantity(product.getQuantity() - productRequest.getQuantity());
+            }
+
+            productRepository.save(product);
+        }
     }
 
 }

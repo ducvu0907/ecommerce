@@ -36,4 +36,9 @@ public class PaymentController {
         return ApiResponse.<PaymentResponse>builder().result(res).build();
     }
 
+    @DeleteMapping("/order/{orderId}")
+    public ApiResponse<String> deletePayment(@PathVariable Integer orderId, @RequestBody AuthRequest request) {
+        paymentService.deletePayment(orderId, request);
+        return ApiResponse.<String>builder().result("Payment deleted successfully").build();
+    }
 }

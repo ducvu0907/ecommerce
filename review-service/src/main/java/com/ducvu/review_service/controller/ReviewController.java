@@ -31,13 +31,13 @@ public class ReviewController {
     }
 
     @PostMapping("/{reviewId}")
-    public ApiResponse<ReviewResponse> createReview(@PathVariable String reviewId, @RequestBody UpdateReviewRequest request) {
+    public ApiResponse<ReviewResponse> updateReview(@PathVariable String reviewId, @RequestBody UpdateReviewRequest request) {
         var res = reviewService.updateReview(reviewId, request);
         return ApiResponse.<ReviewResponse>builder().result(res).build();
     }
 
     @DeleteMapping("/{reviewId}")
-    public ApiResponse<String> createReview(@PathVariable String reviewId, @RequestBody AuthRequest request) {
+    public ApiResponse<String> deleteReview(@PathVariable String reviewId, @RequestBody AuthRequest request) {
         reviewService.deleteReview(reviewId, request);
         return ApiResponse.<String>builder().result("Review has been deleted").build();
     }

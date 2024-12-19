@@ -2,9 +2,7 @@ package com.ducvu.cart_service.service;
 
 import com.ducvu.cart_service.config.ProductClient;
 import com.ducvu.cart_service.config.UserClient;
-import com.ducvu.cart_service.dto.request.AddItemRequest;
-import com.ducvu.cart_service.dto.request.AuthRequest;
-import com.ducvu.cart_service.dto.request.UpdateItemRequest;
+import com.ducvu.cart_service.dto.request.*;
 import com.ducvu.cart_service.dto.response.CartResponse;
 import com.ducvu.cart_service.entity.Cart;
 import com.ducvu.cart_service.entity.CartItem;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -157,5 +156,31 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    // used by order servide after successful order
+    public void updateCart(UpdateCartRequest request) {
+        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
+        var authResponse = userClient.authenticate(authRequest);
+        if (authResponse == null) {
+            throw new RuntimeException("Token invalid");
+        }
 
+        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
+                .orElseThrow(() ->  new RuntimeException("Cart not found"));
+
+        // replace previous cart items with new set of items
+        cart.getItems().clear();
+
+        for (CartItemRequest itemRequest : request.getItems()) {
+            CartItem newItem = CartItem.builder()
+                    .productId(itemRequest.getProductId())
+                    .quantity(itemRequest.getQuantity())
+                    .price(itemRequest.getPrice())
+                    .cart(cart)
+                    .build();
+            cartItemRepository.save(newItem);
+            cart.getItems().add(newItem);
+        }
+
+        cartRepository.save(cart);
+    }
 }

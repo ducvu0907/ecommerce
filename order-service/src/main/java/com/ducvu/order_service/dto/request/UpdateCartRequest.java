@@ -1,6 +1,5 @@
 package com.ducvu.order_service.dto.request;
 
-import com.ducvu.order_service.entity.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateOrderRequest {
-    String token;
-    String description;
-    String discountId;
-    List<OrderItemRequest> items;
+public class UpdateCartRequest {
+    private String token;
+    private List<CartItemRequest> items;
 }
