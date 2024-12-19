@@ -1,6 +1,10 @@
+import { CategoryContext } from "@/contexts/CategoryContext";
 import { getCategories } from "@/services/category";
+import { useContext } from "react";
+import { Checkbox } from "../ui/checkbox";
 
 const CategoryBar = () => {
+  const { selectedCategories, setSelectedCategories } = useContext(CategoryContext);
   const { data: categories, isLoading, isError, error } = getCategories();
 
   if (isLoading) {
@@ -27,8 +31,19 @@ const CategoryBar = () => {
           {categories?.result?.map((category) => (
             <li 
               key={category.id} 
-              className="group cursor-pointer"
+              className="group cursor-pointer flex items-center"
             >
+              <Checkbox
+                checked={selectedCategories.includes(category)}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setSelectedCategories([...selectedCategories, category]);
+                  } else {
+                    setSelectedCategories([...selectedCategories.filter(c => c !== category)])
+                  }
+                }}
+                className="mr-2"
+              />
               <div className="px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200">
                 <span className="font-medium group-hover:text-gray-900">
                   {category.title}

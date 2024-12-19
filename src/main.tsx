@@ -7,6 +7,7 @@ import "./index.css";
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from './contexts/AuthContext.tsx'
 import { CartProvider } from './contexts/CartContext.tsx'
+import { CategoryProvider } from './contexts/CategoryContext.tsx'
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <CartProvider>
-            <App />
+            <CategoryProvider>
+              <App />
+            </CategoryProvider>
             <Toaster />
           </CartProvider>
         </AuthProvider>

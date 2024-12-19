@@ -1,10 +1,9 @@
 import { getUser } from "@/services/user";
-import { CheckCircle2, ShieldCheck, MapPin, Badge, Phone, MessageCircle, Store, ShoppingBag, Users, MessageSquareText } from "lucide-react";
+import { CheckCircle2, ShieldCheck, MapPin, Phone, MessageCircle, Store } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import React from 'react';
 
 interface SellerInfoProps {
   sellerId: string;
@@ -57,8 +56,8 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
       <CardContent className="p-6">
         <div className="flex items-center space-x-6 mb-4">
           <img
-            src={`https://avatar.iran.liara.run/username?username=${seller.firstName}+${seller.lastName}`}
-            alt={`${seller?.firstName} ${seller?.lastName}`}
+            src={`https://avatar.iran.liara.run/username?username=${seller?.firstName}+${seller?.lastName}`}
+            alt={`seller avatar`}
             className="w-16 h-16 rounded-full object-cover"
           />
 

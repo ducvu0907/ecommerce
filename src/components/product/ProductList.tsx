@@ -1,8 +1,28 @@
 import { getProducts } from "@/services/product";
 import ProductItem from "./ProductItem";
+import { useContext, useEffect, useState } from "react";
+import { CategoryContext } from "@/contexts/CategoryContext";
+import { ProductData } from "@/types/models";
 
 const ProductList = () => {
+  const { selectedCategories } = useContext(CategoryContext);
   const {data: products, isLoading, isError, error} = getProducts(); 
+
+  const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
+
+  useEffect(() => {
+    if (products?.result) {
+      if (selectedCategories?.length > 0) {
+        var filtered: ProductData[] = [];
+        selectedCategories.forEach((category) => {
+          filtered = filtered.concat(category.products);
+        });
+        setFilteredProducts(filtered);
+      } else {
+        setFilteredProducts(products.result);
+      }
+    }
+  }, [products, selectedCategories]);
 
   if (isLoading) {
     return (
@@ -24,21 +44,17 @@ const ProductList = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {products?.result?.map((product) => (
-          <ProductItem 
-            key={product.id} 
-            product={product} 
-          />
-        ))}
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-10 text-gray-500">
+            No products found.
+          </div>
+        ) : (
+          filteredProducts.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))
+        )}
       </div>
-      
-      {products?.result?.length === 0 && (
-        <div className="text-center py-10 text-gray-500">
-          No products found.
-        </div>
-      )}
     </div>
   );
 };

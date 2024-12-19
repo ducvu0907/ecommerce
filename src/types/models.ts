@@ -19,6 +19,10 @@ export type LoginRequest = {
   password: string;
 };
 
+export enum Role {
+  seller, buyer, admin
+};
+
 export type SignupRequest = {
   username: string;
   password: string;
@@ -46,10 +50,17 @@ export type CreateReviewRequest = {
   content: string;
 };
 
+export type CreateOrderItemRequest = {
+  productId: string;
+  price: number;
+  quantity: number;
+};
+
 export type CreateOrderRequest = {
   token: string;
   description: string;
   discountId: string | null;
+  items: CreateOrderItemRequest[];
 };
 
 export type TokenData = {
@@ -104,6 +115,10 @@ export type AuthData = {
   role: string;
 };
 
+export enum OrderStatus {
+  pending, delivering, arrived
+};
+
 export type OrderItemData = {
   id: string;
   productId: string;
@@ -118,7 +133,7 @@ export type OrderData = {
   userId: string;
   description: string;
   totalAmount: number;
-  status: string; // pending, delivering, arrived
+  status: OrderStatus;
   items: OrderItemData[];
   createdAt: Date;
 };
@@ -147,7 +162,7 @@ export type DiscountData = {
   isActive: boolean;
 };
 
-// TODO: payment interface model
+// TODO: payment model
 export type PaymentData = {
   id: string;
 };
