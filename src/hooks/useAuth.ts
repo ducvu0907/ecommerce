@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ApiResponse, AuthRequest, LoginRequest, SignupRequest, TokenData, UserData } from "@/types/models";
+import { ApiResponse, AuthRequest, LoginRequest, Role, SignupRequest, TokenData, UserData } from "@/types/models";
 import { useToast } from "./use-toast";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -17,7 +17,7 @@ const isLoggedIn = () => {
 
 const isSeller = () => {
   const { role } = useContext(AuthContext);
-  return role === "seller";
+  return role === Role.SELLER;
 };
 
 const useAuth = () => {

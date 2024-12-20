@@ -20,7 +20,9 @@ export type LoginRequest = {
 };
 
 export enum Role {
-  seller, buyer, admin
+  SELLER = "SELLER",
+  BUYER = "BUYER",
+  ADMIN = "ADMIN"
 };
 
 export type SignupRequest = {
@@ -29,7 +31,7 @@ export type SignupRequest = {
   firstName: string;
   lastName: string;
   phone: string;
-  role: string; // seller, buyer, admin
+  role: Role;
 };
 
 export type AddItemRequest = {
@@ -81,6 +83,7 @@ export type UserData = {
   lastName: string;
   phone: string;
   addresses: AddressData[];
+  role: Role;
 };
 
 export type ProductData = {
@@ -112,11 +115,14 @@ export type ReviewData = {
 
 export type AuthData = {
   userId: string;
-  role: string;
+  role: Role;
 };
 
 export enum OrderStatus {
-  pending, delivering, arrived
+  PENDING = "PENDING",
+  DELIVERING = "DELIVERING",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED"
 };
 
 export type OrderItemData = {
@@ -124,8 +130,7 @@ export type OrderItemData = {
   productId: string;
   quantity: number;
   price: number;
-  cartId: string;
-
+  orderId: string;
 };
 
 export type OrderData = {

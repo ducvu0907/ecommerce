@@ -1,4 +1,4 @@
-import { CartData, CartItemData, LoginRequest, ReviewData, SignupRequest } from "@/types/models";
+import { CartItemData, LoginRequest, OrderStatus, ReviewData, SignupRequest } from "@/types/models";
 
 export const validateLoginForm = (formData: LoginRequest): { isValid: boolean; errors: { [key: string]: string } } => {
   const errors: { [key: string]: string } = {};
@@ -100,4 +100,17 @@ export const validateReviewForm = (rating: number, content: string) => {
 
 export const computeSubtotal = (items: CartItemData[]) => {
   return items.reduce((acc, el) => el.price + acc, 0);
+};
+
+export const getStatusColor = (status: OrderStatus) => {
+  switch (status) {
+    case OrderStatus.PENDING:
+      return "bg-yellow-500";
+    case OrderStatus.DELIVERING:
+      return "bg-blue-500";
+    case OrderStatus.COMPLETED:
+      return "bg-green-500";
+    case OrderStatus.CANCELLED:
+      return "bg-red-500";
+  }
 };

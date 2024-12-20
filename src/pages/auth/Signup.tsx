@@ -8,7 +8,7 @@ import { User, Lock, Phone } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { validateSignupForm } from '@/helpers';
-import { SignupRequest } from '@/types/models';
+import { Role, SignupRequest } from '@/types/models';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Signup: React.FC = () => {
     firstName: '',
     lastName: '',
     phone: '',
-    role: 'buyer',
+    role: Role.BUYER,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -39,7 +39,7 @@ const Signup: React.FC = () => {
     }));
   };
 
-  const handleRoleChange = (value: string) => {
+  const handleRoleChange = (value: Role) => {
     setFormData((prev) => ({
       ...prev,
       role: value,
@@ -165,8 +165,8 @@ const Signup: React.FC = () => {
                   <SelectValue placeholder="Select your account type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="buyer">Buyer</SelectItem>
-                  <SelectItem value="seller">Seller</SelectItem>
+                  <SelectItem value={Role.BUYER}>Buyer</SelectItem>
+                  <SelectItem value={Role.SELLER}>Seller</SelectItem>
                 </SelectContent>
               </Select>
             </div>

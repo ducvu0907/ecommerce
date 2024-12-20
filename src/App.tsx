@@ -7,6 +7,8 @@ import NotFound from "./pages/main/NotFound";
 import Product from "./pages/product/Product";
 import { isLoggedIn } from "./hooks/useAuth";
 import Layout from "./pages/main/Layout";
+import OrderDetails from "./pages/order/OrderDetails";
+import OrderList from "./pages/order/OrderList";
 
 const App = () => {
   const loggedIn = isLoggedIn();
@@ -21,6 +23,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={loggedIn ? <Cart /> : <Navigate to={"/login"} />} />
           <Route path="/products/:productId" element={<Product />} />
+          <Route path="/orders" element={loggedIn ? <OrderList />:<Navigate to={"/login" } />} />
+          <Route path="/orders/:orderId" element={loggedIn ? <OrderDetails /> : <Navigate to={"/login"} />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

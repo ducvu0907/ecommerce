@@ -1,10 +1,11 @@
+import { Role } from '@/types/models';
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;
-  role: string | null;
-  setRole: (role: string | null) => void;
+  role: Role | null;
+  setRole: (role: Role | null) => void;
   userId: string | null;
   setUserId: (userId: string | null) => void;
 }
@@ -24,7 +25,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
