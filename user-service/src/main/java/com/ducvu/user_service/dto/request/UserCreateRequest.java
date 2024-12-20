@@ -1,5 +1,6 @@
 package com.ducvu.user_service.dto.request;
 
+import com.ducvu.user_service.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,5 @@ public class UserCreateRequest { // both registration and user creation
     String firstName;
     String lastName;
     String phone;
-    String role;
+    Role role;
 }

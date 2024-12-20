@@ -22,7 +22,7 @@ public class Order {
     private String discountId; // nullable, only one discount is applicable
     private String description;
     private Double totalAmount;
-    private String status; // pending, delivering, arrived
+    private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OrderItem> items;

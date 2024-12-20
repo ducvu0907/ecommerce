@@ -1,5 +1,6 @@
 package com.ducvu.user_service.dto.response;
 
+import com.ducvu.user_service.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthResponse { // authenticate the token sent from external service
     Integer userId;
-    String role;
+    Role role;
 }

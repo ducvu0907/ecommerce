@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Data
-public class Payment {
+public class Payment { // TODO: refactor this for vnpay gateway
     @Id
     private String id;
 
     private Integer orderId;
     private Integer userId; // for querying user payments history
     private String transactionId; // references the transaction from the payment gateway
-    private String status; // pending (default), completed
+    private PaymentStatus status;
     private LocalDateTime payDate;
 }

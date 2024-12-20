@@ -1,5 +1,6 @@
 package com.ducvu.payment_service.dto.response;
 
+import com.ducvu.payment_service.entity.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ public class PaymentResponse {
     Integer orderId;
     Integer userId;
     String transactionId;
-    String status;
+    PaymentStatus status;
     LocalDateTime payDate;
 }

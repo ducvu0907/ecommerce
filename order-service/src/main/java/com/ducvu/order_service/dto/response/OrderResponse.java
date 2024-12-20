@@ -1,5 +1,6 @@
 package com.ducvu.order_service.dto.response;
 
+import com.ducvu.order_service.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class OrderResponse {
     Integer userId;
     String description;
     Double totalAmount;
-    String status;
+    OrderStatus status;
     Set<OrderItemResponse> items;
     LocalDateTime createdAt;
 }

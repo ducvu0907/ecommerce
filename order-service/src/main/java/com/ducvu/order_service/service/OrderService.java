@@ -6,6 +6,7 @@ import com.ducvu.order_service.dto.response.OrderItemResponse;
 import com.ducvu.order_service.dto.response.OrderResponse;
 import com.ducvu.order_service.entity.Order;
 import com.ducvu.order_service.entity.OrderItem;
+import com.ducvu.order_service.entity.OrderStatus;
 import com.ducvu.order_service.helper.Mapper;
 import com.ducvu.order_service.repository.OrderItemRepository;
 import com.ducvu.order_service.repository.OrderRepository;
@@ -133,7 +134,7 @@ public class OrderService {
             }
         }
 
-        order.setStatus("pending"); // default status
+        order.setStatus(OrderStatus.PENDING); // default status
         order.setCreatedAt(LocalDateTime.now());
         orderRepository.save(order);
 
@@ -185,8 +186,10 @@ public class OrderService {
             throw new RuntimeException("Unauthorized");
         }
 
+        // delete corresponding payment and update the order status to cancelled
         paymentClient.deletePayment(orderId, request);
-        orderRepository.delete(order);
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
     }
 
 }
