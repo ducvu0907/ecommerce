@@ -31,7 +31,7 @@ public class CategoryController {
         return ApiResponse.<CategoryResponse>builder().result(res).build();
     }
 
-    // admin
+    // this should be in the admin endpoints only
     @PostMapping("")
     public ApiResponse<CategoryResponse> createCategory(@RequestBody CategoryCreateRequest request) {
         var res = categoryService.createCategory(request);

@@ -23,24 +23,28 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
 
+    // public
     @PostMapping("/login")
     public ApiResponse<TokenResponse> login(@RequestBody LoginRequest request) {
         var res = authService.login(request);
         return ApiResponse.<TokenResponse>builder().result(res).build();
     }
 
+    // public
     @PostMapping("/signup")
     public ApiResponse<UserResponse> signup(@RequestBody UserCreateRequest request) {
         var res = userService.createUser(request);
         return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
+    // user
     @PostMapping("/token")
     public ApiResponse<AuthResponse> authenticate(@RequestBody AuthRequest request) {
         var res = authService.authenticate(request);
         return ApiResponse.<AuthResponse>builder().result(res).build();
     }
 
+    // user
     @PostMapping("/logout")
     public ApiResponse<String> logout(@RequestBody AuthRequest request) {
         authService.logout(request);

@@ -6,6 +6,7 @@ import com.ducvu.payment_service.dto.request.CreatePaymentRequest;
 import com.ducvu.payment_service.dto.request.PayOrderRequest;
 import com.ducvu.payment_service.dto.response.PaymentResponse;
 import com.ducvu.payment_service.entity.Payment;
+import com.ducvu.payment_service.entity.PaymentStatus;
 import com.ducvu.payment_service.helper.Mapper;
 import com.ducvu.payment_service.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
@@ -61,7 +62,7 @@ public class PaymentService {
         Payment payment = Payment.builder()
                 .userId(authResponse.getResult().getUserId())
                 .orderId(request.getOrderId())
-                .status("pending")
+                .status(PaymentStatus.PENDING)
                 .build();
 
         paymentRepository.save(payment);

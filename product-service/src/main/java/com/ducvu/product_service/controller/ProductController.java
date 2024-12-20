@@ -64,8 +64,8 @@ public class ProductController {
         return ApiResponse.<String>builder().result("Product has been deleted").build();
     }
 
-    // order service uses this to update the product quantity
-    // after placing order or canceling order
+    // used by order service update the product quantity
+    // after placing order or cancelling order
     @PostMapping("/order")
     public ApiResponse<String> order(@RequestBody OrderRequest request) {
         productService.order(request);

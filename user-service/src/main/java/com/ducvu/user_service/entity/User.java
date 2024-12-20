@@ -24,7 +24,10 @@ public class User {
     private String lastName;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
+
     private String phone;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

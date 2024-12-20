@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController { // many of these should be in the admin endpoints
     private final UserService userService;
 
     @PostMapping
@@ -37,13 +37,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable Integer userId, @RequestBody AuthRequest request) {
+    ApiResponse<String> deleteUser(@PathVariable("userId") Integer userId, @RequestBody AuthRequest request) {
         userService.deleteUser(userId, request);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
     @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest request) {
+    ApiResponse<UserResponse> updateUser(@PathVariable("userId") Integer userId, @RequestBody UserUpdateRequest request) {
         var res = userService.updateUser(userId, request);
         return ApiResponse.<UserResponse>builder().result(res).build();
     }

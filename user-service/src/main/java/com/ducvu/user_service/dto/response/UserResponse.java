@@ -1,5 +1,6 @@
 package com.ducvu.user_service.dto.response;
 
+import com.ducvu.user_service.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class UserResponse {
     String lastName;
     String phone;
     Set<AddressResponse> addresses;
+    Role role;
 }

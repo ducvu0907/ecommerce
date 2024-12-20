@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
     private final AddressService addressService;
 
+    // user
     @PostMapping("/")
     public ApiResponse<AddressResponse> createAddress(@RequestBody AddressCreateRequest request) {
         var res = addressService.createAddress(request);
         return ApiResponse.<AddressResponse>builder().result(res).build();
     }
 
+    // user
     @DeleteMapping("/{addressId}")
     public ApiResponse<String> deleteAddress(@PathVariable("addressId") Integer addressId, @RequestBody AuthRequest request) {
         addressService.deleteAddress(addressId, request);
