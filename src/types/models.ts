@@ -19,12 +19,6 @@ export type LoginRequest = {
   password: string;
 };
 
-export enum Role {
-  SELLER = "SELLER",
-  BUYER = "BUYER",
-  ADMIN = "ADMIN"
-};
-
 export type SignupRequest = {
   username: string;
   password: string;
@@ -32,6 +26,30 @@ export type SignupRequest = {
   lastName: string;
   phone: string;
   role: Role;
+};
+
+export type UserUpdateRequest = {
+  token: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+};
+
+export type CreateProductRequest = {
+  token: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  sku: string;
+  price: number;
+  quantity: number;
+  categoryId: string;
+};
+
+export enum Role {
+  SELLER = "SELLER",
+  BUYER = "BUYER",
+  ADMIN = "ADMIN"
 };
 
 export type AddItemRequest = {

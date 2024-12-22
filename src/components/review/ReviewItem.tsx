@@ -4,14 +4,46 @@ import { Star, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDate } from '@/helpers';
 import { ReviewData } from '@/types/models';
-import { getUser } from '@/services/user';
+import { getUserProfile } from '@/services/user';
+import { Skeleton } from '../ui/skeleton';
 
 interface ReviewItemProps {
   review: ReviewData
 }
+const ReviewItemSkeleton: React.FC = () => {
+  return (
+    <div className="p-4 border-b">
+
+      <div className="flex items-center space-x-3 mb-2">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <div className="flex flex-col space-y-1">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+      </div>
+
+      <div className="flex space-x-1 mb-3">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Skeleton key={index} className="h-4 w-4 rounded" />
+        ))}
+      </div>
+
+      <div className="mb-3">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-5/6 mt-1" />
+      </div>
+
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-3 w-20" />
+        <Skeleton className="h-6 w-16 rounded" />
+      </div>
+
+    </div>
+  );
+};
 
 const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
-  const {data: user, isLoading} = getUser(review.userId);
+  const {data: user, isLoading} = getUserProfile(review.userId);
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => (
       <Star
@@ -20,6 +52,10 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
       />
     ));
   };
+
+  if (isLoading) {
+    return <ReviewItemSkeleton />;
+  }
 
   return (
     <div className="p-4 border-b">

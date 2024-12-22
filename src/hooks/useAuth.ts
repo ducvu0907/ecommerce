@@ -15,11 +15,6 @@ const isLoggedIn = () => {
   return true;
 };
 
-const isSeller = () => {
-  const { role } = useContext(AuthContext);
-  return role === Role.SELLER;
-};
-
 const useAuth = () => {
   const { setToken, setRole, setUserId } = useContext(AuthContext);
   const { toast } = useToast();
@@ -102,5 +97,5 @@ const useAuth = () => {
   return { loginMutation, signupMutation, logout };
 };
 
-export { isLoggedIn, isSeller };
+export { isLoggedIn };
 export default useAuth;

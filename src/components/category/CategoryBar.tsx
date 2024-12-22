@@ -2,6 +2,7 @@ import { CategoryContext } from "@/contexts/CategoryContext";
 import { getCategories } from "@/services/category";
 import { useContext } from "react";
 import { Checkbox } from "../ui/checkbox";
+import { CategoryData } from "@/types/models";
 
 const CategoryBar = () => {
   const { selectedCategories, setSelectedCategories } = useContext(CategoryContext);
@@ -23,6 +24,15 @@ const CategoryBar = () => {
     );
   }
 
+  const handleCategoryClick = (category: CategoryData) => {
+    const isSelected = selectedCategories.includes(category);
+    if (isSelected) {
+      setSelectedCategories(selectedCategories.filter((c) => c !== category));
+    } else {
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
+
   return (
     <aside className="w-64 bg-white shadow-md rounded-lg p-4 space-y-2">
       <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Categories</h2>
@@ -39,12 +49,15 @@ const CategoryBar = () => {
                   if (checked) {
                     setSelectedCategories([...selectedCategories, category]);
                   } else {
-                    setSelectedCategories([...selectedCategories.filter(c => c !== category)])
+                    setSelectedCategories([...selectedCategories.filter(c => c !== category)]);
                   }
                 }}
                 className="mr-2"
               />
-              <div className="px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200">
+              <div 
+                className="px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                onClick={() => handleCategoryClick(category)}
+              >
                 <span className="font-medium group-hover:text-gray-900">
                   {category.title}
                 </span>

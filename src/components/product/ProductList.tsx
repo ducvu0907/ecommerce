@@ -1,21 +1,24 @@
+import { useContext, useEffect, useState } from "react";
 import { getProducts } from "@/services/product";
 import ProductItem from "./ProductItem";
-import { useContext, useEffect, useState } from "react";
 import { CategoryContext } from "@/contexts/CategoryContext";
 import { ProductData } from "@/types/models";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const ProductList = () => {
   const { selectedCategories } = useContext(CategoryContext);
-  const {data: products, isLoading, isError, error} = getProducts(); 
-
+  const { data: products, isLoading, isError, error } = getProducts();
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
 
   useEffect(() => {
     if (products?.result) {
       if (selectedCategories?.length > 0) {
-        var filtered: ProductData[] = [];
+        const filtered: ProductData[] = [];
         selectedCategories.forEach((category) => {
-          filtered = filtered.concat(category.products);
+          filtered.push(...category.products);
         });
         setFilteredProducts(filtered);
       } else {
@@ -26,36 +29,62 @@ const ProductList = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full flex justify-center items-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500"></div>
+      <div className="flex-1 flex justify-center items-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <span className="block sm:inline">{error.message}</span>
-        </div>
+      <div className="flex-1 flex justify-center items-center p-8">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertDescription>
+            {error.message || "An error occurred while fetching products"}
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <Card className="flex-1 m-4 bg-background">
+      <CardContent className="p-6">
+        {selectedCategories?.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-3">Selected Categories</h2>
+            <div className="flex flex-wrap gap-2">
+              {selectedCategories.map((category) => (
+                <Badge key={category.id} variant="secondary">
+                  {category.title}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
-            No products found.
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="text-center space-y-4">
+              <h3 className="text-xl font-medium text-muted-foreground">
+                No products found
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Try selecting different categories
+              </p>
+            </div>
           </div>
         ) : (
-          filteredProducts.map((product) => (
-            <ProductItem key={product.id} product={product} />
-          ))
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="transition-all hover:scale-[1.02]">
+                <ProductItem product={product} />
+              </div>
+            ))}
+          </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

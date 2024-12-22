@@ -9,6 +9,7 @@ import { isLoggedIn } from "./hooks/useAuth";
 import Layout from "./pages/main/Layout";
 import OrderDetails from "./pages/order/OrderDetails";
 import OrderList from "./pages/order/OrderList";
+import SearchProducts from "./pages/product/SearchProducts";
 
 const App = () => {
   const loggedIn = isLoggedIn();
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={loggedIn ? <Cart /> : <Navigate to={"/login"} />} />
           <Route path="/products/:productId" element={<Product />} />
+          <Route path="/products/search" element={<SearchProducts />} />
           <Route path="/orders" element={loggedIn ? <OrderList />:<Navigate to={"/login" } />} />
           <Route path="/orders/:orderId" element={loggedIn ? <OrderDetails /> : <Navigate to={"/login"} />} />
           <Route path="*" element={<NotFound />} />

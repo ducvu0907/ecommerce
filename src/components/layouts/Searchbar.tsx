@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Searchbar = () => {
   const [query, setQuery] = useState<string>("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!query) {
+      navigate("/");
+    }
+  }, [query]);
 
   const handleSearch = () => {
-    console.log("Searching:", query);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+    if (!query.trim()) {
+      return;
+    }
+    navigate("/products/search", { state: query });
   };
 
   return (
@@ -19,7 +26,7 @@ const Searchbar = () => {
       <Input
         type="text"
         value={query}
-        onChange={handleChange}
+        onChange={(e) => setQuery(e.target.value)}
         placeholder="Discover..."
         className="w-full bg-white/80 border-0 rounded-md py-4 text-lg placeholder-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
       />

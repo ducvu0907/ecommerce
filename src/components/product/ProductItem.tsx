@@ -1,7 +1,7 @@
 import React from 'react';
 import { ProductData } from "@/types/models";
 import { Card, CardContent } from "../ui/card";
-import { Computer, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getReviewsByProduct } from '@/services/review';
 import { computeAverageRating } from '@/helpers';

@@ -1,9 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import useAuth, { isLoggedIn } from "@/hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "@/contexts/AuthContext";
+import { Role } from "@/types/models";
 
 const UserMenu = () => {
+  const { role } = useContext(AuthContext);
   const loggedIn = isLoggedIn();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -39,16 +42,33 @@ const UserMenu = () => {
             size={28}
           />
           {showDropdown && (
-            <div 
-              ref={dropdownRef} 
-              className="absolute mt-2 w-32 bg-white rounded-md shadow-lg z-50"
-            >
+            <div ref={dropdownRef} className="absolute mt-2 w-32 bg-white rounded-md shadow-lg z-50" >
               <ul className="py-2">
-                <li onClick={() => navigate("/profile")} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-                <li onClick={() => navigate("/settings")} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-                <li onClick={logout} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+
+                <li
+                  onClick={() => {
+                    navigate("/settings");
+                    setShowDropdown(!showDropdown)
+                  }}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  Settings
+                </li>
+
+                {role === Role.SELLER &&
+                  <li
+                    onClick={() => {
+                      navigate("/my-products");
+                      setShowDropdown(!showDropdown)
+                    }}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    My Products
+                  </li>
+                }
+
+                <li onClick={() => logout()} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   Log out
                 </li>
+
               </ul>
             </div>
           )}

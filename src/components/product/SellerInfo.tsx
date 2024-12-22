@@ -1,4 +1,4 @@
-import { getUser } from "@/services/user";
+import { getUserProfile } from "@/services/user";
 import { CheckCircle2, ShieldCheck, MapPin, Phone, MessageCircle, Store } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,7 +10,7 @@ interface SellerInfoProps {
 }
 
 const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
-  const { data, isLoading, isError } = getUser(sellerId);
+  const { data, isLoading, isError } = getUserProfile(sellerId);
   const seller = data?.result;
 
   if (isLoading) {
@@ -99,7 +99,7 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
             className="flex-1"
           >
             <Store className="mr-2 h-4 w-4" />
-            View Shop
+            View Seller
           </Button>
         </div>
       </CardContent>
