@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Searchbar = () => {
+  const location = useLocation();
   const [query, setQuery] = useState<string>("");
   const navigate = useNavigate();
 
@@ -13,6 +14,13 @@ const Searchbar = () => {
       navigate("/");
     }
   }, [query]);
+
+  useEffect(() => {
+    // if back to home then remove query
+    if (location.pathname === "/") {
+      setQuery("");
+    }
+  }, [location]);
 
   const handleSearch = () => {
     if (!query.trim()) {
