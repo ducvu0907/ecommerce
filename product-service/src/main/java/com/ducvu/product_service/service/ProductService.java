@@ -156,4 +156,12 @@ public class ProductService {
         }
     }
 
+    // TODO: refactor to better search engine
+    public List<ProductResponse> search(String query) {
+        log.info("Searching products");
+        List<Product> products = productRepository.searchProducts(query);
+        return products.stream()
+                .map(mapper::toProductResponse)
+                .toList();
+    }
 }

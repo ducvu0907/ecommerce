@@ -21,7 +21,7 @@ VALUES
 ('Amelia', 'Wilson', 'ameliawilson', '123456', 'BUYER', '0991234567'),
 ('Liam', 'Moore', 'liammoore', '123456', 'SELLER', '0902345678'),
 ('eren', 'jaeger', 'buyer', '123', 'BUYER', '0123456789'),
-('gojo', 'satoru', 'seller', '123', 'BUYER', '0123456789'),
+('gojo', 'satoru', 'seller', '123', 'SELLER', '0123456789'),
 ('uzuki', 'admin', 'admin', '123', 'ADMIN', '0123456789');
 
 INSERT INTO addresses (user_id, street, city, country)

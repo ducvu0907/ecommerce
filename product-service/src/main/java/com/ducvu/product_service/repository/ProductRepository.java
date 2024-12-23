@@ -10,4 +10,10 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findBySellerId(Integer sellerId);
     Optional<Product> findBySku(String sku);
+
+    @Query(value = "SELECT * FROM products p " +
+            "WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))",
+            nativeQuery = true)
+    List<Product> searchProducts(String query);
 }

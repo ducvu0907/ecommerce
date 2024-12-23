@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,18 +68,35 @@ public class CartService {
             throw new RuntimeException("Quantity exceeded");
         }
 
-        CartItem item = CartItem.builder()
-                .productId(request.getProductId())
-                .quantity(request.getQuantity())
-                .price(productResponse.getResult().getPrice() * request.getQuantity())
-                .cart(cart)
-                .build();
+        Optional<CartItem> existingItem = cart.getItems().stream()
+                .filter(item -> item.getProductId().equals(request.getProductId()))
+                .findFirst();
 
-        cartItemRepository.save(item);
+        // if the product is present in the cart then update quantity
+        // otherwise add new item
+        if (existingItem.isPresent()) {
+            CartItem item = existingItem.get();
+            int newQuantity = item.getQuantity() + request.getQuantity();
+            if (newQuantity > productResponse.getResult().getQuantity()) {
+                throw new RuntimeException("Quantity exceeded");
+            }
+            item.setQuantity(newQuantity);
+            item.setPrice(productResponse.getResult().getPrice() * newQuantity);
 
-        cart.getItems().add(item);
+            cartItemRepository.save(item);
+        } else {
+            CartItem newItem = CartItem.builder()
+                    .productId(request.getProductId())
+                    .quantity(request.getQuantity())
+                    .price(productResponse.getResult().getPrice() * request.getQuantity())
+                    .cart(cart)
+                    .build();
+
+            cartItemRepository.save(newItem);
+            cart.getItems().add(newItem);
+        }
+
         cartRepository.save(cart);
-
         return mapper.toCartResponse(cart);
     }
 
@@ -118,6 +136,7 @@ public class CartService {
         return mapper.toCartResponse(cart);
     }
 
+    @Transactional
     public void deleteItem(Integer itemId, AuthRequest request) {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);
@@ -148,15 +167,18 @@ public class CartService {
         Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
                 .orElseThrow(() ->  new RuntimeException("Cart not found"));
 
-        cart.getItems().forEach(item -> {
-            cartItemRepository.delete(item);
-        });
+        cartItemRepository.deleteAllInBatch(cart.getItems());
+
+        //cart.getItems().forEach(item -> {
+        //    cartItemRepository.delete(item);
+        //});
 
         cart.getItems().clear();
         cartRepository.save(cart);
     }
 
-    // used by order servide after successful order
+    // used by order service after successful order
+    @Transactional
     public void updateCart(UpdateCartRequest request) {
         AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
         var authResponse = userClient.authenticate(authRequest);

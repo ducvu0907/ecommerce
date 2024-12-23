@@ -38,6 +38,7 @@ public class Mapper {
                                 .map(this::toAddressResponse)
                                 .collect(Collectors.toSet())
                 )
+                .role(user.getRole())
                 .build();
     }
 

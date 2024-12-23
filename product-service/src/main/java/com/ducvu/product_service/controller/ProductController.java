@@ -71,4 +71,11 @@ public class ProductController {
         productService.order(request);
         return ApiResponse.<String>builder().result("Products have been updated").build();
     }
+
+    // public
+    @GetMapping("/search")
+    public ApiResponse<List<ProductResponse>> searchProducts(@RequestParam String query) {
+        var res = productService.search(query);
+        return ApiResponse.<List<ProductResponse>>builder().result(res).build();
+    }
 }

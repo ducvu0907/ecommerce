@@ -15,36 +15,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController { // many of these should be in the admin endpoints
+public class UserController {
     private final UserService userService;
 
-    @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request) {
-        var res = userService.createUser(request);
+    // user
+    @PostMapping("/me")
+    public ApiResponse<UserResponse> getMyProfile(@RequestBody AuthRequest request) {
+        var res = userService.getMyProfile(request);
         return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
-    @GetMapping
-    ApiResponse<List<UserResponse>> getUsers(@RequestBody AuthRequest request) {
-        var res = userService.getUsers(request);
-        return ApiResponse.<List<UserResponse>>builder().result(res).build();
+    // user
+    @PostMapping("/me/update")
+    public ApiResponse<UserResponse> updateMyProfile(@RequestBody UserUpdateRequest request) {
+        var res = userService.updateMyProfile(request);
+        return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
+    // public
     @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUser(@PathVariable("userId") Integer userId) {
-        var res = userService.getUser(userId);
+    public ApiResponse<UserResponse> getUserProfile(@PathVariable("userId") Integer userId) {
+        var res = userService.getUserProfile(userId);
         return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
-    @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable("userId") Integer userId, @RequestBody AuthRequest request) {
-        userService.deleteUser(userId, request);
-        return ApiResponse.<String>builder().result("User has been deleted").build();
-    }
-
-    @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable("userId") Integer userId, @RequestBody UserUpdateRequest request) {
-        var res = userService.updateUser(userId, request);
-        return ApiResponse.<UserResponse>builder().result(res).build();
-    }
 }

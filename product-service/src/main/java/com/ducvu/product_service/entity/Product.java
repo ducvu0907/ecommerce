@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "products")
+@Table(name = "products", indexes = {
+        // TODO: remove this when changing search engine
+        @Index(name = "idx_title", columnList = "title"),
+        @Index(name = "idx_description", columnList = "description")
+})
 @Data
 @Builder
 @NoArgsConstructor

@@ -4,6 +4,7 @@ import com.ducvu.user_service.dto.request.AuthRequest;
 import com.ducvu.user_service.dto.request.UserCreateRequest;
 import com.ducvu.user_service.dto.request.UserUpdateRequest;
 import com.ducvu.user_service.dto.response.UserResponse;
+import com.ducvu.user_service.entity.Role;
 import com.ducvu.user_service.entity.User;
 import com.ducvu.user_service.helper.Mapper;
 import com.ducvu.user_service.helper.TokenUtil;
@@ -99,4 +100,45 @@ public class UserService {
                 .map(mapper::toUserResponse)
                 .toList();
     }
+
+    public UserResponse getMyProfile(AuthRequest request) {
+        if (request.getToken() == null) {
+            throw new RuntimeException("No token found");
+        }
+        User user = userRepository.findByToken(request.getToken())
+                .orElseThrow(() -> new RuntimeException("Token invalid"));
+
+        return mapper.toUserResponse(user);
+    }
+
+    public UserResponse updateMyProfile(UserUpdateRequest request) {
+        if (request.getToken() == null) {
+            throw new RuntimeException("No token found");
+        }
+        User user = userRepository.findByToken(request.getToken())
+                .orElseThrow(() -> new RuntimeException("Token invalid"));
+
+        if (request.getFirstname() != null) {
+            user.setFirstName(request.getFirstname());
+        }
+
+        if (request.getLastname() != null) {
+            user.setFirstName(request.getLastname());
+        }
+
+        if (request.getPhone() != null) {
+            user.setFirstName(request.getPhone());
+        }
+
+        userRepository.save(user);
+        return mapper.toUserResponse(user);
+    }
+
+    public UserResponse getUserProfile(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return mapper.toUserResponse(user);
+    }
+
 }
