@@ -10,6 +10,7 @@ import Layout from "./pages/main/Layout";
 import OrderDetails from "./pages/order/OrderDetails";
 import OrderList from "./pages/order/OrderList";
 import SearchProducts from "./pages/product/SearchProducts";
+import Settings from "./pages/main/Settings";
 
 const App = () => {
   const loggedIn = isLoggedIn();
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/products/search" element={<SearchProducts />} />
           <Route path="/orders" element={loggedIn ? <OrderList />:<Navigate to={"/login" } />} />
           <Route path="/orders/:orderId" element={loggedIn ? <OrderDetails /> : <Navigate to={"/login"} />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

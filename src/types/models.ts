@@ -26,6 +26,7 @@ export type SignupRequest = {
   lastName: string;
   phone: string;
   role: Role;
+  address: AddressRegisterRequest;
 };
 
 export type UserUpdateRequest = {
@@ -81,6 +82,19 @@ export type CreateOrderRequest = {
   description: string;
   discountId: string | null;
   items: CreateOrderItemRequest[];
+};
+
+export type AddressRegisterRequest = {
+  country: string;
+  street: string;
+  city: string;
+};
+
+export type CreateAddressRequest = {
+  token: string;
+  country: string;
+  street: string;
+  city: string;
 };
 
 export type TokenData = {

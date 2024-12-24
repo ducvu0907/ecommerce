@@ -114,3 +114,45 @@ export const getStatusColor = (status: OrderStatus) => {
       return "bg-red-500";
   }
 };
+
+export const countries = [
+  { value: 'us', label: 'United States' },
+  { value: 'ca', label: 'Canada' },
+  { value: 'uk', label: 'United Kingdom' }
+];
+
+export const streets = {
+  us: [
+    { value: 'broadway', label: '1234 Broadway' },
+    { value: 'fifth_ave', label: '5678 Fifth Avenue' },
+    { value: 'main_st', label: '910 Main Street' }
+  ],
+  ca: [
+    { value: 'yonge_st', label: '100 Yonge Street' },
+    { value: 'king_st', label: '200 King Street West' },
+    { value: 'bay_st', label: '300 Bay Street' }
+  ],
+  uk: [
+    { value: 'oxford_st', label: '45 Oxford Street' },
+    { value: 'baker_st', label: '221B Baker Street' },
+    { value: 'bond_st', label: '10 Bond Street' }
+  ]
+};
+
+export const cities = {
+  us: [
+    { value: 'nyc', label: 'New York City' },
+    { value: 'la', label: 'Los Angeles' },
+    { value: 'chicago', label: 'Chicago' }
+  ],
+  ca: [
+    { value: 'toronto', label: 'Toronto' },
+    { value: 'vancouver', label: 'Vancouver' },
+    { value: 'montreal', label: 'Montreal' }
+  ],
+  uk: [
+    { value: 'london', label: 'London' },
+    { value: 'manchester', label: 'Manchester' },
+    { value: 'birmingham', label: 'Birmingham' }
+  ]
+};

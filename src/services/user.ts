@@ -32,7 +32,7 @@ const getUserProfileRequest = async (userId: string): Promise<ApiResponse<UserDa
 
 export const getMyProfile = (token: string) => {
   return useQuery<ApiResponse<UserData>, Error>({
-    queryKey: ["me"],
+    queryKey: ["users", "me"],
     queryFn: () => getMyProfileRequest({ token })
   });
 };

@@ -38,7 +38,7 @@ const OrderList = () => {
   if (orders.result.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-black">No orders found</p>
+        <p className="text-black text-xl font-medium">No orders found</p>
       </div>
     );
   }
