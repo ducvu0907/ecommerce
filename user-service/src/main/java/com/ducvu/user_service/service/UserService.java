@@ -4,14 +4,17 @@ import com.ducvu.user_service.dto.request.AuthRequest;
 import com.ducvu.user_service.dto.request.UserCreateRequest;
 import com.ducvu.user_service.dto.request.UserUpdateRequest;
 import com.ducvu.user_service.dto.response.UserResponse;
+import com.ducvu.user_service.entity.Address;
 import com.ducvu.user_service.entity.Role;
 import com.ducvu.user_service.entity.User;
 import com.ducvu.user_service.helper.Mapper;
 import com.ducvu.user_service.helper.TokenUtil;
+import com.ducvu.user_service.repository.AddressRepository;
 import com.ducvu.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,16 +24,29 @@ import java.util.List;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
     private final Mapper mapper;
     private final TokenUtil tokenUtil;
 
+    @Transactional // make sure seller with no address shouldn't be saved
     public UserResponse createUser(UserCreateRequest request) {
         userRepository.findByUsername(request.getUsername())
-                .ifPresent(user -> {throw new RuntimeException("User already exists");});
+                .ifPresent(user -> { throw new RuntimeException("User already exists"); });
+
         User user = mapper.toUser(request);
-        var token = tokenUtil.generateToken();
-        user.setToken(token);
         user.setAddresses(new HashSet<>());
+
+        if (Role.SELLER.equals(user.getRole())) {
+            if (request.getAddress() == null) {
+                throw new RuntimeException("Seller must provide an address");
+            }
+            user = userRepository.save(user);
+            Address address = mapper.toAddress(request.getAddress());
+            address.setUser(user);
+            address = addressRepository.save(address);
+            user.getAddresses().add(address);
+        }
+
         userRepository.save(user);
         return mapper.toUserResponse(user);
     }

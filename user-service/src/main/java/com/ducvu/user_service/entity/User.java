@@ -30,7 +30,7 @@ public class User {
 
     private String phone;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Address> addresses;
 
     @Column(name = "token", unique = true)

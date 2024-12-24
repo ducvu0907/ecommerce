@@ -17,4 +17,5 @@ public class UserCreateRequest { // both registration and user creation
     String lastName;
     String phone;
     Role role;
+    AddressCreateRequest address;
 }
