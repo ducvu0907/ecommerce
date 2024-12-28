@@ -1,18 +1,18 @@
 Table User {
-  id integer [pk]
-  first_name string
-  last_name string
+  id string [pk]
   username string
   password string
-  role enum("admin", "buyer", "seller")
+  role enum("BUYER", "SELLER")
   phone string
   token string
+  created_at date
+  updated_at date
 }
 
 Table Review {
-  id integer [pk]
-  user_id integer [pk, ref: > User.id]
-  product_id integer [pk, ref: > Product.id]
+  id string [pk]
+  user_id string [ref: > User.id]
+  product_id string [ref: > Product.id]
   rating integer
   content string
   created_at date
@@ -20,75 +20,79 @@ Table Review {
 }
 
 Table Category {
-  id integer [pk]
+  id string [pk]
   title string
 }
 
+Table Inventory {
+  id string [pk]
+  product_id string [ref: > Product.id]
+  location string
+  stock integer
+  created_at date
+  updated_at date
+}
+
 Table Product {
-  id integer [pk]
-  category_id integer [ref: < Category.id]
+  id string [pk]
+  category_id string [ref: < Category.id]
   description string
-  seller_id integer [ref: > User.id]
+  user_id string [ref: > User.id]
   title string
   image_url string
   sku string
   price double
-  quantity integer
+  created_at date
+  updated_at date
 }
 
 Table Discount {
-  id integer [pk]
-  amount double
-  percent double
+  id string [pk]
+  type enum("FIXED", "PERCENTAGE")
+  value double
   description string
   start_date date
   end_date date
-  is_active boolean
+  created_at date
+  updated_at date
 }
 
 Table Order {
-  id integer [pk]
-  discount_id integer [ref: < Discount.id]
-  user_id integer [ref: > User.id]
-  description string
-  total_amount double
-  status enum("pending", "delivering", "arrived")
+  id string [pk]
+  discount_id string [ref: < Discount.id]
+  total_price double // after applying discount
+  user_id string [ref: > User.id]
+  address string
+  status enum("PENDING", "COMPLETED", "CANCELLED")
   created_at date
+  updated_at date
 }
 
 Table OrderItem {
-  id integer [pk]
-  product_id integer [pk, ref: > Product.id]
-  order_id integer [pk, ref: > Order.id]
+  id string [pk]
+  product_id string [ref: > Product.id]
+  order_id string [ref: > Order.id]
   quantity integer
-  price double
+  subtotal double
 }
 
 Table Cart {
-  id integer [pk]
-  user_id integer [ref: - User.id]
+  id string [pk]
+  user_id string [ref: - User.id]
 }
 
 Table CartItem {
-  id integer [pk]
-  product_id integer [pk, ref: > Product.id]
-  cart_id integer [pk, ref: > Cart.id]
+  id string [pk]
+  product_id string [pk, ref: > Product.id]
+  cart_id string [pk, ref: > Cart.id]
   quantity integer
-  price double
-}
-
-Table Address {
-  id integer [pk]
-  user_id integer [ref: > User.id]
-  street string
-  city string
-  country string
+  subtotal double // quantity * unit price of the product
 }
 
 Table Payment {
-  id integer [pk]
-  order_id integer [ref: - Order.id]
-  user_id integer [ref: > User.id]
-  transaction_id integer
-  pay_date date
+  id string [pk]
+  order_id string [ref: - Order.id]
+  transaction_content string
+  transaction_id string
+  created_at date
 }
