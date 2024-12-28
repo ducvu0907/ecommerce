@@ -1,11 +1,8 @@
 package com.ducvu.user_service.service;
 
-import com.ducvu.user_service.dto.request.AuthRequest;
 import com.ducvu.user_service.dto.request.LoginRequest;
-import com.ducvu.user_service.dto.request.UserCreateRequest;
 import com.ducvu.user_service.dto.response.AuthResponse;
 import com.ducvu.user_service.dto.response.TokenResponse;
-import com.ducvu.user_service.dto.response.UserResponse;
 import com.ducvu.user_service.entity.User;
 import com.ducvu.user_service.helper.Mapper;
 import com.ducvu.user_service.helper.TokenUtil;
@@ -22,14 +19,18 @@ public class AuthService {
     private final Mapper mapper;
     private final TokenUtil tokenUtil;
 
-    public AuthResponse authenticate(AuthRequest request) {
-        User user = userRepository.findByToken(request.getToken())
+    public AuthResponse validate(String token) {
+        log.info("Auth service; validate");
+
+        User user = userRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Token invalid"));
 
         return mapper.toAuthResponse(user);
     }
 
     public TokenResponse login(LoginRequest request) {
+        log.info("Auth service; login");
+
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Username invalid"));
 
@@ -37,7 +38,7 @@ public class AuthService {
             throw new RuntimeException("Password incorrect");
         }
 
-        // reset token every login
+        // reset token on login
         String newToken = tokenUtil.generateToken();
         user.setToken(newToken);
         userRepository.save(user);
@@ -45,11 +46,13 @@ public class AuthService {
         return mapper.toTokenResponse(user);
     }
 
-    public void logout(AuthRequest request) {
-        User user = userRepository.findByToken(request.getToken())
+    public void logout(String token) {
+        log.info("Auth service; logout");
+
+        User user = userRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Token invalid"));
 
-        // invalidate the current token
+        // invalidate the token
         user.setToken(null);
         userRepository.save(user);
     }

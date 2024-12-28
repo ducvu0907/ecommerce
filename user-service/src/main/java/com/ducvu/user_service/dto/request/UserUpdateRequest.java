@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserUpdateRequest {
-    String token;
-    String firstname;
-    String lastname;
+    String username;
     String phone;
 }
