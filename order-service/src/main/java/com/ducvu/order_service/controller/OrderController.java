@@ -1,8 +1,7 @@
 package com.ducvu.order_service.controller;
 
-import com.ducvu.order_service.dto.request.AuthRequest;
 import com.ducvu.order_service.dto.request.CreateOrderRequest;
-import com.ducvu.order_service.dto.response.ApiResponse;
+import com.ducvu.order_service.dto.ApiResponse;
 import com.ducvu.order_service.dto.response.OrderResponse;
 import com.ducvu.order_service.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -16,31 +15,27 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    // buyer
-    @PostMapping("")
-    public ApiResponse<List<OrderResponse>> getMyOrders(@RequestBody AuthRequest request) {
-        var res = orderService.getMyOrders(request);
+    @GetMapping("")
+    public ApiResponse<List<OrderResponse>> getMyOrders(@RequestHeader("token") String token) {
+        var res = orderService.getMyOrders(token);
         return ApiResponse.<List<OrderResponse>>builder().result(res).build();
     }
 
-    // buyer
     @PostMapping("/{orderId}")
-    public ApiResponse<OrderResponse> getOrder(@PathVariable("orderId") Integer orderId, @RequestBody AuthRequest request) {
-        var res = orderService.getOrder(orderId, request);
+    public ApiResponse<OrderResponse> getOrder(@RequestHeader("token") String token, @PathVariable("orderId") String orderId) {
+        var res = orderService.getOrder(token, orderId);
         return ApiResponse.<OrderResponse>builder().result(res).build();
     }
 
-    // buyer
-    @PostMapping("/create")
-    public ApiResponse<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
-        var res = orderService.createOrder(request);
+    @PostMapping("")
+    public ApiResponse<OrderResponse> createOrder(@RequestHeader("token") String token, @RequestBody CreateOrderRequest request) {
+        var res = orderService.createOrder(token, request);
         return ApiResponse.<OrderResponse>builder().result(res).build();
     }
 
-    // buyer
     @DeleteMapping("/{orderId}")
-    public ApiResponse<String> cancelOrder(@PathVariable("orderId") Integer orderId, @RequestBody AuthRequest request) {
-        orderService.cancelOrder(orderId, request);
+    public ApiResponse<String> cancelOrder(@RequestHeader("token") String token, @PathVariable("orderId") String orderId) {
+        orderService.cancelOrder(token, orderId);
         return ApiResponse.<String>builder().result("Order has been cancelled").build();
     }
 

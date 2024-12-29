@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class DiscountResponse {
     String id;
+    String type;
+    Double value;
     String description;
-    Double amount;
-    Double percent;
     LocalDateTime startDate;
     LocalDateTime endDate;
-    Boolean isActive;
 }

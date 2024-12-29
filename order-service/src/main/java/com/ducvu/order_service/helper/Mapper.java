@@ -1,7 +1,5 @@
 package com.ducvu.order_service.helper;
 
-import com.ducvu.order_service.dto.request.OrderItemRequest;
-import com.ducvu.order_service.dto.response.CartItemResponse;
 import com.ducvu.order_service.dto.response.OrderItemResponse;
 import com.ducvu.order_service.dto.response.OrderResponse;
 import com.ducvu.order_service.entity.Order;
@@ -16,17 +14,18 @@ public class Mapper {
     public OrderResponse toOrderResponse(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())
-                .userId(order.getUserId())
-                .description(order.getDescription())
-                .totalAmount(order.getTotalAmount())
+                .buyerId(order.getBuyerId())
+                .instruction(order.getInstruction())
                 .status(order.getStatus())
+                .totalPrice(order.getTotalPrice())
                 .items(
                         order.getItems()
                                 .stream()
                                 .map(this::toOrderItemResponse)
-                                .collect(Collectors.toSet())
+                                .toList()
                 )
-                .createdAt(LocalDateTime.now())
+                .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
                 .build();
     }
 
@@ -35,16 +34,8 @@ public class Mapper {
                 .id(item.getId())
                 .productId(item.getProductId())
                 .quantity(item.getQuantity())
-                .price(item.getPrice())
-                .orderId(item.getOrder().getId())
+                .subtotal(item.getSubtotal())
                 .build();
     }
 
-    public OrderItem toOrderItem(OrderItemRequest itemRequest) {
-        return OrderItem.builder()
-                .productId(itemRequest.getProductId())
-                .quantity(itemRequest.getQuantity())
-                .price(itemRequest.getPrice())
-                .build();
-    }
 }

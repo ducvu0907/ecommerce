@@ -4,10 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx_buyer_id", columnList = "buyer_id")
+})
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,17 +19,40 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"items"})
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private Integer userId;
-    private String discountId; // nullable, only one discount is applicable
-    private String description;
-    private Double totalAmount;
+    @Column(nullable = false)
+    private String buyerId;
+
+    private String discountId; // nullable
+
+    @Column(nullable = false)
+    private String address;
+
+    private String instruction; // nullable
+
+    @Column(nullable = false)
+    private Double totalPrice;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<OrderItem> items;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items = new ArrayList<>();
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
 }

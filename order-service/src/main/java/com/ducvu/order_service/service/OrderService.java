@@ -2,8 +2,7 @@ package com.ducvu.order_service.service;
 
 import com.ducvu.order_service.config.*;
 import com.ducvu.order_service.dto.request.*;
-import com.ducvu.order_service.dto.response.OrderItemResponse;
-import com.ducvu.order_service.dto.response.OrderResponse;
+import com.ducvu.order_service.dto.response.*;
 import com.ducvu.order_service.entity.Order;
 import com.ducvu.order_service.entity.OrderItem;
 import com.ducvu.order_service.entity.OrderStatus;
@@ -32,164 +31,94 @@ public class OrderService {
     private final UserClient userClient;
     private final CartClient cartClient;
     private final DiscountClient discountClient;
-    private final PaymentClient paymentClient;
     private final ProductClient productClient;
 
-    public List<OrderResponse> getMyOrders(AuthRequest request) {
-        var authResponse = userClient.authenticate(request);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
-        List<Order> orders = orderRepository.findByUserId(authResponse.getResult().getUserId());
-        return orders.stream()
+    public List<OrderResponse> getMyOrders(String token) {
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+
+        return orderRepository.findByBuyerId(userId)
+                .stream()
                 .map(mapper::toOrderResponse)
                 .toList();
     }
 
-    public OrderResponse getOrder(Integer orderId, AuthRequest request) {
-        var authResponse = userClient.authenticate(request);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+    public OrderResponse getOrder(String token, String orderId) {
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        if (!order.getUserId().equals(authResponse.getResult().getUserId())) {
+        if (!userId.equals(order.getBuyerId())) {
             throw new RuntimeException("Unauthorized");
         }
 
         return mapper.toOrderResponse(order);
     }
 
-    public OrderResponse createOrder(CreateOrderRequest request) {
-        // authenticate user first
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
-
-        // get user cart
-        var cartResponse = cartClient.getMyCart(authRequest);
-        if (cartResponse == null) {
-            throw new RuntimeException("Cart is invalid");
-        }
+    // TODO
+    @Transactional
+    public OrderResponse createOrder(String token, CreateOrderRequest request) {
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
         Order order = new Order();
-        order.setItems(new HashSet<>());
-        order.setUserId(authResponse.getResult().getUserId());
 
-        if (request.getDescription() != null) {
-            order.setDescription(request.getDescription());
-        }
+        // set from request
+        order.setAddress(request.getAddress());
+        order.setInstruction(request.getInstruction());
+        order.setDiscountId(request.getDiscountId());
 
-        if (request.getItems().isEmpty()) {
-            throw new RuntimeException("Order is empty");
-        }
+        // default status
+        order.setStatus(OrderStatus.PENDING);
 
-        // loop over each item in the cart to recheck
-        double totalAmount = 0.0;
-        List<UpdateProductRequest> productsUpdate = new ArrayList<>(); // for sending products update request
-        List<CartItemRequest> cartItemRequests = new ArrayList<>(); // for sending request to update items in the cart
+        // map each cart item to order item
+        var cartResponse = getCartResponse(token);
+        cartResponse.getItems().stream().forEach(item -> {
 
-        for (var item : request.getItems()) {
-            var productResponse = productClient.getProduct(item.getProductId());
-            if (productResponse == null) {
-                throw new RuntimeException("Product not found");
-            }
-            if (item.getQuantity() > productResponse.getResult().getQuantity()) {
-                throw new RuntimeException("Item quantity exceeds product quantity");
-            }
-            totalAmount += item.getPrice();
-            OrderItem newItem = mapper.toOrderItem(item);
-            newItem.setOrder(order);
-            orderItemRepository.save(newItem);
-            order.getItems().add(newItem);
-            var product = UpdateProductRequest.builder()
-                    .productId(item.getProductId())
-                    .quantity(item.getQuantity())
-                    .build();
-            productsUpdate.add(product);
-            var cartItem = CartItemRequest.builder()
-                    .price(item.getPrice())
-                    .productId(item.getProductId())
-                    .quantity(item.getQuantity())
-                    .build();
-            cartItemRequests.add(cartItem);
-        }
+        });
 
-        order.setTotalAmount(totalAmount);
-
-        // validate the discount id if present
-        if (request.getDiscountId() != null) {
-            var discountResponse = discountClient.getDiscount(request.getDiscountId());
-            if (discountResponse == null) {
-                throw new RuntimeException("Discount invalid");
-            }
-            order.setDiscountId(request.getDiscountId());
-            if (discountResponse.getResult().getAmount() != null) {
-                order.setTotalAmount(order.getTotalAmount() - discountResponse.getResult().getAmount());
-            } else if (discountResponse.getResult().getPercent() != null) {
-                order.setTotalAmount(order.getTotalAmount() * (1 - discountResponse.getResult().getPercent() / 100));
-            }
-        }
-
-        order.setStatus(OrderStatus.PENDING); // default status
-        order.setCreatedAt(LocalDateTime.now());
-        orderRepository.save(order);
-
-        // update cart
-        var cartUpdateRequest = UpdateCartRequest.builder()
-                .token(request.getToken())
-                .items(cartItemRequests)
-                .build();
-        cartClient.order(cartUpdateRequest);
-
-        // update products
-        var productUpdateRequest = OrderProductsRequest.builder()
-                .isOrderCanceled(false)
-                .products(productsUpdate)
-                .build();
-        productClient.order(productUpdateRequest);
-
-        // create payment
-        CreatePaymentRequest paymentRequest = CreatePaymentRequest.builder().token(request.getToken()).orderId(order.getId()).build();
-        paymentClient.createPayment(paymentRequest);
-
-        return mapper.toOrderResponse(order);
+        // use discount
+        var discountResponse = getDiscountResponse(request.getDiscountId());
     }
 
-    public void cancelOrder(Integer orderId, AuthRequest request) {
-        var authResponse = userClient.authenticate(request);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+    // TODO
+    @Transactional
+    public void cancelOrder(String token, String orderId) {
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // send request to revert product quantity
-        var productUpdateRequest = OrderProductsRequest.builder()
-                .isOrderCanceled(true)
-                .products(new ArrayList<>())
-                .build();
-        for (var item : order.getItems()) {
-            var productUpdateItem = UpdateProductRequest.builder()
-                    .productId(item.getProductId())
-                    .quantity(item.getQuantity())
-                    .build();
-            productUpdateRequest.getProducts().add(productUpdateItem);
-        }
-        productClient.order(productUpdateRequest);
-
-        if (!order.getUserId().equals(authResponse.getResult().getUserId())) {
-            throw new RuntimeException("Unauthorized");
+        if (!order.getStatus().equals(OrderStatus.PENDING)) {
+            throw new RuntimeException("Order is not cancellable");
         }
 
-        // delete corresponding payment and update the order status to cancelled
-        paymentClient.deletePayment(orderId, request);
-        order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
     }
 
+    private DiscountResponse getDiscountResponse(String discountId) {
+        var discountResponse = discountClient.getDiscount(discountId);
+        if (discountResponse.getResult() == null) {
+            throw new RuntimeException("Discount not found");
+        }
+        return discountResponse.getResult();
+    }
+
+    private CartResponse getCartResponse(String token) {
+        var cartResponse = cartClient.getMyCart(token);
+        if (cartResponse.getResult() == null) {
+            throw new RuntimeException("Cart not found");
+        }
+        return cartResponse.getResult();
+    }
+
+    private AuthResponse validateToken(String token) {
+        var authResponse = userClient.authenticate(token);
+        if (authResponse.getResult() == null) {
+            throw new RuntimeException("Token invalid");
+        }
+        return authResponse.getResult();
+    }
 }

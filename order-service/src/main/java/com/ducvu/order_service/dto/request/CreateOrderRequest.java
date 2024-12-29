@@ -13,8 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CreateOrderRequest {
-    String token;
-    String description;
+    String address;
+    String instruction;
     String discountId;
-    List<OrderItemRequest> items;
 }

@@ -20,4 +20,9 @@ public class DiscountController {
         return ApiResponse.<List<DiscountResponse>>builder().result(res).build();
     }
 
+    @GetMapping("{discountId}")
+    public ApiResponse<DiscountResponse> getDiscount(@PathVariable("discountId") String discountId) {
+        var res = discountService.getDiscount(discountId);
+        return ApiResponse.<DiscountResponse>builder().result(res).build();
+    }
 }

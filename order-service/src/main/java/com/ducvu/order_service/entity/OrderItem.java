@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "orderItems")
+@Table(name = "order_items")
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,14 +13,14 @@ import lombok.*;
 @EqualsAndHashCode(exclude = {"order"})
 public class OrderItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private Integer productId;
+    private String productId;
     private Integer quantity;
-    private Double price;
+    private Double subtotal;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 }

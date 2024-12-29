@@ -63,6 +63,7 @@ Table Order {
   total_price double // after applying discount
   buyer_id string [ref: > User.id]
   address string
+  instruction string
   status enum("PENDING", "COMPLETED", "CANCELLED")
   created_at date
   updated_at date

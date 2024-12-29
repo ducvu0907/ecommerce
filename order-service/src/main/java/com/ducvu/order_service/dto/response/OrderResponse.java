@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,11 +15,12 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class OrderResponse {
-    Integer id;
-    Integer userId;
-    String description;
-    Double totalAmount;
+    String id;
+    String buyerId;
+    String instruction;
+    Double totalPrice;
     OrderStatus status;
-    Set<OrderItemResponse> items;
+    List<OrderItemResponse> items;
     LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

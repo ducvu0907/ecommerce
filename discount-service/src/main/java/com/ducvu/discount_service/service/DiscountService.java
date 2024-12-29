@@ -1,6 +1,7 @@
 package com.ducvu.discount_service.service;
 
 import com.ducvu.discount_service.dto.response.DiscountResponse;
+import com.ducvu.discount_service.entity.Discount;
 import com.ducvu.discount_service.helper.Mapper;
 import com.ducvu.discount_service.repository.DiscountRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,13 @@ public class DiscountService {
                 .stream()
                 .map(mapper::toDiscountResponse)
                 .toList();
+    }
+
+    public DiscountResponse getDiscount(String discountId) {
+        Discount discount = discountRepository.findById(discountId)
+                .orElseThrow(() -> new RuntimeException("Discount not found"));
+
+        return mapper.toDiscountResponse(discount);
     }
 
 }

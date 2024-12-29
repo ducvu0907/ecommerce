@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class OrderItemResponse {
-    Integer id;
-    Integer productId;
+    String id;
+    String productId;
     Integer quantity;
-    Double price;
-    Integer orderId;
+    Double subtotal;
 }
