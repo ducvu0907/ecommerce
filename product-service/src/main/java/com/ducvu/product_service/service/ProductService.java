@@ -3,6 +3,7 @@ package com.ducvu.product_service.service;
 import com.ducvu.product_service.config.UserClient;
 import com.ducvu.product_service.dto.request.ProductUpdateRequest;
 import com.ducvu.product_service.dto.request.*;
+import com.ducvu.product_service.dto.response.AuthResponse;
 import com.ducvu.product_service.dto.response.ProductResponse;
 import com.ducvu.product_service.entity.Category;
 import com.ducvu.product_service.entity.Product;
@@ -57,18 +58,16 @@ public class ProductService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category invalid"));
 
-        // check user role
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+        String role = authResponse.getRole();
 
-        if (!authResponse.getResult().getRole().equals("SELLER")) {
+        if (!role.equals("SELLER")) {
             throw new RuntimeException("Unauthorized");
         }
 
         Product product = Product.builder()
-                .sellerId(authResponse.getResult().getUserId())
+                .sellerId(userId)
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .imageUrl(request.getImageUrl())
@@ -87,13 +86,10 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product already exists"));
 
-        // check user role
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
-        if (!authResponse.getResult().getUserId().equals(product.getSellerId()) || !authResponse.getResult().getRole().equals("SELLER")) {
+        if (!userId.equals(product.getSellerId())) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -127,15 +123,10 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        Category category = product.getCategory();
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
-        // check user role
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
-
-        if (!authResponse.getResult().getUserId().equals(product.getSellerId()) || !authResponse.getResult().getRole().equals("SELLER")) {
+        if (!userId.equals(product.getSellerId())) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -156,4 +147,11 @@ public class ProductService {
     public void order(OrderRequest request) {
     }
 
+    private AuthResponse validateToken(String token) {
+        var authResponse = userClient.authenticate(token);
+        if (authResponse.getResult() == null) {
+            throw new RuntimeException("Token invalid");
+        }
+        return authResponse.getResult();
+    }
 }

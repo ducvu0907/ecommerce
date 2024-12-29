@@ -2,6 +2,7 @@ package com.ducvu.payment_service.service;
 
 import com.ducvu.payment_service.config.UserClient;
 import com.ducvu.payment_service.dto.request.PayOrderRequest;
+import com.ducvu.payment_service.dto.response.AuthResponse;
 import com.ducvu.payment_service.dto.response.PaymentResponse;
 import com.ducvu.payment_service.entity.Payment;
 import com.ducvu.payment_service.helper.Mapper;
@@ -24,10 +25,7 @@ public class PaymentService {
     public PaymentResponse getPaymentByOrderId(String token, String orderId) {
         log.info("Payment service; Get payment by order id");
 
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
 
         Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
@@ -40,4 +38,11 @@ public class PaymentService {
         return new PaymentResponse();
     }
 
+    private AuthResponse validateToken(String token) {
+        var authResponse = userClient.authenticate(token);
+        if (authResponse.getResult() == null) {
+            throw new RuntimeException("Token invalid");
+        }
+        return authResponse.getResult();
+    }
 }

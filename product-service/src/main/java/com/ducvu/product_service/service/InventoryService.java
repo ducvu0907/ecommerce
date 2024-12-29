@@ -3,6 +3,7 @@ package com.ducvu.product_service.service;
 import com.ducvu.product_service.config.UserClient;
 import com.ducvu.product_service.dto.request.InventoryCreateRequest;
 import com.ducvu.product_service.dto.request.InventoryUpdateRequest;
+import com.ducvu.product_service.dto.response.AuthResponse;
 import com.ducvu.product_service.dto.response.InventoryResponse;
 import com.ducvu.product_service.entity.Inventory;
 import com.ducvu.product_service.entity.Product;
@@ -30,12 +31,10 @@ public class InventoryService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
-        if (!authResponse.getResult().getUserId().equals(product.getSellerId()) || !authResponse.getResult().getRole().equals("SELLER")) {
+        if (!userId.equals(product.getSellerId())) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -51,12 +50,10 @@ public class InventoryService {
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
-        if (!authResponse.getResult().getUserId().equals(product.getSellerId()) || !authResponse.getResult().getRole().equals("SELLER")) {
+        if (!userId.equals(product.getSellerId())) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -75,12 +72,11 @@ public class InventoryService {
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+        String role = authResponse.getRole();
 
-        if (!authResponse.getResult().getUserId().equals(inventory.getProduct().getSellerId()) || !authResponse.getResult().getRole().equals("SELLER")) {
+        if (!userId.equals(inventory.getProduct().getSellerId())) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -95,4 +91,11 @@ public class InventoryService {
         return mapper.toInventoryResponse(inventoryRepository.save(inventory));
     }
 
+    private AuthResponse validateToken(String token) {
+        var authResponse = userClient.authenticate(token);
+        if (authResponse.getResult() == null) {
+            throw new RuntimeException("Token invalid");
+        }
+        return authResponse.getResult();
+    }
 }
