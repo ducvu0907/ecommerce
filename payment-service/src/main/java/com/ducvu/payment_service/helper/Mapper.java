@@ -10,10 +10,9 @@ public class Mapper {
         return PaymentResponse.builder()
                 .id(payment.getId())
                 .orderId(payment.getOrderId())
-                .userId(payment.getUserId())
+                .transactionContent(payment.getTransactionContent())
                 .transactionId(payment.getTransactionId())
-                .status(payment.getStatus())
-                .payDate(payment.getPayDate())
+                .createdAt(payment.getCreatedAt())
                 .build();
     }
 }

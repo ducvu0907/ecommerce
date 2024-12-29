@@ -1,7 +1,7 @@
 package com.ducvu.payment_service.exception;
 
 
-import com.ducvu.payment_service.dto.response.ApiResponse;
+import com.ducvu.payment_service.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class ApiExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse<?>> handleGenericException(Exception exception) {
         log.error("Exception: ", exception);

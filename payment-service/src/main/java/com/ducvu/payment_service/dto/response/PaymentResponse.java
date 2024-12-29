@@ -1,6 +1,5 @@
 package com.ducvu.payment_service.dto.response;
 
-import com.ducvu.payment_service.entity.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +13,8 @@ import java.time.LocalDateTime;
 @Data
 public class PaymentResponse {
     String id;
-    Integer orderId;
-    Integer userId;
+    String orderId;
+    String transactionContent;
     String transactionId;
-    PaymentStatus status;
-    LocalDateTime payDate;
+    LocalDateTime createdAt;
 }

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PayOrderRequest {
-    String token;
-    Integer orderId;
+public class PayOrderRequest { // TODO
+    String orderId;
 }

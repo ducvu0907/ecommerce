@@ -1,10 +1,13 @@
 package com.ducvu.payment_service.entity;
 
+import jakarta.persistence.PrePersist;
 import lombok.*;
+import org.hibernate.annotations.Index;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(value = "payments")
@@ -12,18 +15,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Data
-public class Payment { // TODO: refactor this for vnpay gateway
+public class Payment {
     @Id
     private String id;
 
-    private Integer orderId;
+    @Indexed
+    private String orderId;
+
+    private String transactionContent;
 
     @Indexed
-    private Integer userId; // for querying user payments history
+    private String transactionId;
 
-    @Indexed
-    private String transactionId; // references the transaction from the payment gateway
+    private LocalDateTime createdAt;
 
-    private PaymentStatus status;
-    private LocalDateTime payDate;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
