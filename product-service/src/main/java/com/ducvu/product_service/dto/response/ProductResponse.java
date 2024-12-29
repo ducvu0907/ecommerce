@@ -20,7 +20,7 @@ public class ProductResponse {
     String imageUrl;
     String description;
     Double price;
-    Category category;
+    CategoryResponse category;
     Integer quantity;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

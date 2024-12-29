@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name = "user-service", url = "http://localhost:8007")
 public interface UserClient {
-    @PostMapping(value = "/auth/validate", consumes = "application/json")
+    @PostMapping("/auth/validate")
     ApiResponse<AuthResponse> authenticate(@RequestHeader("token") String token);
 }

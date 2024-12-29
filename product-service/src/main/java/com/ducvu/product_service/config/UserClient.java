@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(name = "user-service", url = "http://localhost:8007")
 public interface UserClient {
-    @PostMapping(value = "/auth/token", consumes = "application/json")
+    @PostMapping(value = "/auth/validate", consumes = "application/json")
     ApiResponse<AuthResponse> authenticate(String token);
 }

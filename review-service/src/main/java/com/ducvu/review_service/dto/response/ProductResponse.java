@@ -10,11 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse {
-    String id;
     String sellerId;
-    String sku;
-    String title;
-    String imageUrl;
-    String description;
-    Double price;
 }

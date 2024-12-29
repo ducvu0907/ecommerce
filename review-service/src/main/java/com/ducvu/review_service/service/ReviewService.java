@@ -2,7 +2,6 @@ package com.ducvu.review_service.service;
 
 import com.ducvu.review_service.config.ProductClient;
 import com.ducvu.review_service.config.UserClient;
-import com.ducvu.review_service.dto.request.AuthRequest;
 import com.ducvu.review_service.dto.request.CreateReviewRequest;
 import com.ducvu.review_service.dto.request.UpdateReviewRequest;
 import com.ducvu.review_service.dto.response.ReviewResponse;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

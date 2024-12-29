@@ -23,7 +23,7 @@ public class Mapper {
                 .imageUrl(product.getImageUrl())
                 .description(product.getDescription())
                 .price(product.getPrice())
-                .category(product.getCategory())
+                .category(toCategoryResponse(product.getCategory()))
                 .quantity(
                     product.getInventories()
                             .stream()

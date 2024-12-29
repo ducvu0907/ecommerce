@@ -88,7 +88,6 @@ Table CartItem {
   product_id string [pk, ref: > Product.id]
   cart_id string [pk, ref: > Cart.id]
   quantity integer
-  subtotal double // quantity * unit price of the product
 }
 
 Table Payment {
