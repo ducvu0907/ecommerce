@@ -15,11 +15,10 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class DataLoader {
+public class DataLoader { // helper module to initialize data for testing
     private final DiscountRepository discountRepository;
     private final ObjectMapper objectMapper;
 
-    // initialize data
     @PostConstruct
     public void loadMockData() {
         try {

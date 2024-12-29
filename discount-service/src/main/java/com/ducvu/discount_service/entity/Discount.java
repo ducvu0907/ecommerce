@@ -1,5 +1,6 @@
 package com.ducvu.discount_service.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,10 +17,32 @@ public class Discount {
     @Id
     private String id;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DiscountType type;
+
+    @Column(nullable = false)
+    private Double value;
+
+    @Column(nullable = false)
     private String description;
-    private Double amount;
-    private Double percent;
+
+    @Column(nullable = false)
     private LocalDateTime startDate;
+
+    @Column(nullable = false)
     private LocalDateTime endDate;
-    private Boolean isActive;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

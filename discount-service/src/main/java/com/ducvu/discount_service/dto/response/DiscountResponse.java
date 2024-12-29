@@ -1,5 +1,6 @@
 package com.ducvu.discount_service.dto.response;
 
+import com.ducvu.discount_service.entity.DiscountType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class DiscountResponse {
     String id;
+    DiscountType type;
+    Double value;
     String description;
-    Double amount;
-    Double percent;
     LocalDateTime startDate;
     LocalDateTime endDate;
-    Boolean isActive;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

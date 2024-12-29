@@ -9,12 +9,13 @@ public class Mapper {
     public DiscountResponse toDiscountResponse(Discount discount) {
         return DiscountResponse.builder()
                 .id(discount.getId())
+                .type(discount.getType())
+                .value(discount.getValue())
                 .description(discount.getDescription())
-                .amount(discount.getAmount())
-                .percent(discount.getPercent())
                 .startDate(discount.getStartDate())
                 .endDate(discount.getEndDate())
-                .isActive(discount.getIsActive())
+                .createdAt(discount.getCreatedAt())
+                .updatedAt(discount.getUpdatedAt())
                 .build();
     }
 
