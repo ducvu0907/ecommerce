@@ -79,6 +79,8 @@ Table OrderItem {
 Table Cart {
   id string [pk]
   user_id string [ref: - User.id]
+  created_at date
+  updated_at date
 }
 
 Table CartItem {
