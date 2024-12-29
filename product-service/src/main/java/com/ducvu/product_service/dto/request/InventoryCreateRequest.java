@@ -1,5 +1,6 @@
 package com.ducvu.product_service.dto.request;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthRequest { // sent by external service for authentication and authorization
-    String token;
+public class InventoryCreateRequest {
+    String productId;
+    String location;
+    Integer stock;
 }

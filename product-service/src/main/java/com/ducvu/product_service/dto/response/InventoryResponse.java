@@ -1,6 +1,6 @@
 package com.ducvu.product_service.dto.response;
 
-import com.ducvu.product_service.entity.Category;
+import com.ducvu.product_service.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,16 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductResponse {
+public class InventoryResponse {
     String id;
-    String sellerId;
-    String sku;
-    String title;
-    String imageUrl;
-    String description;
-    Double price;
-    Category category;
-    Integer quantity;
+    String location;
+    Integer stock;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 }

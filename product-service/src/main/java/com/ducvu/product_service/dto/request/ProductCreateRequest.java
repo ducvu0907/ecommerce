@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ProductCreateRequest {
-    String token;
     String title;
     String description;
     String imageUrl;
     String sku;
     Double price;
-    Integer quantity;
-    Integer categoryId;
+    String categoryId;
 }

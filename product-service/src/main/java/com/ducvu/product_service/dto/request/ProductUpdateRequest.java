@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ProductUpdateRequest {
-    String token;
     String title;
     String description;
-    String sku;
     String imageUrl;
+    String sku;
     Double price;
-    Integer quantity;
 }

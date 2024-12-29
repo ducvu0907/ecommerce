@@ -37,7 +37,7 @@ Table Product {
   id string [pk]
   category_id string [ref: < Category.id]
   description string
-  user_id string [ref: > User.id]
+  seller_id string [ref: > User.id]
   title string
   image_url string
   sku string
@@ -61,7 +61,7 @@ Table Order {
   id string [pk]
   discount_id string [ref: < Discount.id]
   total_price double // after applying discount
-  user_id string [ref: > User.id]
+  buyer_id string [ref: > User.id]
   address string
   status enum("PENDING", "COMPLETED", "CANCELLED")
   created_at date
