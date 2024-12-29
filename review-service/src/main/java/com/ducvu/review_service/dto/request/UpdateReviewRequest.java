@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateReviewRequest {
-    String token;
     Integer rating;
     String content;
 }

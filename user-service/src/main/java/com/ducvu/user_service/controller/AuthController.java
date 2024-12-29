@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ApiResponse<AuthResponse> validate(@RequestHeader("token") String token) {
+    public ApiResponse<AuthResponse> authenticate(@RequestHeader("token") String token) {
         var res = authService.validate(token);
         return ApiResponse.<AuthResponse>builder().result(res).build();
     }

@@ -1,9 +1,8 @@
 package com.ducvu.review_service.controller;
 
-import com.ducvu.review_service.dto.request.AuthRequest;
 import com.ducvu.review_service.dto.request.CreateReviewRequest;
 import com.ducvu.review_service.dto.request.UpdateReviewRequest;
-import com.ducvu.review_service.dto.response.ApiResponse;
+import com.ducvu.review_service.dto.ApiResponse;
 import com.ducvu.review_service.dto.response.ReviewResponse;
 import com.ducvu.review_service.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -17,32 +16,28 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    // public
     @GetMapping("/product/{productId}")
-    public ApiResponse<List<ReviewResponse>> getReviewsByProductId(@PathVariable("productId") Integer productId) {
+    public ApiResponse<List<ReviewResponse>> getReviewsByProductId(@PathVariable("productId") String productId) {
         var res = reviewService.getReviewsByProductId(productId);
         return ApiResponse.<List<ReviewResponse>>builder().result(res).build();
     }
 
 
-    // buyer
     @PostMapping("")
-    public ApiResponse<ReviewResponse> createReview(@RequestBody CreateReviewRequest request) {
-        var res = reviewService.createReview(request);
+    public ApiResponse<ReviewResponse> createReview(@RequestHeader("token") String token, @RequestBody CreateReviewRequest request) {
+        var res = reviewService.createReview(token, request);
         return ApiResponse.<ReviewResponse>builder().result(res).build();
     }
 
-    // buyer
     @PostMapping("/{reviewId}")
-    public ApiResponse<ReviewResponse> updateReview(@PathVariable("reviewId") String reviewId, @RequestBody UpdateReviewRequest request) {
-        var res = reviewService.updateReview(reviewId, request);
+    public ApiResponse<ReviewResponse> updateReview(@RequestHeader("token") String token, @PathVariable("reviewId") String reviewId, @RequestBody UpdateReviewRequest request) {
+        var res = reviewService.updateReview(token, reviewId, request);
         return ApiResponse.<ReviewResponse>builder().result(res).build();
     }
 
-    // buyer
     @DeleteMapping("/{reviewId}")
-    public ApiResponse<String> deleteReview(@PathVariable("reviewId") String reviewId, @RequestBody AuthRequest request) {
-        reviewService.deleteReview(reviewId, request);
+    public ApiResponse<String> deleteReview(@RequestHeader("token") String token, @PathVariable("reviewId") String reviewId) {
+        reviewService.deleteReview(token, reviewId);
         return ApiResponse.<String>builder().result("Review has been deleted").build();
     }
 

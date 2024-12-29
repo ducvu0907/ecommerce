@@ -26,16 +26,15 @@ public class ReviewService {
     private final UserClient userClient;
     private final ProductClient productClient;
 
-    public List<ReviewResponse> getReviewsByProductId(Integer productId) {
+    public List<ReviewResponse> getReviewsByProductId(String productId) {
         return reviewRepository.findByProductId(productId)
                 .stream()
                 .map(mapper::toReviewResponse)
                 .toList();
     }
 
-    public ReviewResponse createReview(CreateReviewRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
+    public ReviewResponse createReview(String token, CreateReviewRequest request) {
+        var authResponse = userClient.authenticate(token);
         if (authResponse == null) {
             throw new RuntimeException("Token invalid");
         }
@@ -68,9 +67,8 @@ public class ReviewService {
         return mapper.toReviewResponse(review);
     }
 
-    public ReviewResponse updateReview(String reviewId, UpdateReviewRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
+    public ReviewResponse updateReview(String token, String reviewId, UpdateReviewRequest request) {
+        var authResponse = userClient.authenticate(token);
         if (authResponse == null) {
             throw new RuntimeException("Token invalid");
         }
@@ -95,8 +93,8 @@ public class ReviewService {
         return mapper.toReviewResponse(review);
     }
 
-    public void deleteReview(String reviewId, AuthRequest request) {
-        var authResponse = userClient.authenticate(request);
+    public void deleteReview(String token, String reviewId) {
+        var authResponse = userClient.authenticate(token);
         if (authResponse == null) {
             throw new RuntimeException("Token invalid");
         }

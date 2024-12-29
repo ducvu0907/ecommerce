@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ReviewResponse {
     String id;
-    Integer userId;
-    Integer productId;
+    String userId;
+    String productId;
     Integer rating;
     String content;
     LocalDateTime createdAt;

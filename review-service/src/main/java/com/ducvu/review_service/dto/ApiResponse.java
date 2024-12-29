@@ -1,4 +1,4 @@
-package com.ducvu.review_service.dto.response;
+package com.ducvu.review_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> { // format for every request response
+public class ApiResponse<T> {
     @Builder.Default
-    private int code = 1000; // default to 1000 - success, otherwise probably 9999
+    private int code = 1000;
     private String message;
     private T result;
 }

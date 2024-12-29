@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateReviewRequest {
-    String token;
-    Integer productId;
+    String productId;
     Integer rating;
     String content;
 }

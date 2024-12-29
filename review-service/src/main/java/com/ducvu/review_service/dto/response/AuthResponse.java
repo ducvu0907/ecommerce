@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse { // authenticate the token sent from external service
-    Integer userId;
+    String userId;
     String role;
 }

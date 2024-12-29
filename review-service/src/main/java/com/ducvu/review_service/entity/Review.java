@@ -1,5 +1,7 @@
 package com.ducvu.review_service.entity;
 
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,13 +17,25 @@ import java.time.LocalDateTime;
 public class Review {
     @Id
     private String id;
-    private Integer userId;
 
     @Indexed
-    private Integer productId;
+    private String userId;
+
+    @Indexed
+    private String productId;
 
     private Integer rating; // 1-5
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

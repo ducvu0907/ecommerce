@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepository extends MongoRepository<Review, String> {
-    List<Review> findByProductId(Integer productId);
-    Optional<Review> findByUserIdAndProductId(Integer userId, Integer productId);
+    List<Review> findByProductId(String productId);
+    Optional<Review> findByUserIdAndProductId(String userId, String productId);
 }
