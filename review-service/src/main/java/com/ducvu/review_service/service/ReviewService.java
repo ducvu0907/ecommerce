@@ -4,6 +4,7 @@ import com.ducvu.review_service.config.ProductClient;
 import com.ducvu.review_service.config.UserClient;
 import com.ducvu.review_service.dto.request.CreateReviewRequest;
 import com.ducvu.review_service.dto.request.UpdateReviewRequest;
+import com.ducvu.review_service.dto.response.AuthResponse;
 import com.ducvu.review_service.dto.response.ReviewResponse;
 import com.ducvu.review_service.entity.Review;
 import com.ducvu.review_service.helper.Mapper;
@@ -32,28 +33,26 @@ public class ReviewService {
     }
 
     public ReviewResponse createReview(String token, CreateReviewRequest request) {
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+        String role = authResponse.getRole();
+
+        if (role.equals("SELLER")) {
+            throw new RuntimeException("Seller can't review products");
         }
 
-        reviewRepository.findByUserIdAndProductId(authResponse.getResult().getUserId(), request.getProductId())
+        reviewRepository.findByUserIdAndProductId(userId, request.getProductId())
                 .ifPresent(review -> {
                     throw new RuntimeException("Review already exists");
                 });
 
         var productResponse = productClient.getProduct(request.getProductId());
-
         if (productResponse == null) {
             throw new RuntimeException("Product not found");
         }
 
-        if (productResponse.getResult().getSellerId().equals(authResponse.getResult().getUserId())) {
-            throw new RuntimeException("Can't review your own product");
-        }
-
         Review review = Review.builder()
-                .userId(authResponse.getResult().getUserId())
+                .userId(userId)
                 .productId(request.getProductId())
                 .rating(request.getRating())
                 .content(request.getContent())
@@ -66,15 +65,13 @@ public class ReviewService {
     }
 
     public ReviewResponse updateReview(String token, String reviewId, UpdateReviewRequest request) {
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
 
-        if (!review.getUserId().equals(authResponse.getResult().getUserId())) {
+        if (!review.getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -92,19 +89,24 @@ public class ReviewService {
     }
 
     public void deleteReview(String token, String reviewId) {
-        var authResponse = userClient.authenticate(token);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not exists"));
 
-        if (!review.getUserId().equals(authResponse.getResult().getUserId())) {
+        if (!review.getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
 
         reviewRepository.delete(review);
     }
 
+    private AuthResponse validateToken(String token) {
+        var authResponse = userClient.authenticate(token);
+        if (authResponse.getResult() == null) {
+            throw new RuntimeException("Token invalid");
+        }
+        return authResponse.getResult();
+    }
 }
