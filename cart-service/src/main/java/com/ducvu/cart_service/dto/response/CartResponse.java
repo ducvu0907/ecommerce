@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -12,7 +14,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class CartResponse {
-    Integer id;
-    Integer userId;
-    Set<CartItemResponse> items;
+    String id;
+    String userId;
+    List<CartItemResponse> items;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

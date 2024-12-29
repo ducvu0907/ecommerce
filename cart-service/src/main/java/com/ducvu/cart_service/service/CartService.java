@@ -3,6 +3,8 @@ package com.ducvu.cart_service.service;
 import com.ducvu.cart_service.config.ProductClient;
 import com.ducvu.cart_service.config.UserClient;
 import com.ducvu.cart_service.dto.request.*;
+import com.ducvu.cart_service.dto.response.AuthResponse;
+import com.ducvu.cart_service.dto.response.CartItemResponse;
 import com.ducvu.cart_service.dto.response.CartResponse;
 import com.ducvu.cart_service.entity.Cart;
 import com.ducvu.cart_service.entity.CartItem;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,38 +27,54 @@ import java.util.stream.Collectors;
 public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final Mapper mapper;
     private final UserClient userClient;
     private final ProductClient productClient;
 
-    public CartResponse getMyCart(AuthRequest request) {
-        var authResponse = userClient.authenticate(request);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
-        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
+    public CartResponse getMyCart(String token) {
+        log.info("Cart service; Get my cart");
+
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+
+        Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUserId(authResponse.getResult().getUserId());
-                    newCart.setItems(new HashSet<>());
+                    Cart newCart = Cart.builder()
+                            .userId(userId)
+                            .build();
                     return cartRepository.save(newCart);
                 });
 
-        return mapper.toCartResponse(cart);
+        List<CartItemResponse> cartItemResponses = cart.getItems().stream()
+                .map(item -> {
+                    var productResponse = productClient.getProduct(item.getProductId());
+                    double subtotal = productResponse.getResult().getPrice() * item.getQuantity();
+                    return CartItemResponse.builder()
+                            .productId(item.getProductId())
+                            .quantity(item.getQuantity())
+                            .subtotal(subtotal)
+                            .build();
+                })
+                .toList();
+
+        return CartResponse.builder()
+                .id(cart.getId())
+                .userId(userId)
+                .items(cartItemResponses)
+                .build();
     }
 
     @Transactional
-    public CartResponse addItem(AddItemRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
-        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
+    public void addItem(String token, AddItemRequest request) {
+        log.info("Cart service; Add item");
+
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+
+        Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUserId(authResponse.getResult().getUserId());
-                    newCart.setItems(new HashSet<>());
+                    Cart newCart = Cart.builder()
+                            .userId(userId)
+                            .build();
                     return cartRepository.save(newCart);
                 });
 
@@ -81,41 +100,32 @@ public class CartService {
                 throw new RuntimeException("Quantity exceeded");
             }
             item.setQuantity(newQuantity);
-            item.setPrice(productResponse.getResult().getPrice() * newQuantity);
-
             cartItemRepository.save(item);
+
         } else {
             CartItem newItem = CartItem.builder()
                     .productId(request.getProductId())
                     .quantity(request.getQuantity())
-                    .price(productResponse.getResult().getPrice() * request.getQuantity())
                     .cart(cart)
                     .build();
 
             cartItemRepository.save(newItem);
             cart.getItems().add(newItem);
         }
-
-        cartRepository.save(cart);
-        return mapper.toCartResponse(cart);
     }
 
     @Transactional
-    public CartResponse updateItem(Integer itemId, UpdateItemRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+    public void updateItem(String token, String itemId, UpdateItemRequest request) {
+        log.info("Cart service; Update item");
 
-        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
         CartItem item = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        if (!item.getCart().getId().equals(cart.getId())) {
-            throw new RuntimeException("Item not found");
+        if (!item.getCart().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
         }
 
         var productResponse = productClient.getProduct(item.getProductId());
@@ -128,81 +138,47 @@ public class CartService {
         }
 
         item.setQuantity(request.getQuantity());
-        item.setPrice(productResponse.getResult().getPrice() * request.getQuantity());
-
         cartItemRepository.save(item);
-        cartRepository.save(cart);
-
-        return mapper.toCartResponse(cart);
     }
 
     @Transactional
-    public void deleteItem(Integer itemId, AuthRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+    public void deleteItem(String token, String itemId) {
+        log.info("Cart service; Delete item");
 
-        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
         CartItem item = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
+        if (!item.getCart().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+
         cartItemRepository.delete(item);
-
-        cart.getItems().remove(item);
-        cartRepository.save(cart);
     }
 
     @Transactional
-    public void deleteItems(AuthRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null) {
-            throw new RuntimeException("Token invalid");
-        }
+    public void emptyCart(String token) {
+        log.info("Cart service; Empty cart");
 
-        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
-                .orElseThrow(() ->  new RuntimeException("Cart not found"));
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
 
-        cartItemRepository.deleteAllInBatch(cart.getItems());
-
-        //cart.getItems().forEach(item -> {
-        //    cartItemRepository.delete(item);
-        //});
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         cart.getItems().clear();
         cartRepository.save(cart);
     }
 
-    // used by order service after successful order
-    @Transactional
-    public void updateCart(UpdateCartRequest request) {
-        AuthRequest authRequest = AuthRequest.builder().token(request.getToken()).build();
-        var authResponse = userClient.authenticate(authRequest);
-        if (authResponse == null) {
+    private AuthResponse validateToken(String token) {
+        var authResponse = userClient.authenticate(token);
+        if (authResponse.getResult() == null) {
             throw new RuntimeException("Token invalid");
         }
 
-        Cart cart = cartRepository.findByUserId(authResponse.getResult().getUserId())
-                .orElseThrow(() ->  new RuntimeException("Cart not found"));
-
-        // replace previous cart items with new set of items
-        cart.getItems().clear();
-
-        for (CartItemRequest itemRequest : request.getItems()) {
-            CartItem newItem = CartItem.builder()
-                    .productId(itemRequest.getProductId())
-                    .quantity(itemRequest.getQuantity())
-                    .price(itemRequest.getPrice())
-                    .cart(cart)
-                    .build();
-            cartItemRepository.save(newItem);
-            cart.getItems().add(newItem);
-        }
-
-        cartRepository.save(cart);
+        return authResponse.getResult();
     }
+
 }

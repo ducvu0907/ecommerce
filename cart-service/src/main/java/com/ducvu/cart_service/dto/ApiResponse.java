@@ -1,6 +1,5 @@
-package com.ducvu.cart_service.dto.response;
+package com.ducvu.cart_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

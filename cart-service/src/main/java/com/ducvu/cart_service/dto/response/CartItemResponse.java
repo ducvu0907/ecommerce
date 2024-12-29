@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CartItemResponse {
-    Integer id;
-    Integer productId;
+    String id;
+    String productId;
     Integer quantity;
-    Double price;
-    Integer cartId;
+    Double subtotal;
 }

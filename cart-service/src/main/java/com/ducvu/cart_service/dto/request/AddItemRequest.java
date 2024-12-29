@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AddItemRequest {
-    String token;
-    Integer productId;
+    String productId;
     Integer quantity;
 }

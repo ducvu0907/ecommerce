@@ -12,14 +12,13 @@ import lombok.*;
 @EqualsAndHashCode(exclude = {"cart"})
 public class CartItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private Integer productId;
+    private String productId;
     private Integer quantity;
-    private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 }

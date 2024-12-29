@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateItemRequest {
-    String token;
     Integer quantity;
 }

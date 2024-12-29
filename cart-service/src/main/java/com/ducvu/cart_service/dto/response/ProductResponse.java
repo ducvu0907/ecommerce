@@ -10,12 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ProductResponse {
-    Integer id;
-    Integer sellerId;
-    String sku;
-    String title;
-    String imageUrl;
-    String description;
     Double price;
     Integer quantity;
 }
