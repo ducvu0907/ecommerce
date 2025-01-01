@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderRequest {
-    private boolean isOrderCanceled; // if order is canceled then increase else decrease the quantity
-    private List<OrderProductRequest> products;
+public class ShipmentRequest {
+    String orderId;
+    List<ShipmentItemRequest> products;
 }

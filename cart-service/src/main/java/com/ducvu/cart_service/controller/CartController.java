@@ -28,7 +28,7 @@ public class CartController {
         return ApiResponse.<String>builder().result("Item added successfully").build();
     }
 
-    @PutMapping("me/items/{itemId}")
+    @PostMapping("me/items/{itemId}")
     public ApiResponse<String> updateItem(@RequestHeader("token") String token, @PathVariable("itemId") String itemId, @RequestBody UpdateItemRequest request) {
         cartService.updateItem(token, itemId, request);
         return ApiResponse.<String>builder().result("Item updated successfully").build();

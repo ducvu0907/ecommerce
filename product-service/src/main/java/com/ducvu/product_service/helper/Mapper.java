@@ -30,6 +30,8 @@ public class Mapper {
                             .mapToInt(Inventory::getStock)
                             .sum()
                 )
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
                 .build();
     }
 

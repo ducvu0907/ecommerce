@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,6 +75,7 @@ public class ProductService {
                 .sku(request.getSku())
                 .price(request.getPrice())
                 .category(category)
+                .inventories(new ArrayList<>())
                 .build();
 
         productRepository.save(product);
@@ -84,7 +86,7 @@ public class ProductService {
         log.info("Product service; Update product");
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product already exists"));
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         var authResponse = validateToken(token);
         String userId = authResponse.getUserId();
@@ -143,11 +145,10 @@ public class ProductService {
                 .toList();
     }
 
-    // TODO
-    public void order(OrderRequest request) {
-    }
-
     private AuthResponse validateToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("No token provided");
+        }
         var authResponse = userClient.authenticate(token);
         if (authResponse.getResult() == null) {
             throw new RuntimeException("Token invalid");

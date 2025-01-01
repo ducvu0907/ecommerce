@@ -1,92 +1,102 @@
 [
   {
     "id": "1",
-    "description": "New Year Discount",
-    "amount": 50.0,
-    "percent": 10.0,
-    "startDate": "2024-01-01T00:00:00",
-    "endDate": "2024-01-31T23:59:59",
-    "isActive": true
+    "type": "FIXED",
+    "value": 10.0,
+    "description": "Fixed discount of $10",
+    "startDate": "2023-10-01T00:00:00",
+    "endDate": "2023-10-31T23:59:59",
+    "createdAt": "2023-09-25T10:00:00",
+    "updatedAt": "2023-09-25T10:00:00"
   },
   {
     "id": "2",
-    "description": "Holiday Sale",
-    "amount": 75.0,
-    "percent": 15.0,
-    "startDate": "2024-12-20T00:00:00",
-    "endDate": "2024-12-31T23:59:59",
-    "isActive": true
+    "type": "PERCENTAGE",
+    "value": 15.0,
+    "description": "15% off on all items",
+    "startDate": "2023-10-05T00:00:00",
+    "endDate": "2023-10-15T23:59:59",
+    "createdAt": "2023-09-26T11:00:00",
+    "updatedAt": "2023-09-26T11:00:00"
   },
   {
     "id": "3",
-    "description": "Black Friday Special",
-    "amount": 100.0,
-    "percent": 20.0,
-    "startDate": "2024-11-25T00:00:00",
-    "endDate": "2024-11-30T23:59:59",
-    "isActive": false
+    "type": "FIXED",
+    "value": 20.0,
+    "description": "Fixed discount of $20",
+    "startDate": "2023-10-10T00:00:00",
+    "endDate": "2023-10-20T23:59:59",
+    "createdAt": "2023-09-27T12:00:00",
+    "updatedAt": "2023-09-27T12:00:00"
   },
   {
     "id": "4",
-    "description": "Summer Clearance",
-    "amount": 30.0,
-    "percent": 5.0,
-    "startDate": "2024-06-01T00:00:00",
-    "endDate": "2024-06-30T23:59:59",
-    "isActive": false
+    "type": "PERCENTAGE",
+    "value": 25.0,
+    "description": "25% off on selected items",
+    "startDate": "2023-10-15T00:00:00",
+    "endDate": "2023-10-25T23:59:59",
+    "createdAt": "2023-09-28T13:00:00",
+    "updatedAt": "2023-09-28T13:00:00"
   },
   {
     "id": "5",
-    "description": "Back-to-School Offer",
-    "amount": 40.0,
-    "percent": 8.0,
-    "startDate": "2024-08-15T00:00:00",
-    "endDate": "2024-09-15T23:59:59",
-    "isActive": true
+    "type": "FIXED",
+    "value": 30.0,
+    "description": "Fixed discount of $30",
+    "startDate": "2023-10-20T00:00:00",
+    "endDate": "2023-10-30T23:59:59",
+    "createdAt": "2023-09-29T14:00:00",
+    "updatedAt": "2023-09-29T14:00:00"
   },
   {
     "id": "6",
-    "description": "Valentine's Day Special",
-    "amount": 60.0,
-    "percent": 12.0,
-    "startDate": "2024-02-01T00:00:00",
-    "endDate": "2024-02-14T23:59:59",
-    "isActive": true
+    "type": "PERCENTAGE",
+    "value": 10.0,
+    "description": "10% off on all orders",
+    "startDate": "2023-10-25T00:00:00",
+    "endDate": "2023-11-05T23:59:59",
+    "createdAt": "2023-09-30T15:00:00",
+    "updatedAt": "2023-09-30T15:00:00"
   },
   {
     "id": "7",
-    "description": "Spring Festival Sale",
-    "amount": 90.0,
-    "percent": 18.0,
-    "startDate": "2024-03-20T00:00:00",
-    "endDate": "2024-03-31T23:59:59",
-    "isActive": false
+    "type": "FIXED",
+    "value": 50.0,
+    "description": "Fixed discount of $50",
+    "startDate": "2023-11-01T00:00:00",
+    "endDate": "2023-11-10T23:59:59",
+    "createdAt": "2023-10-01T16:00:00",
+    "updatedAt": "2023-10-01T16:00:00"
   },
   {
     "id": "8",
-    "description": "Cyber Monday Discount",
-    "amount": 120.0,
-    "percent": 25.0,
-    "startDate": "2024-12-02T00:00:00",
-    "endDate": "2024-12-02T23:59:59",
-    "isActive": false
+    "type": "PERCENTAGE",
+    "value": 20.0,
+    "description": "20% off on all items",
+    "startDate": "2023-11-05T00:00:00",
+    "endDate": "2023-11-15T23:59:59",
+    "createdAt": "2023-10-02T17:00:00",
+    "updatedAt": "2023-10-02T17:00:00"
   },
   {
     "id": "9",
-    "description": "Anniversary Promotion",
-    "amount": 70.0,
-    "percent": 14.0,
-    "startDate": "2024-05-01T00:00:00",
-    "endDate": "2024-05-31T23:59:59",
-    "isActive": true
+    "type": "FIXED",
+    "value": 100.0,
+    "description": "Fixed discount of $100",
+    "startDate": "2023-11-10T00:00:00",
+    "endDate": "2023-11-20T23:59:59",
+    "createdAt": "2023-10-03T18:00:00",
+    "updatedAt": "2023-10-03T18:00:00"
   },
   {
     "id": "10",
-    "description": "Winter Blowout Sale",
-    "amount": 85.0,
-    "percent": 17.0,
-    "startDate": "2024-12-01T00:00:00",
-    "endDate": "2024-12-15T23:59:59",
-    "isActive": true
+    "type": "PERCENTAGE",
+    "value": 30.0,
+    "description": "30% off on selected items",
+    "startDate": "2023-11-15T00:00:00",
+    "endDate": "2023-11-25T23:59:59",
+    "createdAt": "2023-10-04T19:00:00",
+    "updatedAt": "2023-10-04T19:00:00"
   }
 ]

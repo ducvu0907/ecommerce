@@ -77,6 +77,11 @@ Table OrderItem {
   subtotal double
 }
 
+Table Shipment {
+    order_id string [pk, ref: > Order.id]
+    inventory_id string [pk, ref: > Inventory.id]
+}
+
 Table Cart {
   id string [pk]
   user_id string [ref: - User.id]

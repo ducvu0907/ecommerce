@@ -31,7 +31,7 @@ public class InventoryController {
         return ApiResponse.<InventoryResponse>builder().result(res).build();
     }
 
-    @PutMapping("/{inventoryId}")
+    @PostMapping("/{inventoryId}")
     public ApiResponse<InventoryResponse> updateInventory(@RequestHeader("token") String token, @PathVariable("inventoryId") String inventoryId, InventoryUpdateRequest request) {
         var res = inventoryService.updateInventory(token, inventoryId, request);
         return ApiResponse.<InventoryResponse>builder().result(res).build();

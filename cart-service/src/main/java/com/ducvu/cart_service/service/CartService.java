@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class CartService {
                 .orElseGet(() -> {
                     Cart newCart = Cart.builder()
                             .userId(userId)
+                            .items(new ArrayList<>())
                             .build();
                     return cartRepository.save(newCart);
                 });
@@ -49,6 +51,7 @@ public class CartService {
                     var productResponse = productClient.getProduct(item.getProductId());
                     double subtotal = productResponse.getResult().getPrice() * item.getQuantity();
                     return CartItemResponse.builder()
+                            .id(item.getId())
                             .productId(item.getProductId())
                             .quantity(item.getQuantity())
                             .subtotal(subtotal)
@@ -60,6 +63,8 @@ public class CartService {
                 .id(cart.getId())
                 .userId(userId)
                 .items(cartItemResponses)
+                .createdAt(cart.getCreatedAt())
+                .updatedAt(cart.getUpdatedAt())
                 .build();
     }
 
@@ -173,6 +178,10 @@ public class CartService {
     }
 
     private AuthResponse validateToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("No token provided");
+        }
+
         var authResponse = userClient.authenticate(token);
         if (authResponse.getResult() == null) {
             throw new RuntimeException("Token invalid");

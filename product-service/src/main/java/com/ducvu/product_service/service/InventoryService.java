@@ -92,6 +92,9 @@ public class InventoryService {
     }
 
     private AuthResponse validateToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("No token provided");
+        }
         var authResponse = userClient.authenticate(token);
         if (authResponse.getResult() == null) {
             throw new RuntimeException("Token invalid");

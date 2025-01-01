@@ -1,11 +1,9 @@
 package com.ducvu.product_service.controller;
 
-import com.ducvu.product_service.dto.request.OrderRequest;
 import com.ducvu.product_service.dto.request.ProductCreateRequest;
 import com.ducvu.product_service.dto.request.ProductUpdateRequest;
 import com.ducvu.product_service.dto.ApiResponse;
 import com.ducvu.product_service.dto.response.ProductResponse;
-import com.ducvu.product_service.entity.Product;
 import com.ducvu.product_service.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +42,7 @@ public class ProductController {
         return ApiResponse.<ProductResponse>builder().result(res).build();
     }
 
-    @PutMapping("/{productId}")
+    @PostMapping("/{productId}")
     public ApiResponse<ProductResponse> updateProduct(@RequestHeader("token") String token, @PathVariable("productId") String productId, @RequestBody ProductUpdateRequest request) {
         var res = productService.updateProduct(token, productId, request);
         return ApiResponse.<ProductResponse>builder().result(res).build();
@@ -54,14 +52,6 @@ public class ProductController {
     public ApiResponse<String> deleteProduct(@RequestHeader("token") String token, @PathVariable("productId") String productId) {
         productService.deleteProduct(token, productId);
         return ApiResponse.<String>builder().result("Product has been deleted").build();
-    }
-
-    // used by order service update the product quantity
-    // after placing or cancelling order
-    @PostMapping("/order")
-    public ApiResponse<String> order(@RequestBody OrderRequest request) {
-        productService.order(request);
-        return ApiResponse.<String>builder().result("Products have been updated").build();
     }
 
     @GetMapping("/search")

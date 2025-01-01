@@ -21,7 +21,7 @@ public class OrderController {
         return ApiResponse.<List<OrderResponse>>builder().result(res).build();
     }
 
-    @PostMapping("/{orderId}")
+    @GetMapping("/{orderId}")
     public ApiResponse<OrderResponse> getOrder(@RequestHeader("token") String token, @PathVariable("orderId") String orderId) {
         var res = orderService.getOrder(token, orderId);
         return ApiResponse.<OrderResponse>builder().result(res).build();
