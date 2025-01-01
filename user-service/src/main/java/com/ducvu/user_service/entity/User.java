@@ -21,6 +21,9 @@ public class User {
     private String username;
 
     @Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -41,6 +44,7 @@ public class User {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate

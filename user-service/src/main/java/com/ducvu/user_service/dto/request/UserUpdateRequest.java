@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserUpdateRequest {
     String username;
+    String fullName;
     String phone;
 }

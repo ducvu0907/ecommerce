@@ -44,6 +44,15 @@ public class UserService {
         return mapper.toUserResponse(user);
     }
 
+    public UserResponse getUserProfile(String userId) {
+        log.info("User service; Get user profile");
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return mapper.toUserResponse(user);
+    }
+
     public UserResponse updateMyProfile(String token, UserUpdateRequest request) {
         log.info("User service; Update my profile");
 
@@ -56,6 +65,10 @@ public class UserService {
 
         if (request.getUsername() != null) {
             user.setUsername(request.getUsername());
+        }
+
+        if (request.getFullName() != null) {
+            user.setFullName(request.getFullName());
         }
 
         if (request.getPhone() != null) {

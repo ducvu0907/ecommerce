@@ -19,6 +19,12 @@ public class UserController {
         return ApiResponse.<UserResponse>builder().result(res).build();
     }
 
+    @GetMapping("/{userId}")
+    public ApiResponse<UserResponse> getUserProfile(@PathVariable("userId") String userId) {
+        var res = userService.getUserProfile(userId);
+        return ApiResponse.<UserResponse>builder().result(res).build();
+    }
+
     @PostMapping("/me")
     public ApiResponse<UserResponse> updateMyProfile(@RequestHeader("token") String token, @RequestBody UserUpdateRequest request) {
         var res = userService.updateMyProfile(token, request);
