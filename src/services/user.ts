@@ -1,4 +1,4 @@
-import { AuthRequest, UserData, UserUpdateRequest } from "@/types/models";
+import { AddressData, AuthRequest, CreateAddressRequest, UserData, UserUpdateRequest } from "@/types/models";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { _request } from "./request";
 import { ApiResponse } from "@/types/models";
@@ -30,6 +30,24 @@ const getUserProfileRequest = async (userId: string): Promise<ApiResponse<UserDa
   });
 };
 
+const createAddressRequest = async (request: CreateAddressRequest) => {
+  return _request<ApiResponse<AddressData>>({
+    url: `/api/addresses`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request)
+  });
+};
+
+const deleteAddressRequest = async (addressId: string, request: AuthRequest) => {
+  return _request<ApiResponse<string>>({
+    url: `/api/addresses/${addressId}`,
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request)
+  });
+};
+
 export const getMyProfile = (token: string) => {
   return useQuery<ApiResponse<UserData>, Error>({
     queryKey: ["users", "me"],
@@ -54,7 +72,7 @@ export const updateMyProfile = () => {
         toast({
           title: "Profile updated successfully"
         });
-        queryClient.invalidateQueries({queryKey: ["me"]});
+        queryClient.invalidateQueries({queryKey: ["users", "me"]});
 
       } else {
         throw new Error(data.message);
@@ -68,4 +86,54 @@ export const getUserProfile = (userId: string) => {
     queryKey: ["users", userId],
     queryFn: () => getUserProfileRequest(userId)
   });
-}
+};
+
+export const createAddress = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (address: CreateAddressRequest) => createAddressRequest(address),
+    onError: (error: Error) => {
+      toast({
+        title: error.message,
+        variant: "destructive"
+      });
+    },
+    onSuccess: (data: ApiResponse<AddressData>) => {
+      if (data.result) {
+        console.log("New address: ", data.result);
+        toast({
+          title: "Address created successfully"
+        });
+        queryClient.invalidateQueries({queryKey: ["users", "me"]});
+      } else {
+        throw new Error(data.message);
+      }
+    }
+  });
+};
+
+export const deleteAddress = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({addressId, request}: {addressId: string, request: AuthRequest}) => deleteAddressRequest(addressId, request),
+    onError: (error: Error) => {
+      toast({
+        title: error.message,
+        variant: "destructive"
+      });
+    },
+    onSuccess: (data: ApiResponse<string>) => {
+      if (data.result) {
+        console.log("Address deleted");
+        toast({
+          title: data.result
+        });
+        queryClient.invalidateQueries({queryKey: ["users", "me"]});
+      } else {
+        throw new Error(data.message);
+      }
+    }
+  });
+};

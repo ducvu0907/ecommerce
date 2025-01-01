@@ -1,60 +1,21 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import { getMyProfile } from "@/services/user";
-import React, { useContext } from "react";
+import { useContext, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, MapPin, PencilIcon, PlusCircle, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { AddressData } from "@/types/models";
-
-interface AddressItemProps {
-  address: AddressData;
-  onDelete: (addressId: string) => void;
-};
-
-const AddressItem: React.FC<AddressItemProps> = ({ address, onDelete }) => {
-  return (
-    <div className="flex items-start space-x-4 p-4 border rounded-lg bg-white">
-      <MapPin className="h-5 w-5 text-gray-500 mt-1" />
-      <div className="flex-grow">
-        <p className="font-medium">{address.country}</p>
-        <p className="text-sm text-gray-600">{address.street}</p>
-        <p className="text-sm text-gray-600">{address.city}</p>
-      </div>
-      <div className="flex space-x-2">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onDelete(address.id)}
-          className="h-8 w-8 text-red-500 hover:text-red-600"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-    </div>
-  );
-};
+import { AlertCircle, MapPin, PencilIcon, PlusCircle } from "lucide-react";
+import AddressInputModal from "@/components/address/AddressInputModal";
+import { Button } from '@/components/ui/button';
+import AddressItem from "@/components/address/AddressItem";
+import UpdateProfileModal from "@/components/user/UpdateProfileModal";
 
 const Settings = () => {
+  const [showAddressModal, setShowAddressModal] = useState<boolean>(false);
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const { token } = useContext(AuthContext);
   const { data, isLoading, isError } = getMyProfile(token || "");
   const user = data?.result;
-
-  // placeholder
-  const handleDeleteAddress = (addressId) => {
-    console.log("Delete address:", addressId);
-  };
-
-  // placeholder
-  const handleAddAddress = () => {
-    console.log("Add new address");
-  };
-
-  // placeholder
-  const handleEditProfile = () => {
-    console.log("Edit profile");
-  };
 
   if (isLoading) {
     return (
@@ -65,7 +26,7 @@ const Settings = () => {
     );
   }
 
-  if (isError) {
+  if (isError || !user) {
     return (
       <Alert variant="destructive" className="m-4">
         <AlertCircle className="h-4 w-4" />
@@ -80,16 +41,19 @@ const Settings = () => {
   return (
     <div className="container mx-auto p-4 space-y-6">
 
-      <Card>
+      {showAddressModal && <AddressInputModal isOpen={showAddressModal} onClose={() => setShowAddressModal(false)} />}
 
+      {showUpdateModal && <UpdateProfileModal userData={{...user}} isOpen={showUpdateModal} onClose={() => setShowUpdateModal(false)} />}
+
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Personal Information</CardTitle>
             <CardDescription>Your profile details and account information</CardDescription>
           </div>
           <Button 
-            variant="outline" 
-            onClick={handleEditProfile}
+            variant={"default"}
+            onClick={() => setShowUpdateModal(true)}
             className="flex items-center gap-2"
           >
             <PencilIcon className="h-4 w-4" />
@@ -98,22 +62,26 @@ const Settings = () => {
         </CardHeader>
 
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-sm font-medium text-gray-500">Username</p>
-              <p className="text-lg">{user?.username}</p>
+              <p className="text-lg">{user.username}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">First Name</p>
+              <p className="text-lg">{user.firstName}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">Last Name</p>
+              <p className="text-lg">{user.lastName}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Role</p>
-              <p className="text-lg capitalize">{user?.role.toLowerCase()}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Full Name</p>
-              <p className="text-lg">{`${user?.firstName} ${user?.lastName}`}</p>
+              <p className="text-lg capitalize">{user.role.toLowerCase()}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Phone</p>
-              <p className="text-lg">{user?.phone}</p>
+              <p className="text-lg">{user.phone}</p>
             </div>
           </div>
         </CardContent>
@@ -127,7 +95,8 @@ const Settings = () => {
             <CardDescription>Manage your saved addresses</CardDescription>
           </div>
           <Button 
-            onClick={handleAddAddress}
+            variant={"outline"}
+            onClick={() => setShowAddressModal(true)}
             className="flex items-center gap-2"
           >
             <PlusCircle className="h-4 w-4" />
@@ -139,7 +108,6 @@ const Settings = () => {
             <AddressItem
               key={address.id}
               address={address}
-              onDelete={handleDeleteAddress}
             />
           ))}
           {user?.addresses.length === 0 && (

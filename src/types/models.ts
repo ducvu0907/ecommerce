@@ -1,3 +1,4 @@
+// router type
 export type routerType = {
   title: string;
   path: string;
@@ -10,10 +11,7 @@ export type ApiResponse<T> = {
   result?: T;
 };
 
-export type AuthRequest = {
-  token: string;
-};
-
+// requests
 export type LoginRequest = {
   username: string;
   password: string;
@@ -22,51 +20,49 @@ export type LoginRequest = {
 export type SignupRequest = {
   username: string;
   password: string;
-  firstName: string;
-  lastName: string;
   phone: string;
   role: Role;
-  address: AddressRegisterRequest;
 };
 
-export type UserUpdateRequest = {
-  token: string;
-  firstName: string;
-  lastName: string;
+export type UpdateMeRequest = {
+  username: string;
   phone: string;
 };
 
 export type CreateProductRequest = {
-  token: string;
   title: string;
   description: string;
   imageUrl: string;
   sku: string;
   price: number;
-  quantity: number;
   categoryId: string;
 };
 
-export enum Role {
-  SELLER = "SELLER",
-  BUYER = "BUYER",
-  ADMIN = "ADMIN"
+export type UpdateProductRequest = {
+  title: string | null;
+  description: string | null;
+  imageUrl: string | null;
+  sku: string | null;
+  price: number | null;
+  categoryId: string | null;
 };
 
 export type AddItemRequest = {
-  token: string;
   productId: string;
   quantity: number;
 };
 
 export type UpdateItemRequest = {
-  token: string;
   quantity: number;
 };
 
 export type CreateReviewRequest = {
-  token: string;
   productId: string;
+  rating: number;
+  content: string;
+};
+
+export type UpdateReviewRequest = {
   rating: number;
   content: string;
 };
@@ -78,44 +74,49 @@ export type CreateOrderItemRequest = {
 };
 
 export type CreateOrderRequest = {
-  token: string;
-  description: string;
+  address: string;
+  instruction: string | null;
   discountId: string | null;
-  items: CreateOrderItemRequest[];
 };
 
-export type AddressRegisterRequest = {
-  country: string;
-  street: string;
-  city: string;
+// TODO
+export type CreatePaymentRequest = {
+
 };
 
-export type CreateAddressRequest = {
-  token: string;
-  country: string;
-  street: string;
-  city: string;
+export type CreateInventoryRequest = {
+  productId: string;
+  location: string;
+  stock: number;
 };
 
+export type UpdateInventoryRequest = {
+  location: string;
+  stock: number;
+};
+
+// responses
 export type TokenData = {
   token: string;
 };
 
-export type AddressData = {
-  id: string;
-  country: string;
-  street: string;
-  city: string;
+export enum Role {
+  BUYER = "BUYER",
+  SELLER = "SELLER",
 };
 
 export type UserData = {
   id: string;
   username: string;
-  firstName: string;
-  lastName: string;
   phone: string;
-  addresses: AddressData[];
   role: Role;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CategoryData = {
+  id: string;
+  title: string;
 };
 
 export type ProductData = {
@@ -127,12 +128,9 @@ export type ProductData = {
   description: string;
   price: number;
   quantity: number;
-};
-
-export type CategoryData = {
-  id: string;
-  title: string;
-  products: ProductData[];
+  category: CategoryData;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type ReviewData = {
@@ -152,7 +150,6 @@ export type AuthData = {
 
 export enum OrderStatus {
   PENDING = "PENDING",
-  DELIVERING = "DELIVERING",
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED"
 };
@@ -161,45 +158,64 @@ export type OrderItemData = {
   id: string;
   productId: string;
   quantity: number;
-  price: number;
-  orderId: string;
+  subtotal: number;
 };
 
 export type OrderData = {
   id: string;
-  userId: string;
-  description: string;
-  totalAmount: number;
+  buyerId: string;
+  instruction: string;
+  totalPrice: number;
   status: OrderStatus;
   items: OrderItemData[];
   createdAt: Date;
+  updatedAt: Date;
 };
 
 export type CartData = {
   id: string;
   userId: string;
   items: CartItemData[];
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type CartItemData = {
   id: string;
   productId: string;
   quantity: number;
-  price: number;
-  cartId: string;
+  subtotal: number;
+};
+
+export enum DiscountType {
+  FIXED = "FIXED",
+  PERCENTAGE = "PERCENTAGE",
 };
 
 export type DiscountData = {
   id: string;
   description: string;
-  amount: number;
-  percent: number;
+  type: DiscountType;
+  value: number;
   startDate: Date;
   endDate: Date;
-  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type InventoryData = {
+  id: string;
+  location: string;
+  stock: number;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 // TODO: payment model
 export type PaymentData = {
   id: string;
+  orderId: string;
+  transactionContent: string;
+  transactionId: string;
+  createdAt: Date;
 };
