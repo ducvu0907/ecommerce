@@ -7,8 +7,8 @@ import ProductDetail from "@/components/product/ProductDetail";
 import ReviewList from "@/components/review/ReviewList";
 import NotFound from "../main/NotFound";
 
-import { getProduct } from "@/services/product";
-import { getReviewsByProduct } from "@/services/review";
+import { getProductQuery } from "@/services/product";
+import { getReviewsByProductQuery } from "@/services/review";
 import CreateReviewForm from "@/components/review/CreateReviewForm";
 import SellerInfo from "@/components/product/SellerInfo";
 
@@ -39,7 +39,7 @@ const ProductErrorState = ({ onRetry }: { onRetry: () => void }) => (
 );
 
 const ReviewsSection = ({ productId }: { productId: string }) => {
-  const { data: reviews, isLoading: isReviewsLoading, isError: isReviewsError } = getReviewsByProduct(productId);
+  const { data: reviews, isLoading: isReviewsLoading, isError: isReviewsError } = getReviewsByProductQuery(productId);
 
   if (isReviewsLoading) {
     return (
@@ -80,7 +80,7 @@ const Product = () => {
     return <NotFound />;
   }
 
-  const { data: product, isLoading: isProductLoading, isError: isProductError, refetch: refetchProduct } = getProduct(productId);
+  const { data: product, isLoading: isProductLoading, isError: isProductError, refetch: refetchProduct } = getProductQuery(productId);
 
   if (isProductLoading) {
     return <ProductLoadingState />;
@@ -103,9 +103,11 @@ const Product = () => {
       <div>
         <SellerInfo sellerId={product.result.sellerId} />
       </div>
+
       <div>
         <CreateReviewForm productId={productId} />
       </div>
+
       <div>
         <ReviewsSection productId={productId} />
       </div>

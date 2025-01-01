@@ -1,4 +1,4 @@
-import { CreateProductRequest, ProductData } from "@/types/models";
+import { CreateProductRequest, ProductData, UpdateProductRequest } from "@/types/models";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { _request } from "./request";
 import { ApiResponse } from "@/types/models";
@@ -8,7 +8,6 @@ const getProductsRequest = async (): Promise<ApiResponse<ProductData[]>> => {
   return _request<ApiResponse<ProductData[]>>({
     url: "/api/products",
     method: "GET",
-    headers: {"Content-Type":"application/json"}
   });
 };
 
@@ -16,7 +15,6 @@ const getProductsBySellerRequest = async (sellerId: string): Promise<ApiResponse
   return _request<ApiResponse<ProductData[]>>({
     url: `/api/products/seller/${sellerId}`,
     method: "GET",
-    headers: {"Content-Type":"application/json"}
   });
 };
 
@@ -24,15 +22,28 @@ const getProductRequest = async (productId: string): Promise<ApiResponse<Product
   return _request<ApiResponse<ProductData>>({
     url: `/api/products/${productId}`,
     method: "GET",
-    headers: {"Content-Type":"application/json"}
   });
 };
 
 const createProductRequest = async (request: CreateProductRequest): Promise<ApiResponse<ProductData>> => {
   return _request<ApiResponse<ProductData>>({
-    url: `/api/products/`,
+    url: `/api/products`,
     method: "POST",
-    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(request)
+  });
+};
+
+const deleteProductRequest = async (productId: string): Promise<ApiResponse<string>> => {
+  return _request<ApiResponse<string>>({
+    url: `/api/products/${productId}`,
+    method: "DELETE",
+  });
+};
+
+const updateProductRequest = async (productId: string, request: UpdateProductRequest): Promise<ApiResponse<ProductData>> => {
+  return _request<ApiResponse<ProductData>>({
+    url: `/api/products/${productId}`,
+    method: "POST",
     body: JSON.stringify(request)
   });
 };
@@ -41,34 +52,33 @@ const searchProductsRequest = async (query: string): Promise<ApiResponse<Product
   return _request({
     url: `/api/products/search?query=${encodeURIComponent(query)}`,
     method: "GET",
-    headers: {"Content-Type":"application/json"},
   });
 };
 
-export const getProducts = () => {
+export const getProductsQuery = () => {
   return useQuery<ApiResponse<ProductData[]>, Error>({
     queryKey: ["products"],
     queryFn: getProductsRequest,
   });
 };
 
-export const getProductsBySeller = (sellerId: string) => {
+export const getProductsBySellerQuery = (sellerId: string) => {
   return useQuery<ApiResponse<ProductData[]>, Error>({
     queryKey: ["products", "seller", sellerId],
     queryFn: () => getProductsBySellerRequest(sellerId)
   });
 };
 
-export const getProduct = (productId: string) => {
+export const getProductQuery = (productId: string) => {
   return useQuery<ApiResponse<ProductData>, Error>({
     queryKey: ["products", productId],
     queryFn: () => getProductRequest(productId)
   });
 };
 
-export const createProduct = () => {
+export const createProductMutation = () => {
   return useMutation({
-    mutationFn: (request: CreateProductRequest) => createProductRequest(request),
+    mutationFn: ({request}: {request: CreateProductRequest}) => createProductRequest(request),
     onError: (error: Error) => {
       toast({
         title: error.message,
@@ -88,7 +98,51 @@ export const createProduct = () => {
   });
 };
 
-export const searchProducts = (query: string) => {
+export const updateProductMutation = () => {
+  return useMutation({
+    mutationFn: ({productId, request}: {productId: string, request: UpdateProductRequest}) => updateProductRequest(productId, request),
+    onError: (error: Error) => {
+      toast({
+        title: error.message,
+        variant: "destructive"
+      });
+    },
+    onSuccess: (data: ApiResponse<ProductData>) => {
+      if (data.result) {
+        console.log("Updated product: ", data.result);
+        toast({
+          title: "Product updated successfully"
+        });
+      } else {
+        throw new Error(data.message);
+      }
+    },
+  });
+};
+
+export const deleteProductMutation = () => {
+  return useMutation({
+    mutationFn: ({productId}: {productId: string}) => deleteProductRequest(productId),
+    onError: (error: Error) => {
+      toast({
+        title: error.message,
+        variant: "destructive"
+      });
+    },
+    onSuccess: (data: ApiResponse<string>) => {
+      if (data.result) {
+        console.log("Delete product", data.result);
+        toast({
+          title: data.result
+        });
+      } else {
+        throw new Error(data.message);
+      }
+    },
+  });
+};
+
+export const searchProductsQuery = (query: string) => {
   return useQuery<ApiResponse<ProductData[]>, Error>({
     queryKey: ["search", query],
     queryFn: () => searchProductsRequest(query)

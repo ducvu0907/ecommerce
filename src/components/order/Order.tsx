@@ -20,9 +20,8 @@ const Order: React.FC<OrderProps> = ({ order }) => {
           <span>Order #{order.id}</span>
           <span className={`text-sm px-3 py-1 rounded-full 
           ${order.status === OrderStatus.COMPLETED ? 'bg-green-100 text-green-800' :
-              order.status === OrderStatus.DELIVERING ? 'bg-blue-100 text-blue-800' :
-                order.status === OrderStatus.CANCELLED ? 'bg-red-100 text-red-800' :
-                  'bg-yellow-100 text-yellow-800'
+              order.status === OrderStatus.CANCELLED ? 'bg-red-100 text-red-800' :
+                'bg-yellow-100 text-yellow-800'
             }`}>
             {order.status}
           </span>
@@ -37,7 +36,7 @@ const Order: React.FC<OrderProps> = ({ order }) => {
             </p>
           </div>
           <p className="font-semibold">
-            ${order.totalAmount.toFixed(2)}
+            ${order.totalPrice.toFixed(2)}
           </p>
         </div>
       </CardContent>

@@ -1,7 +1,6 @@
-import { getMyCart } from '@/services/cart';
+import { getMyCartQuery } from '@/services/cart';
 import { CartData } from '@/types/models';
-import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 interface CartContextType {
   cart: CartData | null,
@@ -18,9 +17,8 @@ interface CartProviderProps {
 };
 
 const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-  const { token } = useContext(AuthContext);
   const [cart, setCart] = useState<CartData | null>(null);
-  const { data, isLoading } = getMyCart(token || "");
+  const { data, isLoading } = getMyCartQuery();
 
   useEffect(() => {
     if (data?.result) {

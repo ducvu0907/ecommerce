@@ -1,5 +1,5 @@
-import { getUserProfile } from "@/services/user";
-import { CheckCircle2, ShieldCheck, MapPin, Phone, MessageCircle, Store } from "lucide-react";
+import { getUserProfileQuery } from "@/services/user";
+import { CheckCircle2, ShieldCheck, Phone, MessageCircle, Store } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,7 +10,7 @@ interface SellerInfoProps {
 }
 
 const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
-  const { data, isLoading, isError } = getUserProfile(sellerId);
+  const { data, isLoading, isError } = getUserProfileQuery(sellerId);
   const seller = data?.result;
 
   if (isLoading) {
@@ -56,7 +56,7 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
       <CardContent className="p-6">
         <div className="flex items-center space-x-6 mb-4">
           <img
-            src={`https://avatar.iran.liara.run/username?username=${seller?.firstName}+${seller?.lastName}`}
+            src={`https://avatar.iran.liara.run/username?username=${seller?.fullName}`}
             alt={`seller avatar`}
             className="w-16 h-16 rounded-full object-cover"
           />
@@ -64,7 +64,7 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
           <div className="flex-1">
             <div className="flex items-center space-x-2">
               <h3 className="text-lg font-semibold">
-                {seller?.firstName} {seller?.lastName}
+                {seller?.fullName}
               </h3>
               <CheckCircle2 className="w-5 h-5 text-green-500" />
             </div>
@@ -74,14 +74,6 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ sellerId }) => {
                 <Phone className="w-4 h-4" />
                 <p className="ml-2">{seller?.phone}</p>
               </div>
-              {seller?.addresses && seller.addresses.length > 0 && (
-                <div className="flex items-center">
-                  <MapPin className="w-4 h-4" />
-                  <p className="ml-2">
-                    {seller.addresses[0].street}, {seller.addresses[0].city}, {seller.addresses[0].country}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { getProduct } from "@/services/product";
+import { getProductQuery } from "@/services/product";
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CartItemData } from "@/types/models";
 import { Loader, AlertTriangle, Minus, Plus, Trash } from "lucide-react";
-import { deleteItem, updateItem } from "@/services/cart";
+import { deleteItemMutation, updateItemMutation } from "@/services/cart";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { Input } from "../ui/input";
@@ -16,12 +16,12 @@ interface CartItemProps {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-  const { data: product, isLoading, isError } = getProduct(item.productId);
+  const { data: product, isLoading, isError } = getProductQuery(item.productId);
   const { token } = useContext(AuthContext);
-  const { mutate: deleteItemMutate, isPending: isDeletePending } = deleteItem();
+  const { mutate: deleteItemMutate, isPending: isDeletePending } = deleteItemMutation();
   const [quantity, setQuantity] = useState<number>(item.quantity);
   const [isQuantityChanged, setIsQuantityChanged] = useState<boolean>(false);
-  const { mutate: updateItemMutate, isPending: isUpdateLoading } = updateItem();
+  const { mutate: updateItemMutate, isPending: isUpdateLoading } = updateItemMutation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,14 +36,14 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     if (!token) {
       return;
     }
-    deleteItemMutate({ itemId: item.id, token });
+    deleteItemMutate({ itemId: item.id });
   };
 
   const handleUpdateItem = async () => {
     if (!token) {
       return;
     }
-    updateItemMutate({ itemId: item.id, quantity, token });
+    updateItemMutate({ itemId: item.id, request: {quantity: quantity}});
     setIsQuantityChanged(false);
   };
   
@@ -192,7 +192,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
               )}
 
               <div className="flex items-center space-x-4">
-                <p className="font-medium text-lg">${item.price.toFixed(2)}</p>
+                <p className="font-medium text-lg">${item.subtotal.toFixed(2)}</p>
                 <Button 
                   onClick={() => setIsDeleteModalOpen(true)} 
                   variant="destructive" 

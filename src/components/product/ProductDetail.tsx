@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Heart, Star, ShoppingCart, Truck, Shield } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { computeAverageRating, isOutOfStock } from '@/helpers';
-import { getReviewsByProduct } from '@/services/review';
-import { addItem } from '@/services/cart';
+import { getReviewsByProductQuery } from '@/services/review';
+import { addItemMutation } from '@/services/cart';
 import { AuthContext } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,10 +16,10 @@ interface ProductDetailProps {
 const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const { token } = useContext(AuthContext);
   const [quantity, setQuantity] = useState(1);
-  const {data: reviews } = getReviewsByProduct(product.id);
+  const {data: reviews } = getReviewsByProductQuery(product.id);
   const averageRating = computeAverageRating(reviews?.result || []);
   const isDisabled = isOutOfStock(product.quantity);
-  const { mutate, isPending, isError } = addItem();
+  const { mutate: addItem, isPending } = addItemMutation();
   const navigate = useNavigate();
 
   // placeholder images
@@ -43,7 +43,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
       navigate("/");
       return;
     }
-    mutate({token, productId: product.id, quantity});
+    addItem({request: {productId: product.id, quantity: quantity}});
   };
 
   return (

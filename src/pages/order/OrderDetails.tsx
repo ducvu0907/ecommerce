@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AuthContext } from "@/contexts/AuthContext";
-import { getOrder } from "@/services/order";
+import { getOrderQuery } from "@/services/order";
 import NotFound from "../main/NotFound";
 import { formatDate, getStatusColor } from "@/helpers";
 import OrderItem from "@/components/order/OrderItem";
@@ -20,7 +20,7 @@ const OrderDetails = () => {
     return <NotFound />;
   }
 
-  const { data: order, isLoading, isError, error } = getOrder(orderId, token);
+  const { data: order, isLoading, isError, error } = getOrderQuery(orderId);
 
   if (isLoading) {
     return (
@@ -75,8 +75,8 @@ const OrderDetails = () => {
               <p>{formatDate(orderData.createdAt)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Description</p>
-              <p>{orderData.description}</p>
+              <p className="text-sm text-gray-500">Instruction</p>
+              <p>{orderData.instruction}</p>
             </div>
           </div>
         </div>
@@ -105,7 +105,7 @@ const OrderDetails = () => {
 
       <CardFooter className="flex justify-end">
         <div className="text-lg font-semibold">
-          Total Amount: ${orderData.totalAmount.toFixed(2)}
+          Total Amount: ${orderData.totalPrice.toFixed(2)}
         </div>
       </CardFooter>
 

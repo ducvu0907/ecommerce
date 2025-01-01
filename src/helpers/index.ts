@@ -1,4 +1,4 @@
-import { CartItemData, LoginRequest, OrderStatus, ReviewData, SignupRequest } from "@/types/models";
+import { CartItemData, LoginRequest, OrderStatus, ProductData, ReviewData, SignupRequest } from "@/types/models";
 
 export const validateLoginForm = (formData: LoginRequest): { isValid: boolean; errors: { [key: string]: string } } => {
   const errors: { [key: string]: string } = {};
@@ -26,14 +26,6 @@ export const validateSignupForm = (formData: SignupRequest): { isValid: boolean;
 
   if (!formData.password) {
     errors.password = "Password is required.";
-  }
-
-  if (!formData.firstName) {
-    errors.firstName = "First name is required.";
-  }
-
-  if (!formData.lastName) {
-    errors.lastName = "Last name is required.";
   }
 
   if (!formData.phone) {
@@ -99,15 +91,13 @@ export const validateReviewForm = (rating: number, content: string) => {
 };
 
 export const computeSubtotal = (items: CartItemData[]) => {
-  return items.reduce((acc, el) => el.price + acc, 0);
+  return items.reduce((acc, el) => el.subtotal + acc, 0);
 };
 
 export const getStatusColor = (status: OrderStatus) => {
   switch (status) {
     case OrderStatus.PENDING:
       return "bg-yellow-500";
-    case OrderStatus.DELIVERING:
-      return "bg-blue-500";
     case OrderStatus.COMPLETED:
       return "bg-green-500";
     case OrderStatus.CANCELLED:
@@ -115,44 +105,9 @@ export const getStatusColor = (status: OrderStatus) => {
   }
 };
 
-export const countries = [
-  { value: 'us', label: 'United States' },
-  { value: 'ca', label: 'Canada' },
-  { value: 'uk', label: 'United Kingdom' }
-];
-
-export const streets = {
-  us: [
-    { value: 'broadway', label: '1234 Broadway' },
-    { value: 'fifth_ave', label: '5678 Fifth Avenue' },
-    { value: 'main_st', label: '910 Main Street' }
-  ],
-  ca: [
-    { value: 'yonge_st', label: '100 Yonge Street' },
-    { value: 'king_st', label: '200 King Street West' },
-    { value: 'bay_st', label: '300 Bay Street' }
-  ],
-  uk: [
-    { value: 'oxford_st', label: '45 Oxford Street' },
-    { value: 'baker_st', label: '221B Baker Street' },
-    { value: 'bond_st', label: '10 Bond Street' }
-  ]
-};
-
-export const cities = {
-  us: [
-    { value: 'nyc', label: 'New York City' },
-    { value: 'la', label: 'Los Angeles' },
-    { value: 'chicago', label: 'Chicago' }
-  ],
-  ca: [
-    { value: 'toronto', label: 'Toronto' },
-    { value: 'vancouver', label: 'Vancouver' },
-    { value: 'montreal', label: 'Montreal' }
-  ],
-  uk: [
-    { value: 'london', label: 'London' },
-    { value: 'manchester', label: 'Manchester' },
-    { value: 'birmingham', label: 'Birmingham' }
-  ]
+export const filterProductsByCategories = ( products: ProductData[], selectedCategories: { id: string; title: string }[]): ProductData[] => {
+  if (!selectedCategories.length) return products;
+  return products.filter((product) =>
+    selectedCategories.some((category) => category.id === product.category.id)
+  );
 };

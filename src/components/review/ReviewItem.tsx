@@ -4,7 +4,7 @@ import { Star, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDate } from '@/helpers';
 import { ReviewData } from '@/types/models';
-import { getUserProfile } from '@/services/user';
+import { getUserProfileQuery } from '@/services/user';
 import { Skeleton } from '../ui/skeleton';
 
 interface ReviewItemProps {
@@ -43,7 +43,7 @@ const ReviewItemSkeleton: React.FC = () => {
 };
 
 const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
-  const {data: user, isLoading} = getUserProfile(review.userId);
+  const { data: user, isLoading } = getUserProfileQuery(review.userId);
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => (
       <Star
@@ -66,7 +66,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
         <div>
           <div className="flex items-center space-x-2">
             <span className="font-semibold text-sm">
-              {user?.result?.firstName} {user?.result?.lastName}
+              {user?.result?.fullName}
             </span>
             <div className="flex">
               {renderStars(review.rating)}

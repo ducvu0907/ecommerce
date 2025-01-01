@@ -1,6 +1,6 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import NotFound from "@/pages/main/NotFound";
-import { getMyOrders } from "@/services/order";
+import { getMyOrdersQuery } from "@/services/order";
 import { useContext } from "react";
 import { Loader2 } from "lucide-react";
 import { OrderData } from "@/types/models";
@@ -13,7 +13,7 @@ const OrderList = () => {
     return <NotFound />;
   }
 
-  const { data: orders, isLoading, isError, error } = getMyOrders(token);
+  const { data: orders, isLoading, isError, error } = getMyOrdersQuery();
 
   if (isLoading) {
     return (

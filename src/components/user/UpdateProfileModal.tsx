@@ -1,22 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateMyProfile } from "@/services/user";
-import { AuthContext } from "@/contexts/AuthContext";
-import { UserUpdateRequest } from "@/types/models";
+import { updateMyProfileMutation } from "@/services/user";
+import { UpdateMeRequest } from "@/types/models";
 
 interface UpdateProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userData: Omit<UserUpdateRequest, "token">;
+  userData: UpdateMeRequest;
 }
 
 const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ isOpen, onClose, userData }) => {
-  const { token } = useContext(AuthContext);
-  const { mutate, isPending } = updateMyProfile();
-  const [formValues, setFormValues] = useState<Omit<UserUpdateRequest, "token">>(userData);
+  const { mutate, isPending } = updateMyProfileMutation();
+  const [formValues, setFormValues] = useState<UpdateMeRequest>(userData);
 
   const handleInputChange = (field: keyof typeof formValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev) => ({ ...prev, [field]: e.target.value }));
@@ -24,7 +22,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ isOpen, onClose
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({token: token || "", ...formValues});
+    mutate({request: formValues});
     onClose();
   };
 
@@ -46,21 +44,12 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ isOpen, onClose
               />
             </div>
             <div>
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="fullName">Full Name</Label>
               <Input
-                id="firstName"
-                value={formValues.firstName}
-                onChange={handleInputChange("firstName")}
-                placeholder="Enter first name"
-              />
-            </div>
-            <div>
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                value={formValues.lastName}
-                onChange={handleInputChange("lastName")}
-                placeholder="Enter last name"
+                id="fullName"
+                value={formValues.fullName}
+                onChange={handleInputChange("fullName")}
+                placeholder="Enter full name"
               />
             </div>
             <div>

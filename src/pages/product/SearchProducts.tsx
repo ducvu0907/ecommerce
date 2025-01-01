@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import ProductItem from "@/components/product/ProductItem";
-import { searchProducts } from "@/services/product";
+import { searchProductsQuery } from "@/services/product";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 const SearchProducts = () => {
   const location = useLocation();
   const query = location.state as string;
-  const { data: products, isLoading, isError, error } = searchProducts(query);
+  const { data: products, isLoading, isError, error } = searchProductsQuery(query);
 
   if (isLoading) {
     return (

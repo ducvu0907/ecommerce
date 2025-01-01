@@ -1,30 +1,20 @@
-import { useContext, useEffect, useState } from "react";
-import { getProducts } from "@/services/product";
+import { useContext, useMemo } from "react";
+import { getProductsQuery } from "@/services/product";
 import ProductItem from "./ProductItem";
 import { CategoryContext } from "@/contexts/CategoryContext";
-import { ProductData } from "@/types/models";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { filterProductsByCategories } from "@/helpers";
 
 const ProductList = () => {
   const { selectedCategories } = useContext(CategoryContext);
-  const { data: products, isLoading, isError, error } = getProducts();
-  const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
+  const { data: products, isLoading, isError, error } = getProductsQuery();
 
-  useEffect(() => {
-    if (products?.result) {
-      if (selectedCategories?.length > 0) {
-        const filtered: ProductData[] = [];
-        selectedCategories.forEach((category) => {
-          filtered.push(...category.products);
-        });
-        setFilteredProducts(filtered);
-      } else {
-        setFilteredProducts(products.result);
-      }
-    }
+  const filteredProducts = useMemo(() => {
+    if (!products?.result) return [];
+    return filterProductsByCategories(products.result, selectedCategories || []);
   }, [products, selectedCategories]);
 
   if (isLoading) {

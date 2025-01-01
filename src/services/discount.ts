@@ -6,7 +6,6 @@ const getDiscountsRequest = async (): Promise<ApiResponse<DiscountData[]>> => {
   return _request({
     url: "/api/discounts",
     method: "GET",
-    headers: {"Content-Type":"application/json"}
   });
 };
 

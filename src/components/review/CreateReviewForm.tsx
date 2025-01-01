@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, Edit } from "lucide-react";
-import { createReview } from '@/services/review';
+import { createReviewMutation } from '@/services/review';
 import { validateReviewForm } from '@/helpers';
 import { AuthContext } from '@/contexts/AuthContext';
 
@@ -15,7 +15,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({productId}) => {
   const { token } = useContext(AuthContext);
   const [rating, setRating] = useState<number>(0);
   const [content, setContent] = useState<string>('');
-  const { mutate, isPending } = createReview();
+  const { mutate: createReview, isPending } = createReviewMutation();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   
   const handleCreateReview = async () => {
@@ -25,7 +25,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({productId}) => {
     if (!token) {
       return;
     }
-    mutate({token, productId, rating, content});
+    createReview({request: {productId, rating, content}});
     setIsDialogOpen(false);
   };
 

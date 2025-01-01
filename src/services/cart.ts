@@ -1,67 +1,67 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { _request } from "./request";
-import { AddItemRequest, ApiResponse, AuthRequest, CartData, UpdateItemRequest } from "@/types/models";
+import { AddItemRequest, ApiResponse, CartData, UpdateItemRequest } from "@/types/models";
 import { toast } from "@/hooks/use-toast";
 
-const getMyCartRequest = async (request: AuthRequest): Promise<ApiResponse<CartData>> => {
+const getMyCartRequest = async (): Promise<ApiResponse<CartData>> => {
   return _request<ApiResponse<CartData>>({
-    url: "/api/carts/cart",
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request)
+    url: "/api/carts/me",
+    method: "GET",
   });
 };
 
-const addItemRequest = async (request: AddItemRequest): Promise<ApiResponse<CartData>> => {
-  return _request<ApiResponse<CartData>>({
-    url: `/api/carts/items`,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request)
-  });
-};
-
-const updateItemRequest = async (itemId: string, request: UpdateItemRequest): Promise<ApiResponse<CartData>> => {
-  return _request<ApiResponse<CartData>>({
-    url: `/api/carts/items/${itemId}`,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request)
-  });
-};
-
-const deleteItemRequest = async (itemId: string, request: AuthRequest): Promise<ApiResponse<string>> => {
+const addItemRequest = async (request: AddItemRequest): Promise<ApiResponse<string>> => {
   return _request<ApiResponse<string>>({
-    url: `/api/carts/items/${itemId}`,
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    url: `/api/carts/me/items`,
+    method: "POST",
     body: JSON.stringify(request)
   });
 };
 
-export const getMyCart = (token: string) => {
+const updateItemRequest = async (itemId: string, request: UpdateItemRequest): Promise<ApiResponse<string>> => {
+  return _request<ApiResponse<string>>({
+    url: `/api/carts/me/items/${itemId}`,
+    method: "POST",
+    body: JSON.stringify(request)
+  });
+};
+
+const deleteItemRequest = async (itemId: string): Promise<ApiResponse<string>> => {
+  return _request<ApiResponse<string>>({
+    url: `/api/carts/me/items/${itemId}`,
+    method: "DELETE",
+  });
+};
+
+const emptyCartRequest = async (): Promise<ApiResponse<string>> => {
+  return _request<ApiResponse<string>>({
+    url: `/api/carts/me/items`,
+    method: "DELETE",
+  });
+};
+
+export const getMyCartQuery = () => {
   return useQuery<ApiResponse<CartData>, Error>({
     queryKey: ["cart"],
-    queryFn: () => getMyCartRequest({token}),
-    enabled: !!token
+    queryFn: getMyCartRequest,
   });
 }
 
-export const addItem = () => {
+export const addItemMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({token, productId, quantity}: {token: string, productId: string, quantity: number}) => addItemRequest({token, productId, quantity}),
+    mutationFn: ({request}: {request: AddItemRequest}) => addItemRequest(request),
     onError: (error: Error) => {
       toast({
         title: error.message,
         variant: "destructive"
       });
     },
-    onSuccess: (data: ApiResponse<CartData>) => {
-      if (data?.result) {
+    onSuccess: (data: ApiResponse<string>) => {
+      if (data.result) {
         toast({
-          title: "Item added"
+          title: data.result
         });
         console.log("Add item to cart: ", data);
         queryClient.invalidateQueries({queryKey: ["cart"]});
@@ -73,19 +73,19 @@ export const addItem = () => {
   });
 };
 
-export const updateItem = () => {
+export const updateItemMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ itemId, token, quantity }: { itemId: string, token: string, quantity: number }) => updateItemRequest(itemId, { token, quantity }),
+    mutationFn: ({itemId, request}: {itemId: string, request: UpdateItemRequest}) => updateItemRequest(itemId, request),
     onError: (error: Error) => {
       toast({
         title: error.message,
         variant: "destructive"
       })
     },
-    onSuccess: (data: ApiResponse<CartData>) => {
-      if (data?.result) {
+    onSuccess: (data: ApiResponse<string>) => {
+      if (data.result) {
         console.log("Update item in cart: ", data);
         toast({
           title: "Item updated successfully"
@@ -99,11 +99,11 @@ export const updateItem = () => {
   });
 };
 
-export const deleteItem = () => {
+export const deleteItemMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ itemId, token }: { itemId: string, token: string }) => deleteItemRequest(itemId, { token }),
+    mutationFn: ({itemId}: {itemId: string}) => deleteItemRequest(itemId),
     onError: (error: Error) => {
       toast({
         title: error.message,
@@ -111,7 +111,7 @@ export const deleteItem = () => {
       });
     },
     onSuccess: (data: ApiResponse<string>) => {
-      if (data?.result) {
+      if (data.result) {
         toast({
           title: data.result
         })
@@ -122,5 +122,30 @@ export const deleteItem = () => {
         throw new Error(data.message);
       }
     }
+  });
+};
+
+export const emptyCartMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: emptyCartRequest,
+    onError: (error: Error) => {
+      toast({
+        title: error.message,
+        variant: "destructive"
+      });
+    },
+    onSuccess: (data: ApiResponse<string>) => {
+      if (data.result) {
+        toast({
+          title: data.result
+        });
+        queryClient.invalidateQueries({queryKey: ["cart"]});
+
+      } else {
+        throw new Error(data.message);
+      }
+    },
   });
 };

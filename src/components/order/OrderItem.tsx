@@ -1,4 +1,4 @@
-import { getProduct } from "@/services/product";
+import { getProductQuery } from "@/services/product";
 import { OrderItemData } from "@/types/models";
 import { TableCell, TableRow } from "../ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,7 +11,7 @@ interface OrderItemProps {
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({item}) => {
-  const { data: product, isLoading, isError } = getProduct(item.productId);
+  const { data: product, isLoading, isError } = getProductQuery(item.productId);
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -67,7 +67,7 @@ const OrderItem: React.FC<OrderItemProps> = ({item}) => {
       </TableCell>
       <TableCell className="text-center">{item.quantity}</TableCell>
       <TableCell className="text-right">
-        ${item.price.toFixed(2)}
+        ${item.subtotal.toFixed(2)}
       </TableCell>
     </TableRow>
   );

@@ -3,7 +3,7 @@ import { ProductData } from "@/types/models";
 import { Card, CardContent } from "../ui/card";
 import { Star, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getReviewsByProduct } from '@/services/review';
+import { getReviewsByProductQuery } from '@/services/review';
 import { computeAverageRating } from '@/helpers';
 import { Badge } from "@/components/ui/badge";
 
@@ -12,7 +12,7 @@ interface ProductItemProps {
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
-  const { data: reviews } = getReviewsByProduct(product.id);
+  const { data: reviews } = getReviewsByProductQuery(product.id);
   const averageRating = computeAverageRating(reviews?.result || []);
   const navigate = useNavigate();
 

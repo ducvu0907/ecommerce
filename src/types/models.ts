@@ -26,6 +26,7 @@ export type SignupRequest = {
 
 export type UpdateMeRequest = {
   username: string;
+  fullName: string;
   phone: string;
 };
 
@@ -108,6 +109,7 @@ export enum Role {
 export type UserData = {
   id: string;
   username: string;
+  fullName: string;
   phone: string;
   role: Role;
   createdAt: Date;
