@@ -12,8 +12,8 @@ public interface ProductClient {
     ApiResponse<ProductResponse> getProduct(@PathVariable("productId") String productId);
 
     @PostMapping("/shipments/plan")
-    ApiResponse<String> planOrderShipment(ShipmentRequest request);
+    ApiResponse<String> planOrderShipment(@RequestBody ShipmentRequest request);
 
-    @DeleteMapping("/{orderId}/cancel")
-    ApiResponse<String> cancelOrderShipment(String orderId);
+    @DeleteMapping("/shipments/{orderId}/cancel")
+    ApiResponse<String> cancelOrderShipment(@PathVariable("orderId") String orderId);
 }

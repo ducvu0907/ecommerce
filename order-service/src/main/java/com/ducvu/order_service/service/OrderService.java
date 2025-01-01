@@ -64,14 +64,16 @@ public class OrderService {
 
         Order order = new Order();
 
-        // set fields from request
+        // set fields from request and initial default values
+        order.setTotalPrice(0.0);
         order.setBuyerId(userId);
         order.setAddress(request.getAddress());
         order.setInstruction(request.getInstruction());
         order.setDiscountId(request.getDiscountId());
-
-        // default initial status
         order.setStatus(OrderStatus.PENDING);
+        order.setItems(new ArrayList<>());
+
+        order = orderRepository.save(order);
 
         // total price and shipment declaration
         double totalPrice = 0.0;
@@ -79,6 +81,9 @@ public class OrderService {
 
         // map each cart item to order item
         var cartResponse = getCartResponse(token);
+        if (cartResponse.getItems().isEmpty()) {
+            throw new RuntimeException("Cart is empty");
+        }
 
         // loop
         for (CartItemResponse item : cartResponse.getItems()) {
@@ -86,7 +91,7 @@ public class OrderService {
 
             // map cart item to order item
             OrderItem orderItem = OrderItem.builder()
-                    .order(order)
+                    .order(order)  // reference the saved order
                     .productId(item.getProductId())
                     .quantity(item.getQuantity())
                     .subtotal(item.getSubtotal())
@@ -99,6 +104,7 @@ public class OrderService {
                     .build();
 
             orderItemRepository.save(orderItem);
+            order.getItems().add(orderItem);
             shipmentItemsRequest.add(shipmentItemRequest);
         }
 
@@ -117,6 +123,7 @@ public class OrderService {
             }
         }
 
+        // save the order again to update the total price
         var result = orderRepository.save(order);
 
         // send shipment request
@@ -128,6 +135,9 @@ public class OrderService {
         if (shipmentResponse.getResult() == null) {
             throw new RuntimeException("Place order unsuccessfully");
         }
+
+        // empty cart as final step
+        cartClient.emptyCart(token);
 
         return mapper.toOrderResponse(result);
     }

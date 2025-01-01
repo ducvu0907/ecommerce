@@ -80,6 +80,9 @@ Table OrderItem {
 Table Shipment {
     order_id string [pk, ref: > Order.id]
     inventory_id string [pk, ref: > Inventory.id]
+    quantity integer
+    created_at date
+    updated_at date
 }
 
 Table Cart {

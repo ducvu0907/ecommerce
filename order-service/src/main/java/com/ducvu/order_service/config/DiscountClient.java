@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "discount-service", url = "http://localhost:8002")
 public interface DiscountClient {
-    @GetMapping("/discount/{discountId}")
+    @GetMapping("/discounts/{discountId}")
     ApiResponse<DiscountResponse> getDiscount(@PathVariable String discountId);
 }

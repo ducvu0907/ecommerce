@@ -34,7 +34,7 @@ public class PaymentService {
     }
 
     // TODO: integrate with vnpay
-    public PaymentResponse payOrder(String token, PayOrderRequest request) {
+    public PaymentResponse createPayment(String token, PayOrderRequest request) {
         return new PaymentResponse();
     }
 

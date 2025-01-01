@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name = "cart-service", url = "http://localhost:8001")
 public interface CartClient {
-    @GetMapping("")
+    @GetMapping("/carts/me")
     ApiResponse<CartResponse> getMyCart(@RequestHeader("token") String token);
 
     @DeleteMapping("/carts/me/items")

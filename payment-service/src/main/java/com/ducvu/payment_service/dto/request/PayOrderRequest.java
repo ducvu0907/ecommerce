@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PayOrderRequest { // TODO
+public class PayOrderRequest { // FIXME: add all needed fields
     String orderId;
 }

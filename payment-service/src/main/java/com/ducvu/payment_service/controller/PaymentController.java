@@ -21,9 +21,9 @@ public class PaymentController {
         return ApiResponse.<PaymentResponse>builder().result(res).build();
     }
 
-    @PostMapping("/pay")
-    public ApiResponse<PaymentResponse> payOrder(@RequestHeader("token") String token, PayOrderRequest request) {
-        var res = paymentService.payOrder(token, request);
+    @PostMapping("")
+    public ApiResponse<PaymentResponse> createPayment(@RequestHeader("token") String token, PayOrderRequest request) {
+        var res = paymentService.createPayment(token, request);
         return ApiResponse.<PaymentResponse>builder().result(res).build();
     }
 }
