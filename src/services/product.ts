@@ -1,5 +1,5 @@
 import { CreateProductRequest, ProductData, UpdateProductRequest } from "@/types/models";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { _request } from "./request";
 import { ApiResponse } from "@/types/models";
 import { toast } from "@/hooks/use-toast";
@@ -64,7 +64,7 @@ export const getProductsQuery = () => {
 
 export const getProductsBySellerQuery = (sellerId: string) => {
   return useQuery<ApiResponse<ProductData[]>, Error>({
-    queryKey: ["products", "seller", sellerId],
+    queryKey: ["products", "seller"],
     queryFn: () => getProductsBySellerRequest(sellerId)
   });
 };
@@ -77,6 +77,8 @@ export const getProductQuery = (productId: string) => {
 };
 
 export const createProductMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({request}: {request: CreateProductRequest}) => createProductRequest(request),
     onError: (error: Error) => {
@@ -91,6 +93,9 @@ export const createProductMutation = () => {
         toast({
           title: "Product created successfully"
         });
+
+        queryClient.invalidateQueries({queryKey: ["products", "seller"]})
+
       } else {
         throw new Error(data.message);
       }
@@ -99,6 +104,8 @@ export const createProductMutation = () => {
 };
 
 export const updateProductMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({productId, request}: {productId: string, request: UpdateProductRequest}) => updateProductRequest(productId, request),
     onError: (error: Error) => {
@@ -113,6 +120,10 @@ export const updateProductMutation = () => {
         toast({
           title: "Product updated successfully"
         });
+
+        queryClient.invalidateQueries({queryKey: ["products", "seller"]})
+        queryClient.invalidateQueries({ queryKey: ["products", data.result.id] })
+
       } else {
         throw new Error(data.message);
       }
@@ -121,6 +132,8 @@ export const updateProductMutation = () => {
 };
 
 export const deleteProductMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({productId}: {productId: string}) => deleteProductRequest(productId),
     onError: (error: Error) => {
@@ -135,6 +148,9 @@ export const deleteProductMutation = () => {
         toast({
           title: data.result
         });
+
+        queryClient.invalidateQueries({queryKey: ["products", "seller"]})
+
       } else {
         throw new Error(data.message);
       }

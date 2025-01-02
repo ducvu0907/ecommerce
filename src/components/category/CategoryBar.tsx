@@ -1,12 +1,12 @@
 import { CategoryContext } from "@/contexts/CategoryContext";
-import { getCategories } from "@/services/category";
+import { getCategoriesQuery } from "@/services/category";
 import { useContext } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { CategoryData } from "@/types/models";
 
 const CategoryBar = () => {
   const { selectedCategories, setSelectedCategories } = useContext(CategoryContext);
-  const { data: categories, isLoading, isError, error } = getCategories();
+  const { data: categories, isLoading, isError, error } = getCategoriesQuery();
 
   if (isLoading) {
     return (

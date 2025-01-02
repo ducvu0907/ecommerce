@@ -21,7 +21,6 @@ const createOrderRequest = async (request: CreateOrderRequest): Promise<ApiRespo
   return _request({
     url: "/api/orders",
     method: "POST",
-    headers: {"Content-Type":"application/json"},
     body: JSON.stringify(request)
   });
 };
@@ -32,7 +31,6 @@ const cancelOrderRequest = async (orderId: string): Promise<ApiResponse<string>>
     method: "DELETE",
   });
 };
-
 
 export const getMyOrdersQuery = () => {
   return useQuery<ApiResponse<OrderData[]>, Error>({

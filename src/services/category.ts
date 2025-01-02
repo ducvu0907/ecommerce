@@ -10,7 +10,7 @@ const getCategoriesRequest = async (): Promise<ApiResponse<CategoryData[]>> => {
   });
 };
 
-export const getCategories = () => {
+export const getCategoriesQuery = () => {
   return useQuery<ApiResponse<CategoryData[]>, Error>({
     queryKey: ["categories"],
     queryFn: getCategoriesRequest

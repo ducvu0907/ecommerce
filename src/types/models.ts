@@ -64,8 +64,8 @@ export type CreateReviewRequest = {
 };
 
 export type UpdateReviewRequest = {
-  rating: number;
-  content: string;
+  rating: number | null;
+  content: string | null;
 };
 
 export type CreateOrderItemRequest = {
@@ -92,8 +92,8 @@ export type CreateInventoryRequest = {
 };
 
 export type UpdateInventoryRequest = {
-  location: string;
-  stock: number;
+  location: string | null;
+  stock: number | null;
 };
 
 // responses
@@ -207,6 +207,7 @@ export type DiscountData = {
 
 export type InventoryData = {
   id: string;
+  productId: string;
   location: string;
   stock: number;
   createdAt: Date;
