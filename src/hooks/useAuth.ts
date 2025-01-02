@@ -16,13 +16,13 @@ const isLoggedIn = () => {
 };
 
 const useAuth = () => {
-  const { setToken, setRole, setUserId } = useContext(AuthContext);
+  const { token, setToken, setRole, setUserId } = useContext(AuthContext);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const signupRequest = async (formData: SignupRequest): Promise<ApiResponse<UserData>> => {
     return _request<ApiResponse<UserData>>({
-      url: "api/auth/signup",
+      url: "/api/auth/signup",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
@@ -31,7 +31,7 @@ const useAuth = () => {
 
   const loginRequest = async (formData: LoginRequest): Promise<ApiResponse<TokenData>> => {
     return _request<ApiResponse<TokenData>>({
-      url: "api/auth/login",
+      url: "/api/auth/login",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
@@ -51,15 +51,6 @@ const useAuth = () => {
         const token = data.result.token;
         localStorage.setItem("token", token);
         setToken(token);
-        
-        const {data: authData} = authenticateQuery();
-        if (authData?.result) {
-          setUserId(authData.result.userId);
-          setRole(authData.result.role);
-        } else {
-          throw new Error(authData?.message);
-        }
-
         navigate("/");
 
       } else {
@@ -89,12 +80,10 @@ const useAuth = () => {
   });
 
   const logout = () => {
-    const { token } = useContext(AuthContext);
-
     // fetch without awaiting
-    fetch("api/auth/logout", {
+    fetch("/api/auth/logout", {
       method: "POST",
-      headers: {"Content-Type":"application/json", "token": token || ""},
+      headers: {"token": token || ""},
     });
 
     localStorage.removeItem("token");

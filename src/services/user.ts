@@ -20,7 +20,7 @@ const getUserProfileRequest = async (userId: string): Promise<ApiResponse<UserDa
 
 const updateMyProfileRequest = async (request: UpdateMeRequest): Promise<ApiResponse<UserData>> => {
   return _request<ApiResponse<UserData>>({
-    url: `/api/users/me/update`,
+    url: `/api/users/me`,
     method: "POST",
     body: JSON.stringify(request)
   });

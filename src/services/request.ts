@@ -1,6 +1,3 @@
-import { AuthContext } from "@/contexts/AuthContext";
-import { useContext } from "react";
-
 type RequestOptions = {
   url: string;
   method: string;
@@ -9,7 +6,7 @@ type RequestOptions = {
 };
 
 export const _request = async <T>({url, method, headers, body}: RequestOptions): Promise<T> => {
-  const { token } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
 
   const requestHeaders = {
     ...(headers ? headers : {"Content-Type": "application/json"}),

@@ -91,7 +91,7 @@ const OrderDetails = () => {
                 <TableHead className="text-left">Product</TableHead>
                 <TableHead className="text-left">Title</TableHead>
                 <TableHead className="text-center">Quantity</TableHead>
-                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="text-right">Subtotal</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

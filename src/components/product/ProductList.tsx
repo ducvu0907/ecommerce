@@ -11,6 +11,7 @@ import { filterProductsByCategories } from "@/helpers";
 const ProductList = () => {
   const { selectedCategories } = useContext(CategoryContext);
   const { data: products, isLoading, isError, error } = getProductsQuery();
+console.log(products);
 
   const filteredProducts = useMemo(() => {
     if (!products?.result) return [];

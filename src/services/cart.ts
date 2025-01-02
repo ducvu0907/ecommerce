@@ -41,9 +41,12 @@ const emptyCartRequest = async (): Promise<ApiResponse<string>> => {
 };
 
 export const getMyCartQuery = () => {
+  const token = localStorage.getItem("token");
+
   return useQuery<ApiResponse<CartData>, Error>({
     queryKey: ["cart"],
     queryFn: getMyCartRequest,
+    enabled: !!token
   });
 }
 

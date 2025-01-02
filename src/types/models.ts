@@ -25,9 +25,9 @@ export type SignupRequest = {
 };
 
 export type UpdateMeRequest = {
-  username: string;
-  fullName: string;
-  phone: string;
+  username: string | null;
+  fullName: string | null;
+  phone: string | null;
 };
 
 export type CreateProductRequest = {

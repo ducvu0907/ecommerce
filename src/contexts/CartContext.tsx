@@ -1,13 +1,14 @@
 import { getMyCartQuery } from '@/services/cart';
 import { CartData } from '@/types/models';
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 
 interface CartContextType {
   cart: CartData | null,
   isLoading: boolean;
 };
 
-const CartContext = createContext<CartContextType>({
+export const CartContext = createContext<CartContextType>({
   cart: null,
   isLoading: false,
 });
@@ -16,8 +17,9 @@ interface CartProviderProps {
   children: ReactNode;
 };
 
-const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartData | null>(null);
+  const {token} = useContext(AuthContext);
   const { data, isLoading } = getMyCartQuery();
 
   useEffect(() => {
@@ -25,7 +27,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       console.log("Fetching user cart: ", data);
       setCart(data.result);
     }
-  }, [data]);
+  }, [data, token]);
 
   return (
     <CartContext.Provider value={{cart, isLoading}}>
@@ -33,5 +35,3 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     </CartContext.Provider>
   );
 };
-
-export {CartContext, CartProvider};

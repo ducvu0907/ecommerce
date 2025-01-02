@@ -14,6 +14,7 @@ const OrderList = () => {
   }
 
   const { data: orders, isLoading, isError, error } = getMyOrdersQuery();
+  console.log("Fetching user orders: ", orders);
 
   if (isLoading) {
     return (
@@ -38,7 +39,7 @@ const OrderList = () => {
   if (orders.result.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-black text-xl font-medium">No orders found</p>
+        <p className="text-black text-xl font-medium">You have no orders</p>
       </div>
     );
   }

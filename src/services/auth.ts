@@ -10,8 +10,11 @@ const authenticateRequest = async (): Promise<ApiResponse<AuthData>> => {
 };
 
 export const authenticateQuery = () => {
+  const token = localStorage.getItem("token");
+
   return useQuery({
     queryKey: ["token"],
     queryFn: authenticateRequest,
+    enabled: !!token
   });
 };

@@ -101,14 +101,14 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
               <HoverCard>
                 <HoverCardTrigger>
                   <img 
-                    src={product.result.imageUrl} 
+                    src={"https://placehold.co/600x400"}  // FIXME: placeholder image
                     alt={product.result.title} 
                     className="w-16 h-16 rounded-md object-cover" 
                   />
                 </HoverCardTrigger>
                 <HoverCardContent>
                   <img 
-                    src={product.result.imageUrl} 
+                    src={"https://placehold.co/600x400"} // FIXME: placeholder image
                     alt={product.result.title} 
                     className="w-full h-auto rounded-md" 
                   />

@@ -4,17 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updateMyProfileMutation } from "@/services/user";
-import { UpdateMeRequest } from "@/types/models";
+
+interface UpdateMeFormData {
+  username: string;
+  fullName: string;
+  phone: string;
+};
 
 interface UpdateProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userData: UpdateMeRequest;
+  userData: UpdateMeFormData;
 }
 
 const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ isOpen, onClose, userData }) => {
-  const { mutate, isPending } = updateMyProfileMutation();
-  const [formValues, setFormValues] = useState<UpdateMeRequest>(userData);
+  const { mutate: updateMyProfile, isPending } = updateMyProfileMutation();
+  const [formValues, setFormValues] = useState<UpdateMeFormData>(userData);
 
   const handleInputChange = (field: keyof typeof formValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev) => ({ ...prev, [field]: e.target.value }));
@@ -22,7 +27,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ isOpen, onClose
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({request: formValues});
+    updateMyProfile({request: formValues});
     onClose();
   };
 

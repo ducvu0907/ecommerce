@@ -29,15 +29,17 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
     >
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         <img
-          src={product.imageUrl}
+          src={"https://placehold.co/600x400"} // FIXME: placeholder image
           alt={product.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
+
         {isLowStock && (
           <Badge className="absolute top-2 right-2 bg-red-500">
             Low Stock
           </Badge>
         )}
+
       </div>
       
       <CardContent className="p-4 flex flex-col flex-grow">

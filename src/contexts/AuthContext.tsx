@@ -1,3 +1,4 @@
+import { authenticateQuery } from '@/services/auth';
 import { Role } from '@/types/models';
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<Role | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const { data: authData } = authenticateQuery();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -34,6 +36,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(storedToken);
     }
   }, []);
+
+  useEffect(() => {
+    if (authData?.result) {
+      setUserId(authData.result?.userId);
+      setRole(authData.result?.role);
+    }
+  }, [token, authData]);
 
   return (
     <AuthContext.Provider value={{ token, setToken, role, setRole, userId, setUserId }}>

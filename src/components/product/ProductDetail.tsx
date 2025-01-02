@@ -22,13 +22,21 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const { mutate: addItem, isPending } = addItemMutation();
   const navigate = useNavigate();
 
-  // placeholder images
+  //const productImages = [
+  //  product.imageUrl,
+  //  product.imageUrl,
+  //  product.imageUrl,
+  //  product.imageUrl
+  //];
+
+  // FIXME: placeholder images
   const productImages = [
-    product.imageUrl,
-    product.imageUrl,
-    product.imageUrl,
-    product.imageUrl
+    "https://placehold.co/600x400",
+    "https://placehold.co/600x400",
+    "https://placehold.co/600x400",
+    "https://placehold.co/600x400"
   ];
+
 
   const adjustQuantity = (type: 'increase' | 'decrease') => {
     if (type === 'increase' && quantity < product.quantity) {
