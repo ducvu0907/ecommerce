@@ -26,14 +26,21 @@ public class InventoryController {
     }
 
     @PostMapping("")
-    public ApiResponse<InventoryResponse> createInventory(@RequestHeader("token") String token, InventoryCreateRequest request) {
+    public ApiResponse<InventoryResponse> createInventory(@RequestHeader("token") String token, @RequestBody InventoryCreateRequest request) {
         var res = inventoryService.createInventory(token, request);
         return ApiResponse.<InventoryResponse>builder().result(res).build();
     }
 
     @PostMapping("/{inventoryId}")
-    public ApiResponse<InventoryResponse> updateInventory(@RequestHeader("token") String token, @PathVariable("inventoryId") String inventoryId, InventoryUpdateRequest request) {
+    public ApiResponse<InventoryResponse> updateInventory(@RequestHeader("token") String token, @PathVariable("inventoryId") String inventoryId, @RequestBody InventoryUpdateRequest request) {
         var res = inventoryService.updateInventory(token, inventoryId, request);
+        return ApiResponse.<InventoryResponse>builder().result(res).build();
+    }
+
+    // return inventory response so client-side can invalidates cache query
+    @DeleteMapping("/{inventoryId}")
+    public ApiResponse<InventoryResponse> deleteInventory(@RequestHeader("token") String token, @PathVariable("inventoryId") String inventoryId) {
+        var res = inventoryService.deleteInventory(token, inventoryId);
         return ApiResponse.<InventoryResponse>builder().result(res).build();
     }
 

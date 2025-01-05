@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class InventoryResponse {
     String id;
     String location;
+    String productId;
     Integer stock;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

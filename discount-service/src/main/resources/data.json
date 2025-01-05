@@ -98,5 +98,105 @@
     "endDate": "2023-11-25T23:59:59",
     "createdAt": "2023-10-04T19:00:00",
     "updatedAt": "2023-10-04T19:00:00"
+  },
+  {
+    "id": "11",
+    "type": "FIXED",
+    "value": 15.0,
+    "description": "Fixed discount of $15",
+    "startDate": "2025-01-01T00:00:00",
+    "endDate": "2025-01-10T23:59:59",
+    "createdAt": "2024-12-31T10:00:00",
+    "updatedAt": "2024-12-31T10:00:00"
+  },
+  {
+    "id": "12",
+    "type": "PERCENTAGE",
+    "value": 5.0,
+    "description": "5% off on all items",
+    "startDate": "2025-01-03T00:00:00",
+    "endDate": "2025-01-12T23:59:59",
+    "createdAt": "2025-01-02T11:00:00",
+    "updatedAt": "2025-01-02T11:00:00"
+  },
+  {
+    "id": "13",
+    "type": "FIXED",
+    "value": 25.0,
+    "description": "Fixed discount of $25",
+    "startDate": "2025-01-01T00:00:00",
+    "endDate": "2025-01-07T23:59:59",
+    "createdAt": "2024-12-30T12:00:00",
+    "updatedAt": "2024-12-30T12:00:00"
+  },
+  {
+    "id": "14",
+    "type": "PERCENTAGE",
+    "value": 10.0,
+    "description": "10% off for orders above $50",
+    "startDate": "2025-01-04T00:00:00",
+    "endDate": "2025-01-10T23:59:59",
+    "createdAt": "2025-01-03T13:00:00",
+    "updatedAt": "2025-01-03T13:00:00"
+  },
+  {
+    "id": "15",
+    "type": "FIXED",
+    "value": 40.0,
+    "description": "Fixed discount of $40",
+    "startDate": "2025-01-01T00:00:00",
+    "endDate": "2025-01-15T23:59:59",
+    "createdAt": "2024-12-29T14:00:00",
+    "updatedAt": "2024-12-29T14:00:00"
+  },
+  {
+    "id": "16",
+    "type": "PERCENTAGE",
+    "value": 20.0,
+    "description": "20% off on selected items",
+    "startDate": "2025-01-05T00:00:00",
+    "endDate": "2025-01-14T23:59:59",
+    "createdAt": "2025-01-04T15:00:00",
+    "updatedAt": "2025-01-04T15:00:00"
+  },
+  {
+    "id": "17",
+    "type": "FIXED",
+    "value": 50.0,
+    "description": "Fixed discount of $50 on orders above $200",
+    "startDate": "2025-01-02T00:00:00",
+    "endDate": "2025-01-09T23:59:59",
+    "createdAt": "2025-01-01T16:00:00",
+    "updatedAt": "2025-01-01T16:00:00"
+  },
+  {
+    "id": "18",
+    "type": "PERCENTAGE",
+    "value": 15.0,
+    "description": "15% off on electronics",
+    "startDate": "2025-01-05T00:00:00",
+    "endDate": "2025-01-10T23:59:59",
+    "createdAt": "2025-01-04T17:00:00",
+    "updatedAt": "2025-01-04T17:00:00"
+  },
+  {
+    "id": "19",
+    "type": "FIXED",
+    "value": 100.0,
+    "description": "Fixed discount of $100 on orders above $500",
+    "startDate": "2025-01-03T00:00:00",
+    "endDate": "2025-01-15T23:59:59",
+    "createdAt": "2025-01-02T18:00:00",
+    "updatedAt": "2025-01-02T18:00:00"
+  },
+  {
+    "id": "20",
+    "type": "PERCENTAGE",
+    "value": 25.0,
+    "description": "25% off on all clothing items",
+    "startDate": "2025-01-01T00:00:00",
+    "endDate": "2025-01-07T23:59:59",
+    "createdAt": "2024-12-31T19:00:00",
+    "updatedAt": "2024-12-31T19:00:00"
   }
 ]

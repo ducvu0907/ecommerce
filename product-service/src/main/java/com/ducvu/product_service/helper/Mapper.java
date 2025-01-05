@@ -45,6 +45,7 @@ public class Mapper {
     public InventoryResponse toInventoryResponse(Inventory inventory) {
         return InventoryResponse.builder()
                 .id(inventory.getId())
+                .productId(inventory.getProduct().getId())
                 .location(inventory.getLocation())
                 .stock(inventory.getStock())
                 .createdAt(inventory.getCreatedAt())

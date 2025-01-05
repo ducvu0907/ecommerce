@@ -68,8 +68,10 @@ public class OrderService {
         order.setTotalPrice(0.0);
         order.setBuyerId(userId);
         order.setAddress(request.getAddress());
-        order.setInstruction(request.getInstruction());
-        order.setDiscountId(request.getDiscountId());
+        if (request.getInstruction() != null && !request.getInstruction().isEmpty()) {
+            order.setInstruction(request.getInstruction());
+        }
+
         order.setStatus(OrderStatus.PENDING);
         order.setItems(new ArrayList<>());
 
@@ -114,12 +116,16 @@ public class OrderService {
         // apply discount
         if (request.getDiscountId() != null) {
             var discountResponse = getDiscountResponse(request.getDiscountId());
-            order.setDiscountId(discountResponse.getId());
-            // discount type is fixed or percentage
-            if ("FIXED".equals(discountResponse.getType())) {
-                order.setTotalPrice(totalPrice - discountResponse.getValue());
+            if (discountResponse.getStartDate().isBefore(LocalDateTime.now()) && discountResponse.getEndDate().isAfter(LocalDateTime.now())) {
+                order.setDiscountId(discountResponse.getId());
+                // discount type is fixed or percentage
+                if ("FIXED".equals(discountResponse.getType())) {
+                    order.setTotalPrice(totalPrice - discountResponse.getValue());
+                } else {
+                    order.setTotalPrice(totalPrice * (1 - discountResponse.getValue() / 100));
+                }
             } else {
-                order.setTotalPrice(totalPrice * (1 - discountResponse.getValue() / 100));
+                throw new RuntimeException("Discount is invalid");
             }
         }
 

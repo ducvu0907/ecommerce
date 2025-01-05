@@ -91,6 +91,23 @@ public class InventoryService {
         return mapper.toInventoryResponse(inventoryRepository.save(inventory));
     }
 
+    public InventoryResponse deleteInventory(String token, String inventoryId) {
+        log.info("Inventory service; Delete inventory");
+
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        var authResponse = validateToken(token);
+        String userId = authResponse.getUserId();
+
+        if (!userId.equals(inventory.getProduct().getSellerId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        inventoryRepository.delete(inventory);
+        return mapper.toInventoryResponse(inventory);
+    }
+
     private AuthResponse validateToken(String token) {
         if (token == null || token.isEmpty()) {
             throw new RuntimeException("No token provided");
