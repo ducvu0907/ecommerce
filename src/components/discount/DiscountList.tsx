@@ -1,58 +1,64 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getDiscounts } from "@/services/discount";
-import { useState } from "react";
 import { DiscountData } from "@/types/models";
 import DiscountItem from "./DiscountItem";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { isDiscountActive } from "@/helpers";
+import { toast } from "@/hooks/use-toast";
 
-const DiscountList = () => {
-  const {data, isLoading, isError} = getDiscounts();
+interface DiscountListModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedDiscount: DiscountData | null;
+  setSelectedDiscount: (discount: DiscountData | null) => void;
+};
+
+const DiscountListModal: React.FC<DiscountListModalProps> = ({ isOpen, onClose, selectedDiscount, setSelectedDiscount }) => {
+  const { data, isLoading, isError } = getDiscounts();
   const discounts = data?.result;
-  const [selectedDiscount, setSelectedDiscount] = useState<DiscountData | null>(null);
 
-  // FIXME 
   const handleSelectDiscount = (discount: DiscountData) => {
-    setSelectedDiscount(discount);
+    if (isDiscountActive(discount)) {
+      setSelectedDiscount(discount);
+    } else {
+      toast({
+        title: "Discount is inactive",
+        variant: "destructive"
+      });
+    }
   };
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Discounts</CardTitle>
-        </CardHeader>
-        <CardContent className="flex justify-center items-center h-40">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-        </CardContent>
-      </Card>
+      <div className="flex justify-center items-center h-40">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Discounts</CardTitle>
-        </CardHeader>
-        <CardContent className="flex justify-center items-center h-40 text-destructive">
-          <AlertTriangle className="h-8 w-8 mr-2" />
-          <span>Error loading discounts</span>
-        </CardContent>
-      </Card>
+      <div className="flex justify-center items-center h-40 text-destructive">
+        <AlertTriangle className="h-8 w-8 mr-2" />
+        <span>Error loading discounts</span>
+      </div>
     );
   }
 
+  if (!discounts || discounts.length === 0) {
+    return <div className="text-center">No discounts available</div>
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Available Discounts</CardTitle>
-      </CardHeader>
-      {!discounts || discounts.length === 0 ?
-        <CardContent className="text-center">
-          No discount available
-        </CardContent> :
-        <CardContent>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Available Discounts</DialogTitle>
+          <DialogDescription className="text-gray-500">Click to choose a discount</DialogDescription>
+        </DialogHeader>
+        <div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -61,24 +67,23 @@ const DiscountList = () => {
                 <TableHead>Start Date</TableHead>
                 <TableHead>End Date</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {discounts?.map((discount) => (
-                <DiscountItem discount={discount}/>
+              {discounts?.map((discount, idx) => (
+                <DiscountItem
+                  isSelected={!selectedDiscount ? false : selectedDiscount.id === discount.id}
+                  key={idx}
+                  discount={discount}
+                  onSelect={() => handleSelectDiscount(discount)}
+                />
               ))}
             </TableBody>
           </Table>
-          {selectedDiscount && (
-            <div className="mt-4 text-sm text-muted-foreground">
-              Selected Discount: {selectedDiscount.description}
-            </div>
-          )}
-        </CardContent>
-      }
-    </Card>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default DiscountList;
+export default DiscountListModal;

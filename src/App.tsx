@@ -14,6 +14,7 @@ import Settings from "./pages/main/Settings";
 import CreateProduct from "./pages/product/CreateProduct";
 import SellerProducts from "./pages/product/SellerProducts";
 import Inventory from "./pages/inventory/Inventory";
+import CreateOrder from "./pages/order/CreateOrder";
 
 const App = () => {
   const loggedIn = isLoggedIn();
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/my-products" element={<SellerProducts />} />
           <Route path="/inventories/:productId" element={<Inventory />} />
           <Route path="/create-product" element={<CreateProduct />} />
+          <Route path="/create-order" element={<CreateOrder />} />
           <Route path="/orders" element={loggedIn ? <OrderList />:<Navigate to={"/login" } />} />
           <Route path="/orders/:orderId" element={loggedIn ? <OrderDetails /> : <Navigate to={"/login"} />} />
           <Route path="/settings" element={<Settings />} />

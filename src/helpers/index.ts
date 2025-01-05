@@ -1,4 +1,4 @@
-import { CartItemData, LoginRequest, OrderStatus, ProductData, ReviewData, SignupRequest } from "@/types/models";
+import { CartData, CartItemData, DiscountData, DiscountType, LoginRequest, OrderStatus, ProductData, ReviewData, SignupRequest } from "@/types/models";
 
 export const validateLoginForm = (formData: LoginRequest): { isValid: boolean; errors: { [key: string]: string } } => {
   const errors: { [key: string]: string } = {};
@@ -110,4 +110,27 @@ export const filterProductsByCategories = ( products: ProductData[], selectedCat
   return products.filter((product) =>
     selectedCategories.some((category) => category.id === product.category.id)
   );
+};
+
+export const isDiscountActive = (discount: DiscountData) => {
+  return discount.startDate <= new Date() && discount.endDate >= new Date();
+};
+
+export const calculateCartTotal = (cart: CartData | null) => {
+  if (!cart) {
+    return 0;
+  }
+
+  return cart.items.reduce((acc, item) => acc + item.subtotal, 0);
+};
+
+export const calculateDiscountAmount = (discount: DiscountData | null, amount: number) => {
+  if (!discount) {
+    return 0;
+  }
+  return discount.type === DiscountType.PERCENTAGE ? (amount * discount.value) / 100 : discount.value;
+};
+
+export const calculateFinalTotal = (total: number, discount: number, shippingFee: number) => {
+  return total - discount + shippingFee;
 };

@@ -53,7 +53,7 @@ const OrderItem: React.FC<OrderItemProps> = ({item}) => {
       <TableCell>
         <div className="w-24">
           <img
-            src={product?.result?.imageUrl}
+            src={"https://placehold.co/600x400"} // FIXME: placeholder image
             alt={product?.result?.title}
             className="rounded-md object-cover"
           />

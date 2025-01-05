@@ -2,6 +2,7 @@ import { toast } from "@/hooks/use-toast";
 import { ApiResponse, CreateOrderRequest, OrderData } from "@/types/models";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { _request } from "./request";
+import { useNavigate } from "react-router-dom";
 
 const getMyOrdersRequest = async (): Promise<ApiResponse<OrderData[]>> => {
   return _request({
@@ -47,6 +48,9 @@ export const getOrderQuery = (orderId: string) => {
 };
 
 export const createOrderMutation = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: ({ request }: { request: CreateOrderRequest }) => createOrderRequest(request),
     onError: (error: Error) => {
@@ -60,6 +64,10 @@ export const createOrderMutation = () => {
         toast({
           title: "Create order successfully"
         });
+
+        queryClient.invalidateQueries({queryKey: ["cart"]});
+        navigate(`/orders/${data.result.id}`); // navigate to the order details page
+
       } else {
         throw new Error(data.message);
       }

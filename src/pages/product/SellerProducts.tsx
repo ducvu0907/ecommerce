@@ -52,6 +52,7 @@ const SellerProducts = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Your Products</h2>
         <Button onClick={() => navigate("/create-product")} className="gap-2">

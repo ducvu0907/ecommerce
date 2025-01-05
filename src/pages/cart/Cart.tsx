@@ -5,10 +5,12 @@ import { useContext, useEffect, useState } from "react";
 import { CartContext } from "@/contexts/CartContext";
 import { computeSubtotal } from "@/helpers";
 import { ArrowRight, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cart } = useContext(CartContext);
   const [subtotal, setSubtotal] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const calculatedSubtotal = cart ? computeSubtotal(cart.items) : 0;
@@ -38,6 +40,7 @@ const Cart = () => {
             <Button 
               className="w-full mt-4" 
               disabled={cart?.items.length === 0}
+              onClick={() => navigate("/create-order")}
             >
               Proceed to Checkout
               <ArrowRight className="ml-2 h-4 w-4" />

@@ -76,14 +76,14 @@ const OrderDetails = () => {
             </div>
             <div>
               <p className="text-sm text-gray-500">Instruction</p>
-              <p>{orderData.instruction}</p>
+              <p>{orderData.instruction || "None"}</p>
             </div>
           </div>
         </div>
 
         <Separator />
 
-        <div>
+        <div className="overflow-y-auto">
           <h3 className="text-lg font-semibold mb-4">Items</h3>
           <Table>
             <TableHeader>
@@ -95,8 +95,8 @@ const OrderDetails = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orderData.items.map((item) => (
-                <OrderItem item={item} />
+              {orderData.items.map((item, idx) => (
+                <OrderItem item={item} key={idx}/>
               ))}
             </TableBody>
           </Table>
@@ -105,7 +105,7 @@ const OrderDetails = () => {
 
       <CardFooter className="flex justify-end">
         <div className="text-lg font-semibold">
-          Total Amount: ${orderData.totalPrice.toFixed(2)}
+          Total: ${orderData.totalPrice.toFixed(2)}
         </div>
       </CardFooter>
 

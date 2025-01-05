@@ -47,8 +47,8 @@ const OrderList = () => {
   return (
     <div className="space-y-4 p-4">
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
-      {orders.result.map((order: OrderData) => (
-        <Order order={order} />
+      {orders.result.map((order, idx) => (
+        <Order order={order} key={idx}/>
       ))}
     </div>
   );

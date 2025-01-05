@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { OrderData, OrderStatus } from "@/types/models";
+import { formatDate } from "@/helpers";
 
 interface OrderProps {
   order: OrderData;
@@ -32,7 +33,7 @@ const Order: React.FC<OrderProps> = ({ order }) => {
           <div>
             <p className="text-gray-600">{order.items.length} items</p>
             <p className="text-sm text-gray-500">
-              {new Date(order.createdAt).toLocaleDateString()}
+              {formatDate(order.createdAt)}
             </p>
           </div>
           <p className="font-semibold">
