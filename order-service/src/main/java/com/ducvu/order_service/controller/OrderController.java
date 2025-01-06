@@ -39,4 +39,10 @@ public class OrderController {
         return ApiResponse.<String>builder().result("Order has been cancelled").build();
     }
 
+    // payment service calls this to update the status of the order
+    @PutMapping("/{orderId}")
+    public ApiResponse<String> payOrder(@PathVariable("orderId") String orderId) {
+        orderService.payOrder(orderId);
+        return ApiResponse.<String>builder().result("Order has been paid").build();
+    }
 }

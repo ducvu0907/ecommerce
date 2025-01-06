@@ -7,8 +7,10 @@ import com.ducvu.payment_service.service.PaymentService;
 import com.ducvu.payment_service.service.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -26,14 +28,14 @@ public class PaymentController {
     }
 
     @PostMapping("/create-payment")
-    public String createPayment(@RequestHeader("token") String token, @RequestBody CreatePaymentRequest request) {
+    public ApiResponse<String> createPayment(@RequestHeader("token") String token, @RequestBody CreatePaymentRequest request) {
         var res = paymentService.createPayment(token, request);
-        return "redirect:" + res;
+        return ApiResponse.<String>builder().result(res).build();
     }
 
     @GetMapping("/vnpay-return")
-    public String paymentReturn(HttpServletRequest request){
+    public RedirectView paymentReturn(HttpServletRequest request){
         var res = paymentService.processPayment(request);
-        return "redirect:" + res;
+        return new RedirectView(res);
     }
 }

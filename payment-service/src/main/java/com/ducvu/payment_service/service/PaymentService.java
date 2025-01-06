@@ -12,6 +12,7 @@ import com.ducvu.payment_service.entity.Payment;
 import com.ducvu.payment_service.helper.Mapper;
 import com.ducvu.payment_service.repository.PaymentRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class PaymentService {
         return mapper.toPaymentResponse(vnpayTransaction);
     }
 
+    @Transactional
     public String createPayment(String token, CreatePaymentRequest request) {
         log.info("Payment service; Create VNPay payment");
 
@@ -58,6 +60,10 @@ public class PaymentService {
             throw new RuntimeException("Unauthorized");
         }
 
+        if (!orderResponse.getStatus().equals("PENDING")) {
+            throw new RuntimeException("Order is not valid to be paid");
+        }
+
         paymentRepository.findByOrderId(orderId)
                 .ifPresent(payment -> {
                     throw new RuntimeException("Payment already exists");
@@ -66,17 +72,17 @@ public class PaymentService {
         return vnPayService.createPaymentUrl(10000, orderId);
     }
 
+    @Transactional
     public String processPayment(HttpServletRequest request) {
         log.info("Payment service; Process VNPay payment");
 
         int paymentResult = vnPayService.getPaymentResult(request);
-
-        if (paymentResult == 0) {
-            throw new RuntimeException("Payment failed");
-        }
-
         String transactionRef = request.getParameter("vnp_TxnRef");
         String orderId = request.getParameter("vnp_OrderInfo");
+
+        if (paymentResult == 0) {
+            return "http://localhost:3000/payment-failed?orderId=" + orderId;
+        }
 
         Payment payment = Payment.builder()
                 .orderId(orderId)
@@ -84,8 +90,9 @@ public class PaymentService {
                 .build();
 
         paymentRepository.save(payment);
+        orderClient.payOrder(orderId);
 
-        return "http://localhost:3000/payments/" + orderId;
+        return "http://localhost:3000/payment-succeeded/?orderId=" + orderId;
     }
 
     private VNPayResponse getVNPayTransaction(String txnRef, String orderInfo) {

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class OrderResponse {
     String buyerId;
     int totalPrice;
+    String status;
 }

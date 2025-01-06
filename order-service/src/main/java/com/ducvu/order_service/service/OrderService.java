@@ -174,6 +174,14 @@ public class OrderService {
         }
     }
 
+    public void payOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(OrderStatus.COMPLETED);
+        orderRepository.save(order);
+    }
+
     private DiscountResponse getDiscountResponse(String discountId) {
         var discountResponse = discountClient.getDiscount(discountId);
         if (discountResponse.getResult() == null) {
