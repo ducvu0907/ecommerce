@@ -1,6 +1,7 @@
 package com.ducvu.payment_service.service;
 
 import com.ducvu.payment_service.config.VNPayConfig;
+import com.ducvu.payment_service.dto.request.VNPayQueryRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,18 +54,19 @@ public class VNPayService {
         StringBuilder query = new StringBuilder();
         Iterator<String> itr = fieldNames.iterator();
 
+        // build query url
         while (itr.hasNext()) {
             String fieldName = (String) itr.next();
             String fieldValue = (String) vnp_Params.get(fieldName);
             if ((fieldValue != null) && (!fieldValue.isEmpty())) {
-                //Build hash data
                 hashData.append(fieldName);
                 hashData.append('=');
                 hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-                //Build query
+
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
                 query.append('=');
                 query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+
                 if (itr.hasNext()) {
                     query.append('&');
                     hashData.append('&');
@@ -77,6 +79,55 @@ public class VNPayService {
 
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         return paymentUrl;
+    }
+
+    // utils to corresponding query transaction
+    public VNPayQueryRequest queryTransaction(String txnRef, String orderInfo) {
+        String vnp_Version = "2.1.0";
+        String vnp_Command = "querydr";
+        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        String vnp_RequestId = VNPayConfig.getRandomNumber(8);
+        String vnp_TxnRef = txnRef;
+        String vnp_OrderInfo = orderInfo;
+
+        // generate the current time for vnp_TransactionDate and vnp_CreateDate
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String vnp_CreateDate = formatter.format(cld.getTime());
+
+        // vnp_TransactionDate (optional, can be same as vnp_CreateDate for simplicity)
+        String vnp_TransactionDate = vnp_CreateDate;
+
+        // localhost IP for testing
+        String vnp_IpAddr = "127.0.0.1";
+
+        // generate secure hash
+        Map<String, String> vnp_Params = new HashMap<>();
+        vnp_Params.put("vnp_Version", vnp_Version);
+        vnp_Params.put("vnp_Command", vnp_Command);
+        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
+        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
+        vnp_Params.put("vnp_RequestId", vnp_RequestId);
+        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
+        vnp_Params.put("vnp_TransactionDate", vnp_TransactionDate);
+        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+
+        // generate secure hash using VNPayConfig
+        String vnp_SecureHash = VNPayConfig.generateChecksumForTransactionQuery(vnp_Params);
+
+        return VNPayQueryRequest.builder()
+                .vnp_Version(vnp_Version)
+                .vnp_Command(vnp_Command)
+                .vnp_TmnCode(vnp_TmnCode)
+                .vnp_TxnRef(vnp_TxnRef)
+                .vnp_OrderInfo(vnp_OrderInfo)
+                .vnp_RequestId(vnp_RequestId)
+                .vnp_CreateDate(vnp_CreateDate)
+                .vnp_TransactionDate(vnp_TransactionDate)
+                .vnp_IpAddr(vnp_IpAddr)
+                .vnp_SecureHash(vnp_SecureHash)
+                .build();
     }
 
 

@@ -23,5 +23,5 @@ public class Payment {
     private String orderId;
 
     @Indexed
-    private String transactionId;
+    private String transactionRef;
 }

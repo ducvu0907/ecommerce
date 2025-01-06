@@ -90,4 +90,18 @@ public class VNPayConfig {
         return sb.toString();
     }
 
+    // query transaction utils
+    public static String generateChecksumForTransactionQuery(Map<String, String> params) {
+        String data = params.get("vnp_RequestId") + "|"
+                + params.get("vnp_Version") + "|"
+                + params.get("vnp_Command") + "|"
+                + params.get("vnp_TmnCode") + "|"
+                + params.get("vnp_TxnRef") + "|"
+                + params.get("vnp_TransactionDate") + "|"
+                + params.get("vnp_CreateDate") + "|"
+                + params.get("vnp_IpAddr") + "|"
+                + params.get("vnp_OrderInfo");
+
+        return hmacSHA512(vnp_HashSecret, data);
+    }
 }

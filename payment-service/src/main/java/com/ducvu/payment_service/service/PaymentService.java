@@ -2,10 +2,12 @@ package com.ducvu.payment_service.service;
 
 import com.ducvu.payment_service.config.OrderClient;
 import com.ducvu.payment_service.config.UserClient;
+import com.ducvu.payment_service.config.VNPayClient;
 import com.ducvu.payment_service.dto.request.CreatePaymentRequest;
 import com.ducvu.payment_service.dto.response.AuthResponse;
 import com.ducvu.payment_service.dto.response.OrderResponse;
 import com.ducvu.payment_service.dto.response.PaymentResponse;
+import com.ducvu.payment_service.dto.response.VNPayResponse;
 import com.ducvu.payment_service.entity.Payment;
 import com.ducvu.payment_service.helper.Mapper;
 import com.ducvu.payment_service.repository.PaymentRepository;
@@ -25,13 +27,14 @@ public class PaymentService {
     private final OrderClient orderClient;
     private final Mapper mapper;
     private final VNPayService vnPayService;
+    private final VNPayClient vnPayClient;
 
     public PaymentResponse getPaymentByOrderId(String token, String orderId) {
         log.info("Payment service; Get payment by order id");
 
         var authResponse = validateToken(token);
-        var orderResponse = getOrder(token, orderId);
 
+        var orderResponse = getOrder(token, orderId);
         if (!orderResponse.getBuyerId().equals(authResponse.getUserId())) {
             throw new RuntimeException("Unauthorized");
         }
@@ -39,7 +42,8 @@ public class PaymentService {
         Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
-        return mapper.toPaymentResponse(payment);
+        var vnpayTransaction = getVNPayTransaction(payment.getTransactionRef(), payment.getOrderId());
+        return mapper.toPaymentResponse(vnpayTransaction);
     }
 
     public String createPayment(String token, CreatePaymentRequest request) {
@@ -49,11 +53,10 @@ public class PaymentService {
 
         String orderId = request.getOrderId();
 
-        // FIXME: comment out to test
-        // var orderResponse = getOrder(token, orderId);
-        //if (!orderResponse.getBuyerId().equals(authResponse.getUserId())) {
-        //    throw new RuntimeException("Unauthorized");
-        //}
+        var orderResponse = getOrder(token, orderId);
+        if (!orderResponse.getBuyerId().equals(authResponse.getUserId())) {
+            throw new RuntimeException("Unauthorized");
+        }
 
         paymentRepository.findByOrderId(orderId)
                 .ifPresent(payment -> {
@@ -72,17 +75,31 @@ public class PaymentService {
             throw new RuntimeException("Payment failed");
         }
 
-        String transactionId = request.getParameter("vnp_TransactionNo");
+        String transactionRef = request.getParameter("vnp_TxnRef");
         String orderId = request.getParameter("vnp_OrderInfo");
 
         Payment payment = Payment.builder()
                 .orderId(orderId)
-                .transactionId(transactionId)
+                .transactionRef(transactionRef)
                 .build();
 
         paymentRepository.save(payment);
 
         return "http://localhost:3000/payments/" + orderId;
+    }
+
+    private VNPayResponse getVNPayTransaction(String txnRef, String orderInfo) {
+        var req = vnPayService.queryTransaction(txnRef, orderInfo);
+        log.info("Send vnpay query request: {}", req);
+
+        var vnpayRes = vnPayClient.getTransaction(req);
+
+        log.info("Get vnpay transaction: {}", vnpayRes);
+        if (!"00".equals(vnpayRes.getVnp_ResponseCode())) {
+            throw new RuntimeException("Transaction invalid");
+        }
+
+        return vnpayRes;
     }
 
     private OrderResponse getOrder(String token, String orderId) {
