@@ -10,9 +10,7 @@ public class Mapper {
         return PaymentResponse.builder()
                 .id(payment.getId())
                 .orderId(payment.getOrderId())
-                .transactionContent(payment.getTransactionContent())
                 .transactionId(payment.getTransactionId())
-                .createdAt(payment.getCreatedAt())
                 .build();
     }
 }

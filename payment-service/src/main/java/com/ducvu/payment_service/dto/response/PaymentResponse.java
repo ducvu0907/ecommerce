@@ -11,10 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Data
-public class PaymentResponse {
+public class PaymentResponse { // TODO: refactor this
     String id;
     String orderId;
-    String transactionContent;
     String transactionId;
-    LocalDateTime createdAt;
 }

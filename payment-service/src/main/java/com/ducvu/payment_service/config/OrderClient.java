@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name = "order-service", url = "http://localhost:8003")
 public interface OrderClient {
-    @GetMapping("/{orderId}")
+    @GetMapping("/orders/{orderId}")
     ApiResponse<OrderResponse> getOrder(@RequestHeader("token") String token, @PathVariable("orderId") String orderId);
 }

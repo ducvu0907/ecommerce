@@ -22,15 +22,6 @@ public class Payment {
     @Indexed
     private String orderId;
 
-    private String transactionContent;
-
     @Indexed
     private String transactionId;
-
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 }
