@@ -4,7 +4,6 @@ import { useToast } from "./use-toast";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { authenticateQuery } from "@/services/auth";
 import { _request } from "@/services/request";
 
 const isLoggedIn = () => {

@@ -1,26 +1,36 @@
-import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, } from "@/components/ui/card";
-import { Table, TableBody, TableHead, TableHeader, TableRow, } from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { AuthContext } from "@/contexts/AuthContext";
-import { getOrderQuery } from "@/services/order";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { getOrderQuery, cancelOrderMutation } from "@/services/order";
 import NotFound from "../main/NotFound";
 import { formatDate, getStatusColor } from "@/helpers";
 import OrderItem from "@/components/order/OrderItem";
+import PaymentDetail from "@/components/payment/PaymentDetail";
+import { Loader2 } from "lucide-react";
+import { OrderStatus } from "@/types/models";
+import { useState } from "react";
 
 const OrderDetails = () => {
-  const { token } = useContext(AuthContext);
   const { orderId } = useParams<{ orderId: string }>();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  if (!orderId || !token) {
+  if (!orderId) {
     return <NotFound />;
   }
 
   const { data: order, isLoading, isError, error } = getOrderQuery(orderId);
+  const { mutate: cancelOrder, isPending } = cancelOrderMutation();
+
+  const handleCancelOrder = () => {
+    cancelOrder({ orderId: orderId });
+    setIsDialogOpen(false);
+  };
 
   if (isLoading) {
     return (
@@ -96,19 +106,55 @@ const OrderDetails = () => {
             </TableHeader>
             <TableBody>
               {orderData.items.map((item, idx) => (
-                <OrderItem item={item} key={idx}/>
+                <OrderItem item={item} key={idx} />
               ))}
             </TableBody>
           </Table>
         </div>
+
+        <Separator />
+
+        {orderData.status !== OrderStatus.CANCELLED && <PaymentDetail />}
+        
       </CardContent>
 
-      <CardFooter className="flex justify-end">
+      <CardFooter className="flex justify-between items-center">
         <div className="text-lg font-semibold">
           Total: ${orderData.totalPrice.toFixed(2)}
         </div>
+        {orderData.status === OrderStatus.PENDING && (
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="destructive" disabled={isPending}>
+                Cancel Order
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently cancel the order.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleCancelOrder}
+                  disabled={isPending}
+                >
+                  {isPending ? <Loader2 className="animate-spin" /> : "Confirm"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </CardFooter>
-
     </Card>
   );
 };

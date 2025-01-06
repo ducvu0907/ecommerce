@@ -80,11 +80,6 @@ export type CreateOrderRequest = {
   discountId: string | null;
 };
 
-// TODO
-export type CreatePaymentRequest = {
-
-};
-
 export type CreateInventoryRequest = {
   productId: string;
   location: string;
@@ -214,11 +209,13 @@ export type InventoryData = {
   updatedAt: Date;
 };
 
-// TODO: payment model
-export type PaymentData = {
-  id: string;
+export type CreatePaymentRequest = {
   orderId: string;
-  transactionContent: string;
-  transactionId: string;
-  createdAt: Date;
+};
+
+export type PaymentData = {
+  amount: number;
+  payDate: Date;
+  orderId: string;
+  bankCode: string;
 };

@@ -15,6 +15,7 @@ import CreateProduct from "./pages/product/CreateProduct";
 import SellerProducts from "./pages/product/SellerProducts";
 import Inventory from "./pages/inventory/Inventory";
 import CreateOrder from "./pages/order/CreateOrder";
+import PaymentFailed from "./components/payment/PaymentFailed";
 
 const App = () => {
   const loggedIn = isLoggedIn();
@@ -27,16 +28,17 @@ const App = () => {
 
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/cart" element={loggedIn ? <Cart /> : <Navigate to={"/login"} />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/products/:productId" element={<Product />} />
           <Route path="/products/search" element={<SearchProducts />} />
           <Route path="/my-products" element={<SellerProducts />} />
           <Route path="/inventories/:productId" element={<Inventory />} />
           <Route path="/create-product" element={<CreateProduct />} />
           <Route path="/create-order" element={<CreateOrder />} />
-          <Route path="/orders" element={loggedIn ? <OrderList />:<Navigate to={"/login" } />} />
-          <Route path="/orders/:orderId" element={loggedIn ? <OrderDetails /> : <Navigate to={"/login"} />} />
+          <Route path="/orders" element={<OrderList />} />
+          <Route path="/orders/:orderId" element={<OrderDetails />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

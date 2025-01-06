@@ -29,7 +29,7 @@ const DiscountItem: React.FC<DiscountItemProps> = ({ discount, isSelected, onSel
       <TableCell>{formatDate(discount.endDate)}</TableCell>
       <TableCell>
         <Badge variant={isDiscountActive(discount) ? "default" : "destructive"}>
-          {isDiscountActive(discount) ? "Active" : "Inactive"}
+          {isDiscountActive(discount) ? "ACTIVE" : "INACTIVE"}
         </Badge>
       </TableCell>
       {isSelected && (

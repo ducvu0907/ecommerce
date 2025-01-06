@@ -1,18 +1,9 @@
-import { AuthContext } from "@/contexts/AuthContext";
 import NotFound from "@/pages/main/NotFound";
 import { getMyOrdersQuery } from "@/services/order";
-import { useContext } from "react";
 import { Loader2 } from "lucide-react";
-import { OrderData } from "@/types/models";
 import Order from "@/components/order/Order";
 
 const OrderList = () => {
-  const { token } = useContext(AuthContext);
-
-  if (!token) {
-    return <NotFound />;
-  }
-
   const { data: orders, isLoading, isError, error } = getMyOrdersQuery();
   console.log("Fetching user orders: ", orders);
 

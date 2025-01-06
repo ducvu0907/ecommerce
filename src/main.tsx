@@ -20,10 +20,10 @@ createRoot(document.getElementById('root')!).render(
             <CategoryProvider>
               <App />
             </CategoryProvider>
-            <Toaster />
           </CartProvider>
         </AuthProvider>
       </QueryClientProvider>
+      <Toaster />
     </BrowserRouter>
   </StrictMode>,
 )

@@ -113,7 +113,7 @@ export const filterProductsByCategories = ( products: ProductData[], selectedCat
 };
 
 export const isDiscountActive = (discount: DiscountData) => {
-  return discount.startDate <= new Date() && discount.endDate >= new Date();
+  return new Date(discount.startDate) <= new Date() && new Date(discount.endDate) >= new Date();
 };
 
 export const calculateCartTotal = (cart: CartData | null) => {

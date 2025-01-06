@@ -58,7 +58,7 @@ const DiscountListModal: React.FC<DiscountListModalProps> = ({ isOpen, onClose, 
           <DialogTitle>Available Discounts</DialogTitle>
           <DialogDescription className="text-gray-500">Click to choose a discount</DialogDescription>
         </DialogHeader>
-        <div>
+        <div className="max-h-96 overflow-y-auto">
           <Table>
             <TableHeader>
               <TableRow>
