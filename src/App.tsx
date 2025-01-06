@@ -16,6 +16,7 @@ import SellerProducts from "./pages/product/SellerProducts";
 import Inventory from "./pages/inventory/Inventory";
 import CreateOrder from "./pages/order/CreateOrder";
 import PaymentFailed from "./components/payment/PaymentFailed";
+import PaymentSucceeded from "./components/payment/PaymentSucceeded";
 
 const App = () => {
   const loggedIn = isLoggedIn();
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/orders/:orderId" element={<OrderDetails />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/payment-failed" element={<PaymentFailed />} />
+          <Route path="/payment-succeeded" element={<PaymentSucceeded />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

@@ -1,9 +1,9 @@
-import { AlertCircle, ArrowLeft } from "lucide-react";
+import { CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-const PaymentFailed = () => {
+const PaymentSucceeded = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const orderId = searchParams.get("orderId");
@@ -16,10 +16,10 @@ const PaymentFailed = () => {
     <div className="flex justify-center items-center">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="flex flex-col items-center text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
-          <CardTitle className="text-xl font-bold">Payment Failed</CardTitle>
+          <CheckCircle className="h-12 w-12 text-green-500 mb-4" />
+          <CardTitle className="text-xl font-bold">Payment Successful</CardTitle>
           <CardDescription className="text-gray-600">
-            We couldn’t process your payment for order <strong>{orderId}</strong>.
+            Your payment for order <strong>{orderId}</strong> was successful.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -39,4 +39,4 @@ const PaymentFailed = () => {
   );
 }
 
-export default PaymentFailed;
+export default PaymentSucceeded;

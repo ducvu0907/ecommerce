@@ -178,8 +178,7 @@ const CreateOrder = () => {
                     >
                       {isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : null}
-                      Place Order
+                      ) : "Place Order"}
                     </Button>
                   </div>
                 </CardContent>

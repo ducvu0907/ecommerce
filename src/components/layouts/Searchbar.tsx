@@ -10,12 +10,6 @@ const Searchbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!query) {
-      navigate("/");
-    }
-  }, [query]);
-
-  useEffect(() => {
     // if back to home then remove query
     if (location.pathname === "/") {
       setQuery("");

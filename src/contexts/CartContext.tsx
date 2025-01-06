@@ -19,7 +19,7 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartData | null>(null);
-  const {token} = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { data, isLoading } = getMyCartQuery();
 
   useEffect(() => {
@@ -28,6 +28,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       setCart(data.result);
     }
   }, [data, token]);
+
+  useEffect(() => {
+    if (!token) {
+      setCart(null);
+    }
+  }, [token]);
 
   return (
     <CartContext.Provider value={{cart, isLoading}}>
