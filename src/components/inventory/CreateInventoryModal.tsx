@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { createInventoryMutation } from "@/services/inventory";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,14 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { CreateInventoryRequest } from "@/types/models";
 
 interface CreateInventoryDialogProps {
@@ -24,20 +31,17 @@ const CreateInventoryModal: React.FC<CreateInventoryDialogProps> = ({
   productId,
 }) => {
   const { mutate: createInventory, isPending } = createInventoryMutation();
-  const [location, setLocation] = useState("");
-  const [stock, setStock] = useState<number>(0);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const inventoryData: CreateInventoryRequest = {
+  const form = useForm<CreateInventoryRequest>({
+    defaultValues: {
       productId,
-      location,
-      stock,
-    };
+      location: "",
+      stock: 0,
+    },
+  });
 
-    console.log(inventoryData);
-    createInventory({ request: inventoryData });
+  const handleSubmit = (data: CreateInventoryRequest) => {
+    console.log(data);
+    createInventory({ request: data });
     onClose();
   };
 
@@ -47,39 +51,57 @@ const CreateInventoryModal: React.FC<CreateInventoryDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Create Inventory</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Enter location"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="stock">Stock</Label>
-              <Input
-                id="stock"
-                type="number"
-                value={stock}
-                onChange={(e) => setStock(Number(e.target.value))}
-                placeholder="Enter stock"
-                required
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create"}
-            </Button>
-          </DialogFooter>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="location"
+              rules={{ required: "Location is required" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Enter location"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stock"
+              rules={{
+                required: "Stock is required",
+                min: { value: 0, message: "Stock must be at least 0" },
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter stock"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Create"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

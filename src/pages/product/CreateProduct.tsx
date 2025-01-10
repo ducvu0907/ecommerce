@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { getCategoriesQuery } from "@/services/category";
 import { createProductMutation } from "@/services/product";
 import { CreateProductRequest } from "@/types/models";
@@ -15,26 +16,19 @@ const CreateProduct = () => {
   const categories = data?.result;
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState<CreateProductRequest>({
-    title: "",
-    description: "",
-    imageUrl: "",
-    sku: "",
-    price: 0,
-    categoryId: "",
+  const form = useForm<CreateProductRequest>({
+    defaultValues: {
+      title: "",
+      description: "",
+      imageUrl: "",
+      sku: "",
+      price: 0,
+      categoryId: "",
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    createProduct({ request: formData });
+  const onSubmit = (data: CreateProductRequest) => {
+    createProduct({ request: data });
     navigate("/my-products");
   };
 
@@ -45,87 +39,108 @@ const CreateProduct = () => {
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-bold mb-6">Create Product</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
             name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Product Title"
-            required
+            rules={{ required: "Title is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="title">Title</Label>
+                <FormControl>
+                  <Input {...field} placeholder="Product Title" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <Input
-            id="description"
+          <FormField
+            control={form.control}
             name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Product Description"
-            required
+            rules={{ required: "Description is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="description">Description</Label>
+                <FormControl>
+                  <Input {...field} placeholder="Product Description" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div>
-          <Label htmlFor="imageUrl">Image URL</Label>
-          <Input
-            id="imageUrl"
+          <FormField
+            control={form.control}
             name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            placeholder="Image URL"
-            required
+            rules={{ required: "Image URL is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="imageUrl">Image URL</Label>
+                <FormControl>
+                  <Input {...field} placeholder="Image URL" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div>
-          <Label htmlFor="sku">SKU</Label>
-          <Input
-            id="sku"
+          <FormField
+            control={form.control}
             name="sku"
-            value={formData.sku}
-            onChange={handleChange}
-            placeholder="Product SKU"
-            required
+            rules={{ required: "SKU is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="sku">SKU</Label>
+                <FormControl>
+                  <Input {...field} placeholder="Product SKU" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div>
-          <Label htmlFor="price">Price</Label>
-          <Input
-            id="price"
+          <FormField
+            control={form.control}
             name="price"
-            type="number"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Product Price"
-            required
+            rules={{ required: "Price is required", min: { value: 0, message: "Price must be a positive number" } }}
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="price">Price</Label>
+                <FormControl>
+                  <Input {...field} type="number" placeholder="Product Price" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div>
-          <Label htmlFor="categoryId">Category</Label>
-          <Select
+          <FormField
+            control={form.control}
             name="categoryId"
-            value={formData.categoryId}
-            onValueChange={(value) => setFormData((prev) => ({ ...prev, categoryId: value }))}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories?.map((category: CategoryData) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <Button type="submit" disabled={isPending} className="w-full">
-          {isPending ? "Creating..." : "Create Product"}
-        </Button>
-      </form>
+            rules={{ required: "Category is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="categoryId">Category</Label>
+                <Select onValueChange={field.onChange} >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categories?.map((category: CategoryData) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? "Creating..." : "Create Product"}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 };
