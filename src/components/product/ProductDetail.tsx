@@ -8,6 +8,7 @@ import { getReviewsByProductQuery } from '@/services/review';
 import { addItemMutation } from '@/services/cart';
 import { AuthContext } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Input } from '../ui/input';
 
 interface ProductDetailProps {
   product: ProductData;
@@ -121,10 +122,24 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
               >
                 -
               </Button>
-              <span className="font-bold">{quantity}</span>
-              <Button 
-                variant="outline" 
-                size="icon" 
+
+              <Input
+                type="number"
+                value={quantity}
+                onChange={(e) => {
+                  const newQuantity = parseInt(e.target.value, 10);
+                  if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= product.quantity) {
+                    setQuantity(newQuantity);
+                  }
+                }}
+                min="1"
+                max={product.quantity}
+                className="w-16 text-center border rounded-md py-1"
+              />
+
+              <Button
+                variant="outline"
+                size="icon"
                 onClick={() => adjustQuantity('increase')}
                 disabled={quantity >= product.quantity}
               >
