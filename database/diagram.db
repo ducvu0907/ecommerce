@@ -102,7 +102,6 @@ Table CartItem {
 Table Payment {
   id string [pk]
   order_id string [ref: - Order.id]
-  transaction_content string
-  transaction_id string
+  transaction_ref string // references transaction from the payment gateway
   created_at date
 }
