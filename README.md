@@ -36,13 +36,13 @@ A minimal ecommerce platform designed to support both sellers and customers. Thi
 
 ## Quick Start
 
-1. **Clone the Repository**
+1. **Clone the repository**
 ```bash
 git clone https://github.com/ducvu0907/ecommerce.git
 cd ecommerce
 ```
 
-2. **Run the Application**
+2. **Run the application**
 ```bash
 sh build-and-run.sh
 ```
