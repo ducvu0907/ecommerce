@@ -3,6 +3,7 @@ package com.ducvu.payment_service.service;
 import com.ducvu.payment_service.config.VNPayConfig;
 import com.ducvu.payment_service.dto.request.VNPayQueryRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,10 @@ import java.util.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class VNPayService {
+
+    private final VNPayConfig vnPayConfig;
 
     public String createPaymentUrl(int total, String orderInfo) {
         String vnp_Version = "2.1.0";
@@ -36,7 +40,7 @@ public class VNPayService {
 
         vnp_Params.put("vnp_Locale", "vn");
 
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_Returnurl);
+        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));

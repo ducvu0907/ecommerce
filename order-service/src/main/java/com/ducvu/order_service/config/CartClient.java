@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "cart-service", url = "http://localhost:8001")
+@FeignClient(name = "cart-service", url = "${cart-service.url}")
 public interface CartClient {
     @GetMapping("/carts/me")
     ApiResponse<CartResponse> getMyCart(@RequestHeader("token") String token);

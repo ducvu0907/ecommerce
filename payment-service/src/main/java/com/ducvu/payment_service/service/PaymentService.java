@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,12 @@ public class PaymentService {
     private final Mapper mapper;
     private final VNPayService vnPayService;
     private final VNPayClient vnPayClient;
+
+    @Value("${client.url}/payment-failed?orderId=")
+    private String paymentFailedUrl;
+
+    @Value("${client.url}/payment-succeeded?orderId=")
+    private String paymentSucceededUrl;
 
     public PaymentResponse getPaymentByOrderId(String token, String orderId) {
         log.info("Payment service; Get payment by order id");
@@ -81,7 +88,7 @@ public class PaymentService {
         String orderId = request.getParameter("vnp_OrderInfo");
 
         if (paymentResult == 0) {
-            return "http://localhost:3000/payment-failed?orderId=" + orderId;
+            return paymentFailedUrl + orderId;
         }
 
         Payment payment = Payment.builder()
@@ -92,7 +99,7 @@ public class PaymentService {
         paymentRepository.save(payment);
         orderClient.payOrder(orderId);
 
-        return "http://localhost:3000/payment-succeeded/?orderId=" + orderId;
+        return paymentSucceededUrl + orderId;
     }
 
     private VNPayResponse getVNPayTransaction(String txnRef, String orderInfo) {

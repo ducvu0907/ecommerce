@@ -1,6 +1,7 @@
 package com.ducvu.payment_service.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
@@ -11,7 +12,10 @@ import java.util.*;
 @Component
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_Returnurl = "http://localhost:8000/payments/vnpay-return";
+
+    @Value("${payment-service.url}/payments/vnpay-return")
+    public String vnp_Returnurl;
+
     public static String vnp_TmnCode = "XPPIBG2J";
     public static String vnp_HashSecret = "5VP0MVHZRIOPP3ILMTW2NCLD5SA5AJQM";
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
