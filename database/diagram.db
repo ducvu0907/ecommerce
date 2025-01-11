@@ -1,0 +1,107 @@
+Table User {
+  id string [pk]
+  username string
+  password string
+  role enum("BUYER", "SELLER")
+  phone string
+  token string
+  created_at date
+  updated_at date
+}
+
+Table Review {
+  id string [pk]
+  user_id string [ref: > User.id]
+  product_id string [ref: > Product.id]
+  rating integer
+  content string
+  created_at date
+  updated_at date
+}
+
+Table Category {
+  id string [pk]
+  title string
+}
+
+Table Inventory {
+  id string [pk]
+  product_id string [ref: > Product.id]
+  location string
+  stock integer
+  created_at date
+  updated_at date
+}
+
+Table Product {
+  id string [pk]
+  category_id string [ref: < Category.id]
+  description string
+  seller_id string [ref: > User.id]
+  title string
+  image_url string
+  sku string
+  price double
+  created_at date
+  updated_at date
+}
+
+Table Discount {
+  id string [pk]
+  type enum("FIXED", "PERCENTAGE")
+  value double
+  description string
+  start_date date
+  end_date date
+  created_at date
+  updated_at date
+}
+
+Table Order {
+  id string [pk]
+  discount_id string [ref: < Discount.id]
+  total_price double // after applying discount
+  buyer_id string [ref: > User.id]
+  address string
+  instruction string
+  status enum("PENDING", "COMPLETED", "CANCELLED")
+  created_at date
+  updated_at date
+}
+
+Table OrderItem {
+  id string [pk]
+  product_id string [ref: > Product.id]
+  order_id string [ref: > Order.id]
+  quantity integer
+  subtotal double
+}
+
+Table Shipment {
+    order_id string [pk, ref: > Order.id]
+    inventory_id string [pk, ref: > Inventory.id]
+    quantity integer
+    created_at date
+    updated_at date
+}
+
+Table Cart {
+  id string [pk]
+  user_id string [ref: - User.id]
+  created_at date
+  updated_at date
+}
+
+Table CartItem {
+  id string [pk]
+  product_id string [pk, ref: > Product.id]
+  cart_id string [pk, ref: > Cart.id]
+  quantity integer
+}
+
+Table Payment {
+  id string [pk]
+  order_id string [ref: - Order.id]
+  transaction_ref string // references transaction from the payment gateway
+  created_at date
+}
