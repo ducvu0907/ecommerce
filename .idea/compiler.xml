@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -17,26 +16,16 @@
         <module name="order-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="cloud-config" target="21" />
-      <module name="proxy-client" target="21" />
-      <module name="service-registry" target="21" />
-      <module name="shipping-service" target="21" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="cart-service" options="-parameters" />
-      <module name="cloud-config" options="-parameters" />
       <module name="discount-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
-      <module name="proxy-client" options="-parameters" />
       <module name="review-service" options="-parameters" />
-      <module name="service-registry" options="-parameters" />
-      <module name="shipping-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

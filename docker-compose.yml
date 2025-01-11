@@ -1,0 +1,258 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_BASE_URL=http://api-gateway:8000
+    depends_on:
+      - api-gateway
+      - cart-service
+      - discount-service
+      - order-service
+      - payment-service
+      - product-service
+      - review-service
+      - user-service
+
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+    environment:
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    ports:
+      - "8000:8000"
+    depends_on:
+      - cart-service
+      - discount-service
+      - order-service
+      - payment-service
+      - product-service
+      - review-service
+      - user-service
+
+  cart-service:
+    build:
+      context: ./backend/cart-service
+    ports:
+      - "8001:8001"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-cart:3306/cart_db
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+
+    depends_on:
+      - mysql-cart
+
+  discount-service:
+    build:
+      context: ./backend/discount-service
+    ports:
+      - "8002:8002"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:root@mongo-discount:27017/discount_db?authSource=admin
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    depends_on:
+      - mongo-discount
+
+  order-service:
+    build:
+      context: ./backend/order-service
+    ports:
+      - "8003:8003"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-order:3306/order_db
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    depends_on:
+      - mysql-order
+
+  payment-service:
+    build:
+      context: ./backend/payment-service
+    ports:
+      - "8004:8004"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:root@mongo-payment:27017/payment_db?authSource=admin
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    depends_on:
+      - mongo-payment
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+
+  product-service:
+    build:
+      context: ./backend/product-service
+    ports:
+      - "8005:8005"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-product:3306/product_db
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    depends_on:
+      - mysql-product
+
+  review-service:
+    build:
+      context: ./backend/review-service
+    ports:
+      - "8006:8006"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:root@mongo-review:27017/review_db?authSource=admin
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    depends_on:
+      - mongo-review
+
+  user-service:
+    build:
+      context: ./backend/user-service
+    ports:
+      - "8007:8007"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-user:5432/user_db
+      - API-GATEWAY_URL=http://api-gateway:8000
+      - CART-SERVICE_URL=http://cart-service:8001
+      - DISCOUNT-SERVICE_URL=http://discount-service:8002
+      - ORDER-SERVICE_URL=http://order-service:8003
+      - PAYMENT-SERVICE_URL=http://payment-service:8004
+      - PRODUCT-SERVICE_URL=http://product-service:8005
+      - REVIEW-SERVICE_URL=http://review-service:8006
+      - USER-SERVICE_URL=http://user-service:8007
+    depends_on:
+      - postgres-user
+
+  mysql-product:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: product_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - product-data:/var/lib/mysql
+
+  mysql-order:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: order_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - order-data:/var/lib/mysql
+
+  mysql-cart:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cart_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - cart-data:/var/lib/mysql
+
+  postgres-user:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - user-data:/var/lib/postgresql/data
+
+  mongo-review:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: review_db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - review-data:/data/db
+
+  mongo-discount:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: discount_db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27018:27017"
+    volumes:
+      - discount-data:/data/db
+
+  mongo-payment:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: payment_db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27019:27017"
+    volumes:
+      - payment-data:/data/db
+
+volumes:
+  product-data:
+  order-data:
+  cart-data:
+  user-data:
+  review-data:
+  discount-data:
+  payment-data:
