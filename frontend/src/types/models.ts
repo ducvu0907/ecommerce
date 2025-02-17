@@ -19,6 +19,7 @@ export type LoginRequest = {
 
 export type SignupRequest = {
   username: string;
+  fullName: string;
   password: string;
   phone: string;
   role: Role;

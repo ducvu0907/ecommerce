@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @EnableFeignClients
+@EnableDiscoveryClient
 public class PaymentServiceApplication {
 
 	public static void main(String[] args) {
