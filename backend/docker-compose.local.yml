@@ -79,6 +79,14 @@ services:
     volumes:
       - payment-data:/data/db
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672" # message broker port
+      - "15672:15672" # ui port
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
 volumes:
   product-data:
   order-data:
@@ -87,3 +95,4 @@ volumes:
   review-data:
   discount-data:
   payment-data:
+  rabbitmq-data:

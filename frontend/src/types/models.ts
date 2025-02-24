@@ -19,6 +19,7 @@ export type LoginRequest = {
 
 export type SignupRequest = {
   username: string;
+  email: string;
   fullName: string;
   password: string;
   phone: string;
@@ -105,6 +106,7 @@ export enum Role {
 export type UserData = {
   id: string;
   username: string;
+  email: string;
   fullName: string;
   phone: string;
   role: Role;

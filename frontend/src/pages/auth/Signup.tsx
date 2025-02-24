@@ -17,6 +17,7 @@ const Signup: React.FC = () => {
 
   const [formData, setFormData] = useState<SignupRequest>({
     username: '',
+    email: '',
     fullName: '',
     password: '',
     phone: '',
@@ -83,6 +84,24 @@ const Signup: React.FC = () => {
               </div>
               {errors.username && (
                 <p className="text-sm text-red-500">{errors.username}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  id="email"
+                  name="email"
+                  placeholder="john_doe@gmail.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
+                />
+              </div>
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.fullName}</p>
               )}
             </div>
 

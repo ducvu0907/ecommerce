@@ -12,6 +12,7 @@ public class Mapper {
     public User toUser(UserCreateRequest request) {
         return User.builder()
                 .username(request.getUsername())
+                .email(request.getEmail())
                 .fullName(request.getFullName())
                 .password(request.getPassword())
                 .role(request.getRole())
@@ -23,6 +24,7 @@ public class Mapper {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .email(user.getEmail())
                 .fullName(user.getFullName())
                 .phone(user.getPhone())
                 .role(user.getRole())
@@ -34,6 +36,7 @@ public class Mapper {
     public AuthResponse toAuthResponse(User user) {
         return AuthResponse.builder()
                 .role(user.getRole())
+                .email(user.getEmail())
                 .userId(user.getId())
                 .build();
     }

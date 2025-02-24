@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthResponse { // authenticate the token sent from external service
     String userId;
+    String email;
     String role;
 }

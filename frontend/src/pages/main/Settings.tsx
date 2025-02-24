@@ -61,6 +61,10 @@ const Settings = () => {
               <p className="text-lg">{user.username}</p>
             </div>
             <div>
+              <p className="text-sm font-medium text-gray-500">Email</p>
+              <p className="text-lg">{user.email}</p>
+            </div>
+            <div>
               <p className="text-sm font-medium text-gray-500">Full Name</p>
               <p className="text-lg">{user.fullName}</p>
             </div>

@@ -1,10 +1,10 @@
-package com.ducvu.eureka_server;
+package com.ducvu.email_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServerApplicationTests {
+class EmailServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

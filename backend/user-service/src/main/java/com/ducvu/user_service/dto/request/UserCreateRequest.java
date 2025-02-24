@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserCreateRequest {
     String username;
+    String email;
     String fullName;
     String password;
     String phone;

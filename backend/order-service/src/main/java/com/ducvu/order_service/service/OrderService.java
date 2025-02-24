@@ -12,6 +12,7 @@ import com.ducvu.order_service.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class OrderService {
     private final CartClient cartClient;
     private final DiscountClient discountClient;
     private final ProductClient productClient;
+    private final RabbitTemplate rabbitTemplate;
 
     public List<OrderResponse> getMyOrders(String token) {
         var authResponse = validateToken(token);
@@ -61,6 +63,7 @@ public class OrderService {
     public OrderResponse createOrder(String token, CreateOrderRequest request) {
         var authResponse = validateToken(token);
         String userId = authResponse.getUserId();
+        String email = authResponse.getEmail();
 
         Order order = new Order();
 
@@ -145,6 +148,9 @@ public class OrderService {
         // empty cart as final step
         cartClient.emptyCart(token);
 
+        // test rabbitmq
+        sendMessage(email);
+
         return mapper.toOrderResponse(result);
     }
 
@@ -207,5 +213,10 @@ public class OrderService {
             throw new RuntimeException("Token invalid");
         }
         return authResponse.getResult();
+    }
+
+    // helper to send message to rabbitmq
+    private void sendMessage(String message) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "routing.key", message);
     }
 }
