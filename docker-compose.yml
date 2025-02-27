@@ -3,7 +3,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3000:3000"
+      - "5173:5173"
     environment:
       - VITE_API_BASE_URL=http://api-gateway:8000
     depends_on:
@@ -38,6 +38,9 @@ services:
       - product-service
       - review-service
       - user-service
+      - grafana
+      - prometheus
+      - rabbitmq
 
   cart-service:
     build:
@@ -91,8 +94,10 @@ services:
       - PRODUCT-SERVICE_URL=http://product-service:8005
       - REVIEW-SERVICE_URL=http://review-service:8006
       - USER-SERVICE_URL=http://user-service:8007
+      - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
       - mysql-order
+      - rabbitmq
 
   payment-service:
     build:
@@ -167,6 +172,16 @@ services:
       - USER-SERVICE_URL=http://user-service:8007
     depends_on:
       - postgres-user
+
+  email-service:
+    build:
+      context: ./backend/email-service
+    ports:
+      - "8008:8008"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
 
   mysql-product:
     image: mysql:latest
@@ -256,6 +271,38 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    entrypoint:
+    - sh
+    - -c
+    - |
+      echo "global:
+        scrape_interval: 15s
+      scrape_configs:
+        - job_name: 'api-gateway'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: ['api-gateway:8000']
+      " > /etc/prometheus/prometheus.yml && 
+      /bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+
 volumes:
   product-data:
   order-data:
@@ -265,3 +312,5 @@ volumes:
   discount-data:
   payment-data:
   rabbitmq-data:
+  grafana-data:
+  prometheus-data:

@@ -4,7 +4,7 @@
 set -e
 
 BACKEND_DIR="./backend"
-SERVICES=("api-gateway" "cart-service" "discount-service" "order-service" "payment-service" "product-service" "review-service" "user-service")
+SERVICES=("api-gateway" "cart-service" "discount-service" "order-service" "payment-service" "product-service" "review-service" "user-service" "email-service")
 
 cleanup() {
   echo "Stopping and cleaning up Docker Compose for local databases..."

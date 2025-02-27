@@ -1,6 +1,5 @@
 package com.ducvu.product_service.helper;
 
-import com.ducvu.product_service.dto.request.ProductCreateRequest;
 import com.ducvu.product_service.dto.response.CategoryResponse;
 import com.ducvu.product_service.dto.response.InventoryResponse;
 import com.ducvu.product_service.dto.response.ProductResponse;
@@ -8,8 +7,6 @@ import com.ducvu.product_service.entity.Category;
 import com.ducvu.product_service.entity.Inventory;
 import com.ducvu.product_service.entity.Product;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 
 @Component
